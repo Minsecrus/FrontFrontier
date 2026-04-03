@@ -3,7 +3,7 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: "Front Frontier",
   description: "Minsecrus 的前端知识分享站",
-  base: '/',
+  base: '/FrontFrontier/',
   cleanUrls: true,
   themeConfig: {
     nav: [
