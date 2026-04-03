@@ -13,9 +13,12 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 ### 前言
 
 - [引言](/guide/02-0)
+
+### 第一章 前端开发简介
+
 - [前端开发简介](/guide/03-i)
 
-### 第一章 Web 概述
+### 第二章 基础 Web 技术
 
 - [Internet 互联网](/guide/04-ii-web-ii-1-internet)
 - [HTML](/guide/05-ii-web-ii-2-html)
@@ -24,7 +27,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [JavaScript](/guide/08-ii-web-ii-5-javascript)
 - [TypeScript](/guide/09-ii-web-ii-6-typescript-javascript)
 
-### 第二章 开发工具
+### 第三章 基本开发环境和工具
 
 - [Git & GitHub](/guide/10-iii-iii-1-git-github)
 - [Git 进阶](/guide/11-iii-iii-2-git)
@@ -37,7 +40,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [浏览器开发者工具](/guide/18-iii-iii-9)
 - [设计协作实践](/guide/19-iii-iii-10)
 
-### 第三章 UI 框架
+### 第四章 前端框架和库
 
 - [框架概览](/guide/20-iv-ui-iv-1-ui-reactvueangularsveltesolidjslit)
 - [Web Components](/guide/21-iv-ui-iv-2-web-components)
@@ -49,7 +52,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [服务器状态与客户端状态](/guide/27-iv-ui-iv-8)
 - [现代后端集成模式](/guide/28-iv-ui-iv-9)
 
-### 第四章 工程化
+### 第五章 高级主题和专业开发最佳实践
 
 - [构建工具](/guide/29-v-v-1)
 - [性能监控](/guide/30-v-v-2-performance-monitoring)
@@ -68,7 +71,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [DevOps](/guide/43-v-v-15-devops-for-Frontend)
 - [法律、合规与隐私](/guide/44-v-v-16)
 
-### 第五章 前沿技术
+### 第六章 新兴技术和专业领域
 
 - [PWA](/guide/45-vi-vi-1-web-pwa-web)
 - [WebAssembly](/guide/46-vi-vi-2-webassembly-wasm-web)
@@ -80,8 +83,14 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [Edge Functions](/guide/52-vi-vi-8-cloudflare-workersvercel-edge-functionsdeno-deploy)
 - [设备集成 API](/guide/53-vi-vi-9-web-bluetoothweb-usbwebhidgeneric-sensor-api)
 
-### 附录
+### 第七章 持续学习和职业发展
 
 - [持续学习和职业发展](/guide/54-vii)
-- [结论](/guide/55-viii)
+
+### 第八章 结语
+
+- [结语](/guide/55-viii)
+
+### 附录
+
 - [学习资料汇总](/guide/56-a)

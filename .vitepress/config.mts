@@ -20,16 +20,16 @@ export default defineConfig({
           text: '现代前端开发指南',
           items: [
             { text: '简介', link: '/guide/' },
+            { text: '前言 - 引言', link: '/guide/02-0' },
             {
-              text: '前言',
+              text: '第一章 前端开发简介',
               collapsed: true,
               items: [
-                { text: '引言', link: '/guide/02-0' },
                 { text: '前端开发简介', link: '/guide/03-i' },
               ]
             },
             {
-              text: '第一章 Web 概述',
+              text: '第二章 基础 Web 技术',
               collapsed: true,
               items: [
                 { text: 'Internet 互联网', link: '/guide/04-ii-web-ii-1-internet' },
@@ -41,7 +41,7 @@ export default defineConfig({
               ]
             },
             {
-              text: '第二章 开发工具',
+              text: '第三章 基本开发环境和工具',
               collapsed: true,
               items: [
                 { text: 'Git & GitHub', link: '/guide/10-iii-iii-1-git-github' },
@@ -57,7 +57,7 @@ export default defineConfig({
               ]
             },
             {
-              text: '第三章 UI 框架',
+              text: '第四章 前端框架和库',
               collapsed: true,
               items: [
                 { text: '框架概览', link: '/guide/20-iv-ui-iv-1-ui-reactvueangularsveltesolidjslit' },
@@ -72,7 +72,7 @@ export default defineConfig({
               ]
             },
             {
-              text: '第四章 工程化',
+              text: '第五章 高级主题和专业开发最佳实践',
               collapsed: true,
               items: [
                 { text: '构建工具', link: '/guide/29-v-v-1' },
@@ -94,7 +94,7 @@ export default defineConfig({
               ]
             },
             {
-              text: '第五章 前沿技术',
+              text: '第六章 新兴技术和专业领域',
               collapsed: true,
               items: [
                 { text: 'PWA', link: '/guide/45-vi-vi-1-web-pwa-web' },
@@ -109,11 +109,23 @@ export default defineConfig({
               ]
             },
             {
-              text: '附录',
+              text: '第七章 持续学习和职业发展',
               collapsed: true,
               items: [
                 { text: '持续学习和职业发展', link: '/guide/54-vii' },
-                { text: '结论', link: '/guide/55-viii' },
+              ]
+            },
+            {
+              text: '第八章 结语',
+              collapsed: true,
+              items: [
+                { text: '结语', link: '/guide/55-viii' },
+              ]
+            },
+            {
+              text: '附录',
+              collapsed: true,
+              items: [
                 { text: '学习资料汇总', link: '/guide/56-a' },
               ]
             },
