@@ -20,7 +20,7 @@ export default defineConfig({
           text: '现代前端开发指南',
           items: [
             { text: '简介', link: '/guide/' },
-            { text: '前言 - 引言', link: '/guide/02-0' },
+            { text: '引言', link: '/guide/02-0' },
             {
               text: '第一章 前端开发简介',
               collapsed: true,
