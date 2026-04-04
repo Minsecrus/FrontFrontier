@@ -33,7 +33,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [Git 进阶](/guide/11-iii-iii-2-git)
 - [高级工程化工作流](/guide/12-iii-iii-3)
 - [包管理器](/guide/13-iii-iii-4-npmyarn-pnpm)
-- [构建工具和打包器](/guide/14-iii-iii-5)
+- [现代构建工具](/guide/14-iii-iii-5)
 - [Linter & Formatter](/guide/15-iii-iii-6-linter-eslint-formatter-prettier)
 - [IDE 配置](/guide/16-iii-iii-7-ide)
 - [AI 辅助开发](/guide/17-iii-iii-8-ai)
@@ -80,7 +80,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [Web 音频和媒体流](/guide/49-vi-vi-5-web)
 - [Web3](/guide/50-vi-vi-6-web3)
 - [AI/ML](/guide/51-vi-vi-7-ai-ml)
-- [Edge Functions](/guide/52-vi-vi-8-cloudflare-workersvercel-edge-functionsdeno-deploy)
+- [Edge Runtime 与边缘平台](/guide/52-vi-vi-8-cloudflare-workersvercel-edge-functionsdeno-deploy)
 - [设备集成 API](/guide/53-vi-vi-9-web-bluetoothweb-usbwebhidgeneric-sensor-api)
 
 ### 第七章 持续学习和职业发展

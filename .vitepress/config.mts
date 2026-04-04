@@ -6,13 +6,7 @@ export default defineConfig({
   base: '/FrontFrontier/',
   cleanUrls: true,
   themeConfig: {
-    nav: [
-      { text: '首页', link: '/' },
-      { text: '现代前端开发指南', link: '/guide/' },
-      { text: '小巧思', link: '/tips/' },
-      { text: '框架原理教学', link: '/principles/' },
-      { text: '进阶专题', link: '/advanced/' }
-    ],
+    nav: [],
 
     sidebar: {
       '/guide/': [
@@ -48,7 +42,7 @@ export default defineConfig({
                 { text: 'Git 进阶', link: '/guide/11-iii-iii-2-git' },
                 { text: '高级工程化工作流', link: '/guide/12-iii-iii-3' },
                 { text: '包管理器', link: '/guide/13-iii-iii-4-npmyarn-pnpm' },
-                { text: '构建工具和打包器', link: '/guide/14-iii-iii-5' },
+                { text: '现代构建工具', link: '/guide/14-iii-iii-5' },
                 { text: 'Linter & Formatter', link: '/guide/15-iii-iii-6-linter-eslint-formatter-prettier' },
                 { text: 'IDE 配置', link: '/guide/16-iii-iii-7-ide' },
                 { text: 'AI 辅助开发', link: '/guide/17-iii-iii-8-ai' },
@@ -104,7 +98,7 @@ export default defineConfig({
                 { text: 'Web 音频和媒体流', link: '/guide/49-vi-vi-5-web' },
                 { text: 'Web3', link: '/guide/50-vi-vi-6-web3' },
                 { text: 'AI/ML', link: '/guide/51-vi-vi-7-ai-ml' },
-                { text: 'Edge Functions', link: '/guide/52-vi-vi-8-cloudflare-workersvercel-edge-functionsdeno-deploy' },
+                { text: 'Edge Runtime 与边缘平台', link: '/guide/52-vi-vi-8-cloudflare-workersvercel-edge-functionsdeno-deploy' },
                 { text: '设备集成 API', link: '/guide/53-vi-vi-9-web-bluetoothweb-usbwebhidgeneric-sensor-api' },
               ]
             },

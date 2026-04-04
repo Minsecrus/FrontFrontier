@@ -1,30 +1,44 @@
 ---
-title: "III. 基本开发环境和工具 / III.5 构建工具和打包器：优化生产代码"
+title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器与编译器"
 ---
 
-# III.5 构建工具和打包器：优化生产代码
+# III.5 现代构建工具、打包器与编译器
 
-**目的**：转换和打包代码以用于生产环境，优化性能、处理模块和处理资产。
+**目的**：将源码转换为可部署产物，并在开发期提供快速反馈循环，在生产环境提供更小、更快、更稳定的输出。
 
-- [**Webpack**](https://webpack.js.org/)：强大的模块打包器，它创建模块的依赖图并将它们打包成优化的资产。支持各种模块格式（ES 模块、[CommonJS](http://www.commonjs.org/)、[AMD](https://www.amd.com/)）并使用加载器进行预处理。
-- [**Vite**](https://vitejs.dev/)：现代构建工具，利用原生 ES 模块在开发中实现快速 HMR（热模块替换），并利用 [Rollup](https://rollupjs.org/) 进行优化的生产构建。
-- [**esbuild**](https://esbuild.github.io/)：用 [Go](https://go.dev/) 编写的超高速 JavaScript 打包器，以其原生编译和大量并行处理带来的卓越速度而闻名。
-- [**Rollup**](https://rollupjs.org/)：模块打包器，将独立的模块编译成更大的输出，擅长“tree-shaking”未使用的代码以获得更小的包。通常用于库。
-- [**Turbopack**](https://turbo.build/pack)：用 [Rust](https://www.rust-lang.org/) 编写的增量打包器，针对 JavaScript 和 TypeScript 进行了优化，内置于 [Next.js](https://nextjs.org/) 中。具有统一图、增量计算和惰性打包以提高速度。
-- **SWC (Speedy Web Compiler)**：基于 [Rust](https://www.rust-lang.org/) 的 TypeScript/JavaScript 编译器，用于编译和压缩，通常集成到 Next.js 等框架中。
+- [**Webpack**](https://webpack.js.org/)：经典而成熟的模块打包器。生态极其完整，插件与 Loader 丰富，仍广泛存在于大型存量项目和高度定制化工程中。
+- [**Vite**](https://vitejs.dev/)：现代前端开发的主流选择之一。开发期依赖原生 ESM 和极快的 HMR；截至 2026 年 4 月，其生产构建仍以 Rollup 生态为主，同时官方正在推进 [Rolldown](https://vite.dev/guide/rolldown) 作为下一代打包后端。
+- [**Rspack / Rsbuild**](https://rspack.dev/)：基于 Rust 的高性能打包器及其上层构建工具，在兼容 Webpack 生态的同时追求更快的构建速度。对中大型应用和企业级工程尤其有吸引力。
+- [**esbuild**](https://esbuild.github.io/)：用 [Go](https://go.dev/) 编写的超高速编译/打包工具，经常被当作构建链中的基础能力使用，例如预打包、转换、压缩或作为其他工具的底层引擎。
+- [**Rollup**](https://rollupjs.org/)：偏向库构建的打包器，擅长 tree-shaking 和生成干净的 ESM/CJS 输出。很多工具会把它作为生产构建阶段的核心部件。
+- [**Turbopack**](https://turbo.build/pack)：面向 [Next.js](https://nextjs.org/) 生态的 Rust 增量打包器，强调大型应用开发期的响应速度与按需计算能力。
+- [**SWC**](https://swc.rs/)：基于 Rust 的 TypeScript/JavaScript 编译器，核心定位是“编译与转换”而不是通用应用打包器，常作为框架或工具链的底层编译层。
 
-基于 Rust 的工具（esbuild、Turbopack、SWC）和基于原生 ES 模块的开发服务器（Vite）的出现和采用 标志着行业向开发和构建过程中极致性能优化的重大趋势。这直接影响了开发者生产力（更快的反馈循环）和最终用户体验（更小、更快的包），突出了工具选择与项目成功指标之间的因果关系。
+截至 2026 年 4 月，前端工具链的真实趋势并不是“某一个新工具统一天下”，而是出现了更清晰的分层：
+
+- 开发服务器与工程入口：Vite、Rsbuild
+- 通用应用打包器：Webpack、Rspack、Turbopack
+- 库构建与产物优化：Rollup
+- 编译与转换层：esbuild、SWC
+
+因此，讨论构建工具时必须区分“开发体验”“应用打包”“库打包”“编译层”这几个不同职责，而不能把它们混成同一类。
 
 ## **表格：领先构建工具/打包器比较**
 
-| 工具名称                                  | 核心技术                                   | 主要用例                                 | 关键特性（示例）                                                                                                    | 性能特点                                  |
-| :---------------------------------------- | :----------------------------------------- | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------ | :---------------------------------------- |
-| [**Webpack**](https://webpack.js.org/)    | JavaScript                                 | 应用程序打包                             | Loaders, Plugins, Code Splitting                                                                                    | 稳定，功能全面                            |
-| [**Vite**](https://vitejs.dev/)           | JavaScript/[Rollup](https://rollupjs.org/) | 开发服务器，应用程序打包                 | 快速 HMR, 原生 ESM, [Rollup](https://rollupjs.org/) 打包                                                            | 开发速度快，生产优化                      |
-| [**esbuild**](https://esbuild.github.io/) | [Go](https://go.dev/)                      | 打包、转换、压缩                         | 原生编译、高度并行、极速                                                                                            | 极速                                      |
-| [**Rollup**](https://rollupjs.org/)       | JavaScript                                 | 库打包                                   | Tree-shaking, ES 模块优先                                                                                           | 包体积小，效率高                          |
-| [**Turbopack**](https://turbo.build/pack) | [Rust](https://www.rust-lang.org/)         | [Next.js](https://nextjs.org/) 开发/构建 | 统一图、增量计算、惰性打包                                                                                          | 极速，[Next.js](https://nextjs.org/) 专用 |
-| [**SWC**](https://swc.rs/)                | [Rust](https://www.rust-lang.org/)         | 编译、压缩                               | 超快编译、[TypeScript](https://www.typescriptlang.org/)/[JSX](https://react.dev/learn/writing-markup-with-jsx) 支持 | 极速                                      |
+| 工具名称                                   | 核心技术                                              | 主要用例                           | 关键特性（示例）                                                           | 2026 视角下的定位                   |
+| :----------------------------------------- | :---------------------------------------------------- | :--------------------------------- | :------------------------------------------------------------------------- | :---------------------------------- |
+| [**Webpack**](https://webpack.js.org/)     | JavaScript                                            | 存量应用、深度定制工程             | Loader、Plugin、Module Federation                                          | 稳定、生态最深                      |
+| [**Vite**](https://vitejs.dev/)            | 原生 ESM + [Rollup](https://rollupjs.org/) 生态       | 现代应用开发入口                   | 快速 HMR、插件生态成熟、向 Rolldown 演进                                   | 新项目常用首选之一                  |
+| [**Rspack / Rsbuild**](https://rspack.dev/) | Rust                                                  | 中大型应用、企业工程               | 高性能、Webpack 兼容、迁移成本相对可控                                     | 近年增长很快                        |
+| [**esbuild**](https://esbuild.github.io/)  | [Go](https://go.dev/)                                 | 转换、压缩、预打包                 | 极快、嵌入式能力强                                                         | 常作为底层引擎                      |
+| [**Rollup**](https://rollupjs.org/)        | JavaScript                                            | 库构建、产物优化                   | Tree-shaking、ESM 优先                                                     | 仍是库生态核心之一                  |
+| [**Turbopack**](https://turbo.build/pack)  | Rust                                                  | [Next.js](https://nextjs.org/) 开发/构建 | 增量计算、按需工作、Next.js 深度集成                                       | Next.js 专用路线                    |
+| [**SWC**](https://swc.rs/)                 | Rust                                                  | 编译、转换、压缩                   | 快速 TS/JS 转换、JSX 支持                                                  | 更像编译层，不应与应用 bundler 混谈 |
 
-这个表格对于理解现代前端工作流的基石至关重要。它帮助学习者理解速度、灵活性和生态系统成熟度之间的权衡，指导他们选择与项目规模和性能目标相符的工具。
+选择这些工具时，最实用的判断标准不是“谁最快”，而是：
+
+- 你做的是应用还是库
+- 你是在新建项目还是迁移老项目
+- 你是否依赖现有 Webpack 生态
+- 你更在意开发时反馈速度，还是迁移成本和生态成熟度
 

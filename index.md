@@ -7,11 +7,17 @@ hero:
   tagline: "Minsecrus 的前端知识分享站"
   actions:
     - theme: brand
-      text: 开始阅读
+      text: 现代前端开发指南
       link: /guide/
     - theme: alt
-      text: GitHub
-      link: https://github.com/minsecrus
+      text: 小巧思
+      link: /tips/
+    - theme: alt
+      text: 框架原理教学
+      link: /principles/
+    - theme: alt
+      text: 进阶专题
+      link: /advanced/
 
 features:
   - title: 📖 现代前端开发指南
@@ -27,4 +33,3 @@ features:
     details: 前端架构设计、微前端、低代码平台、前端监控等进阶话题
     link: /advanced/
 ---
-

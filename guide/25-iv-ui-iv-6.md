@@ -6,25 +6,40 @@ title: "IV. 前端框架和库：构建现代 UI / IV.6 状态管理解决方案
 
 **目的**：在复杂应用程序中高效地管理组件之间的应用程序状态（数据），避免“prop drilling”。
 
+在 2026 年谈状态管理，第一步不是选库，而是先区分：
+
+- **本地 UI 状态**：弹窗开关、表单输入、当前选项卡
+- **客户端共享状态**：主题、用户偏好、跨组件业务状态
+- **服务端状态**：接口请求结果、缓存、重新获取、失效策略
+
+很多项目的问题并不是“没有状态管理库”，而是把服务端状态和客户端状态混在一起。  
+像 TanStack Query、SWR 这类工具更适合处理服务端状态；本章讨论的库主要针对**客户端共享状态**。
+
 - **[Redux](https://redux.js.org/) ([Redux Toolkit](https://redux-toolkit.js.org/))**：广泛使用的状态管理库，遵循单向数据流和集中式存储。Redux Toolkit 简化了 Redux 逻辑。
 - [**Zustand**](https://zustand-demo.pmnd.rs/)：极简的状态管理库，专注于简单性和性能，使用单一存储。
-- [**Recoil**](https://recoiljs.org/)：Facebook 的状态管理库，使用“原子”（状态单元）和“选择器”（派生状态）来实现响应式模型。
 - [**Jotai**](https://jotai.org/)：原子（自下而上）状态管理库，其中状态由单个原子组成，根据原子依赖性优化渲染。
-- [**Pinia**](https://pinia.vuejs.org/)：Vue 3 新推荐的状态管理库，比 Vuex 更简单、更灵活，具有出色的 TypeScript 支持和更少的样板代码。
-- [**Vuex**](https://vuex.vuejs.org/)：Vue.js 的传统状态管理解决方案，遵循状态、突变、动作和 getter 的结构化方法。
+- [**Pinia**](https://pinia.vuejs.org/)：Vue 官方生态当前的主流选择之一。相较 Vuex 更直观、类型友好、样板更少，适合作为 Vue 3 新项目的默认起点。
+- [**Vuex**](https://vuex.vuejs.org/)：Vue.js 的传统状态管理方案。今天更应将其视为**存量项目知识**，而不是 Vue 新项目的默认推荐。
 
-状态管理库的激增，表明“状态管理”是复杂 SPA 中持续存在的挑战。趋势是转向更简单、样板代码更少的解决方案（Zustand、Jotai、Pinia）以及那些具有更好 TypeScript 集成的解决方案，这直接影响了开发者体验和可维护性。 “原子”（Jotai、Recoil）和“单一存储”（Redux、Zustand）模型之间的区别为状态组合提供了不同的心智模型。
+如果你在旧文章、旧项目里看到 [**Recoil**](https://recoiljs.org/)，需要特别注意：它在官方 GitHub 仓库层面已经进入归档状态，不应再作为 React 新项目的优先选择。
+
+状态管理库的演进趋势很明确：更少样板代码、更好的 TypeScript 支持、更清晰的心智模型。  
+因此，新项目通常优先在 **Redux Toolkit / Zustand / Jotai / Pinia** 之间做选择，而不是再回到 Recoil、Vuex 这样的历史方案上。
 
 ## **表格：主要状态管理库比较**
 
-| 库名称                                             | 框架兼容性                  | 设计哲学（示例）       | 学习曲线 | 样板代码 | [TypeScript](https://www.typescriptlang.org/) 支持 | 性能/包大小 | 理想用例（示例）                                                                                |
-| :------------------------------------------------- | :-------------------------- | :--------------------- | :------- | :------- | :------------------------------------------------- | :---------- | :---------------------------------------------------------------------------------------------- |
-| [**Redux Toolkit**](https://redux-toolkit.js.org/) | [React](https://react.dev/) | 集中式存储，可预测状态 | 较陡峭   | 较多     | 良好                                               | 较大        | 大型复杂应用，需要可预测状态流                                                                  |
-| [**Zustand**](https://zustand-demo.pmnd.rs/)       | [React](https://react.dev/) | 极简，单一存储         | 较低     | 极少     | 良好                                               | 较小        | 中小型应用，注重简单和性能                                                                      |
-| [**Recoil**](https://recoiljs.org/)                | [React](https://react.dev/) | 原子，派生状态         | 中等     | 中等     | 良好                                               | 较小        | 复杂状态依赖，并发特性集成                                                                      |
-| [**Jotai**](https://jotai.org/)                    | [React](https://react.dev/) | 原子，自下而上         | 较平缓   | 极少     | 良好                                               | 极小        | 细粒度状态控制，代码分割，Suspense                                                              |
-| [**Pinia**](https://pinia.vuejs.org/)              | [Vue](https://vuejs.org/)   | 模块化，无 Mutations   | 较低     | 极少     | 优秀                                               | 较小        | 新的 [Vue](https://vuejs.org/) 3 项目，注重简单和 [TypeScript](https://www.typescriptlang.org/) |
-| [**Vuex**](https://vuex.vuejs.org/)                | [Vue](https://vuejs.org/)   | 集中式存储，严格结构   | 中等     | 较多     | 较弱                                               | 较大        | 遗留 [Vue](https://vuejs.org/) 2 项目，需要严格架构的大型应用                                   |
+| 库名称                                             | 框架兼容性                  | 设计哲学（示例）       | 学习曲线 | 样板代码 | [TypeScript](https://www.typescriptlang.org/) 支持 | 2026 年推荐度        | 理想用例（示例）                                                                               |
+| :------------------------------------------------- | :-------------------------- | :--------------------- | :------- | :------- | :------------------------------------------------- | :-------------------- | :--------------------------------------------------------------------------------------------- |
+| [**Redux Toolkit**](https://redux-toolkit.js.org/) | [React](https://react.dev/) | 集中式存储，可预测状态 | 中等偏高 | 中等     | 良好                                               | 高                    | 大型复杂应用，需要强约束、可预测状态流                                                         |
+| [**Zustand**](https://zustand-demo.pmnd.rs/)       | [React](https://react.dev/) | 极简，单一存储         | 较低     | 极少     | 良好                                               | 很高                  | 中小型应用，重视简单、灵活和性能                                                               |
+| [**Jotai**](https://jotai.org/)                    | [React](https://react.dev/) | 原子，自下而上         | 较平缓   | 极少     | 良好                                               | 高                    | 细粒度状态控制、组合性强的 React 项目                                                          |
+| [**Pinia**](https://pinia.vuejs.org/)              | [Vue](https://vuejs.org/)   | 模块化，无 Mutations   | 较低     | 极少     | 优秀                                               | 很高                  | Vue 3 新项目，注重简单性和类型支持                                                            |
+| [**Vuex**](https://vuex.vuejs.org/)                | [Vue](https://vuejs.org/)   | 集中式存储，严格结构   | 中等     | 较多     | 较弱                                               | 仅存量项目推荐        | 遗留 Vue 2/早期 Vue 3 项目，需要维护既有代码                                                  |
+| [**Recoil（已归档）**](https://recoiljs.org/)      | [React](https://react.dev/) | 原子，派生状态         | 中等     | 中等     | 良好                                               | 不建议新项目继续采用  | 仅在维护历史项目时需要理解                                                                    |
 
-这个表格帮助学习者驾驭复杂的状态管理领域。它突出了不同库如何满足不同的项目复杂度和开发者偏好，以及选择如何影响性能、可维护性和学习曲线。
+一个很实用的默认建议是：
+
+- React 新项目：先想清楚是否真的需要全局状态；需要时优先看 Zustand 或 Redux Toolkit，细粒度组合场景再看 Jotai
+- Vue 新项目：默认先看 Pinia
+- 看到 Recoil / Vuex：优先理解为“接手旧项目时要会”，而不是“新项目默认该选”
 
