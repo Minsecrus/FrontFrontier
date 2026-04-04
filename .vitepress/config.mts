@@ -139,6 +139,7 @@ export default defineConfig({
           text: '框架原理教学',
           items: [
             { text: '简介', link: '/principles/' },
+            { text: 'Mini Vue：从响应式到模板编译', link: '/principles/mini-vue' },
           ]
         }
       ],
