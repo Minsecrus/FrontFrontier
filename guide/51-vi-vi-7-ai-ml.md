@@ -16,9 +16,9 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 
 将 AI/ML 直接集成到前端的趋势 是由对实时交互性、降低服务器成本和增强隐私（数据保留在设备上）的需求驱动的。这有效地带来了更丰富、更个性化的用户体验。LLM/RAG 集成到前端应用程序中标志着动态内容生成和智能辅助的新前沿。
 
-## **VI.7.0 2026 年的新变化：浏览器开始内建 AI 能力**
+## **VI.7.0 浏览器开始内建 AI 能力**
 
-除了 TensorFlow.js、MediaPipe、ONNX Runtime Web 这类“你自己带模型进浏览器”的路线之外，2026 年另一个值得关注的变化是：**浏览器本身开始提供内建 AI API**。  
+除了 TensorFlow.js、MediaPipe、ONNX Runtime Web 这类“你自己带模型进浏览器”的路线之外，另一个值得关注的变化是：**浏览器本身开始提供内建 AI API**。  
 这意味着有些文本处理和轻量生成任务，不再一定要由开发者自己托管模型或完全依赖远端 API。
 
 以 Chrome 当前推进的 Built-in AI 能力为例，浏览器开始围绕本地模型提供一组更高层的任务 API。其中一部分已经可以让开发者试验，另一部分仍处于预览或逐步开放阶段，例如：
@@ -77,23 +77,27 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 
 ## **VI.7.2 应用示例与框架**
 
-前端 AI/ML 的实际应用日益增多，得益于 MediaPipe 和 TensorFlow.js 等强大框架的出现。
+前端 AI/ML 的实际应用日益增多，形成了以 MediaPipe、ONNX Runtime 和 Transformers.js 为首的三足鼎立格局。
 
-- **MediaPipe Solutions**：这是一套库和工具，使用户能够快速在其应用程序中应用人工智能和机器学习技术。这些解决方案可以立即集成到应用程序中，根据需要进行定制，并跨多个开发平台使用。MediaPipe Solutions 包括：
-  - **MediaPipe Tasks**：用于部署解决方案的跨平台 API 和库。
-  - **MediaPipe Models**：预训练的、可直接用于每个解决方案的模型。
-  - **MediaPipe Model Maker**：允许用户使用自己的数据定制解决方案模型。
-  - **MediaPipe Studio**：用于在浏览器中可视化、评估和基准测试解决方案。
-
-其中，**手势识别器 (Gesture Recognizer)** 任务允许实时识别手势，并提供识别结果以及检测到的手部地标。这使得应用程序能够根据用户特定手势调用相应的功能。该任务在图像数据上使用机器学习模型，接受静态数据或连续流。它输出图像坐标中的手部地标、世界坐标中的手部地标、惯用手（左/右手）以及多只手的手势类别。手势识别器使用包含手部地标模型和手势分类模型的模型包，并且可以通过 Model Maker 进行定制，以识别更多手势。MediaPipe 还提供其他视觉任务，如对象检测、图像分类、图像分割、面部检测和姿态地标检测。例如，[ModiFace](https://www.modiface.com/) 利用 TensorFlow.js 的 [FaceMesh](https://google.github.io/mediapipe/solutions/face_mesh.html) 模型识别关键面部特征，并结合 WebGL 着色器，使用户能够数字试妆，同时保护隐私。
-
+- **MediaPipe (Google)**：**端侧感知与实时交互的工业级标准。**
+  MediaPipe 已从底层的图形流水线演进为以 **Tasks API** 为核心的高级推理框架，专注于在移动端和浏览器中实现极低延迟的感知任务。
+  - **核心任务 (MediaPipe Tasks)**：提供高度封装的 API，开发者只需几行代码即可实现：
+    - **视觉任务**：实时手势识别（Gesture Recognizer）、高精度面部网格（Face Landmarker）、人体姿态追踪（Pose Landmarker）及物体检测。这些任务通过高度优化的算子，能在浏览器中达到 60FPS 甚至更高的运行速度。
+    - **生成式 AI (新)**：通过 **LLM Inference API**，MediaPipe 现在支持在浏览器中利用 **WebGPU** 加速运行大语言模型（如 Gemma、Llama 3、Phi-2），实现了纯客户端的隐私对话。
+  - **定制化能力**：**Model Maker** 允许开发者利用迁移学习，在几分钟内用少量数据定制专属的手势或分类模型；**Studio** 则提供了可视化环境，方便在部署前进行性能评估。
+  - **实际应用**：[ModiFace](https://www.modiface.com/) 利用其 FaceMesh 技术实现毫秒级的 AR 试妆；谷歌视频会议（Google Meet）利用其实现实时的背景虚化和光照调整。
+- [**ONNX Runtime Web**](https://onnxruntime.ai/docs/tutorials/web/)：微软开源的高性能机器学习跨平台推理引擎的 Web 版本，专门用于在浏览器中运行遵循开放神经网络交换 (ONNX) 标准的模型。
+  - **主要特点与实际应用**：ONNX 的核心优势在于“跨生态兼容性”。开发者可以将 PyTorch、TensorFlow、Scikit-learn 等绝大多数主流后端框架训练的模型导出为 ONNX 格式，直接在前端部署。ONNX Runtime Web 对底层硬件加速 API（Wasm、WebGL、WebGPU、WebNN）的适配极为成熟。**实际应用示例**包括：微软的 Microsoft 365 (Office) Web 版广泛使用它来实现客户端的文本预测和图像处理；网页版的复杂图像处理工具（如基于 U-2-Net 的一键抠图背景移除、图像超分辨率重建）；甚至结合 WebGPU 运行轻量化的 Stable Diffusion 推理环节或大语言模型（LLM）的量化版本。
+- [**Transformers.js**](https://huggingface.co/docs/transformers.js/index)：由 Hugging Face 生态支持的 JavaScript 库，旨在将最先进的（State-of-the-Art）机器学习模型直接带入浏览器，且无需搭建任何服务器。
+  - **主要特点与实际应用**：它的 API 设计高度模仿了 Python 中著名的 `transformers` 库，使得习惯了 Python AI 开发的工程师能够“零学习成本”平滑迁移到前端。其底层主要依托于 ONNX Runtime Web 进行计算。它支持自然语言处理（文本生成、翻译、问答）、计算机视觉（深度估计、图像分割）、音频（语音转文本、文字转语音）以及多模态任务。**实际应用示例**包括：纯浏览器端运行的 Whisper 语音识别引擎（实现隐私优先的本地录音转写）、本地化的代码补全浏览器插件、前端构建的纯本地 RAG（检索增强生成）应用、以及基于离线特征向量（Embeddings）提取的客户端语义搜索应用。
 - [**TensorFlow.js**](https://www.tensorflow.org/js)：用于在浏览器和 Node.js 中进行机器学习的 JavaScript 库。
   - **实际应用示例**：TensorFlow.js 在现实世界中有广泛应用，包括在线聊天中的实时毒性过滤器（InSpace 通过在客户端执行所有推理来检测有毒评论，无需将文本发送到第三方服务器进行分类）。其他示例包括 YouTube 的口型同步评分（使用 FaceMesh 模型估计唇部关键点）、表情符号寻宝、网络摄像头控制器、可教学机器（无需编码即可识别图像和播放声音）、动作镜像、实时钢琴演奏（由神经网络生成）、Node.js 中的棒球投球类型预测，以及训练可视化等。
+  - **局限性**：TF 格式不兼容普遍应用的 PyTorch 格式，而且 TF.js 的 WebGL 后端虽然稳定，但在处理大模型时，性能远不如 ONNX Runtime 的 WebGPU 后端优化得好。目前它更多作为**成熟的生产环境回退方案**或用于 **Node.js 服务端推理**。
 
 这些框架通过提供**预训练模型与定制化**的双重策略，极大地推动了前端 AI/ML 的发展。MediaPipe 等框架提供了开箱即用的预训练模型，方便开发者快速集成 AI 功能。同时，它们也提供了 Model Maker 等工具，允许开发者使用自己的数据集对模型进行定制，以满足特定的应用需求。这种方法兼顾了快速原型开发和专业化应用的需求，使得 AI/ML 在前端的普及成为可能。
 
-值得注意的是，到 2026 年，前端 ML 的底层执行后端已经不再只有 **WebGL**。  
-**WebAssembly** 仍是最稳妥的通用回退路径，**WebGPU** 正在成为高性能浏览器推理的重要后端，**WebNN** 则代表更贴近系统级 AI/ML 加速能力的方向。  
+值得注意的是，前端 ML 的底层执行后端已经不再只有 **WebGL**。  
+**WebAssembly** 仍是最稳妥的通用回退路径，**WebGPU** 正在成为高性能浏览器推理的重要后端，**WebNN** 则代表更贴近系统级 AI/ML 加速能力的方向。（框架层（如 ONNX Runtime Web, Transformers.js）正在屏蔽这些底层差异：开发者只需编写一次代码，框架会自动根据当前环境，按 **WebNN > WebGPU > WebGL > Wasm** 的优先级自动选择最优后端。）  
 这说明前端 AI/ML 的关键问题，已经不只是“浏览器里能不能跑模型”，而是“在不同设备和浏览器条件下，应该选择哪种执行路径，才能在性能、功耗、兼容性和体验之间取得平衡”。
 
 ## **VI.7.3 混合架构：设备端 AI 与云端 AI 协同**
@@ -113,5 +117,4 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 - 离线能力
 - 全球不同设备条件下的可用性
 
-因此，到 2026 年讨论前端 AI/ML 时，核心问题已经不只是“模型放在哪里跑”，而是**如何设计一个面向真实用户设备差异的混合 AI 系统**。
-
+因此，讨论前端 AI/ML 时，核心问题已经不只是“模型放在哪里跑”，而是**如何设计一个面向真实用户设备差异的混合 AI 系统**。

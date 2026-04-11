@@ -7,17 +7,11 @@ hero:
   tagline: "Minsecrus 的前端知识分享站"
   actions:
     - theme: brand
-      text: 现代前端开发指南
-      link: /guide/
+      text: 写在前面
+      link: /introduction/
     - theme: alt
-      text: 小巧思
-      link: /tips/
-    - theme: alt
-      text: 框架原理教学
-      link: /principles/
-    - theme: alt
-      text: 进阶专题
-      link: /advanced/
+      text: 杂谈
+      link: /mess/
 
 features:
   - title: 📖 现代前端开发指南
