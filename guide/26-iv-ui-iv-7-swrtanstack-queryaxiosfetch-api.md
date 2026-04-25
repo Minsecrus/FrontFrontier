@@ -11,7 +11,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.7 数据获取和缓存库
 - **[SWR](https://swr.vercel.app/) (stale-while-revalidate)**：用于 React 的数据获取库，使用 stale-while-revalidate 策略简化数据获取、缓存和同步。
 - **[TanStack Query](https://tanstack.com/query/latest) (以前称为 React Query)**：用于 React 的综合数据获取和缓存库，提供用于获取、缓存、同步和更新服务器状态的工具。提供对缓存的细粒度控制。
 
-通用 HTTP 客户端（Fetch API、Axios）和专用数据获取/缓存库（SWR、TanStack Query）之间的区别至关重要。后者通过提供智能缓存、重新验证和同步机制来解决“服务器状态”问题，这直接提高了感知性能并减少了常见数据驱动 UI 的样板代码。
+通用 HTTP 客户端（Fetch API、Axios）和专用数据获取/缓存库（SWR、TanStack Query）之间的区别至关重要。后者通过提供智能缓存、重新验证和同步机制来解决”服务器状态”问题，直接提升了感知性能，并减少了数据驱动 UI 中常见的样板代码。
 
 ## **表格：数据获取和缓存库比较**
 

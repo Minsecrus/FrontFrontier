@@ -17,9 +17,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.9 国际化 (internationa
   - **FormatJS ([react-intl](https://formatjs.io/docs/react-intl/))**：一套 i18n 库，高度关注标准（[ICU](https://icu.unicode.org/) 消息语法、[Unicode CLDR](https://cldr.unicode.org/)）。
   - [**Intlayer**](https://intlayer.org/zh) 是现代国际化（i18n）和内容管理解决方案（CMS），支持 React、Next.js、Vue 等框架。AI 驱动，提供类型安全的多语言内容管理、SSR 支持、字典格式（JSON/Markdown）和无缝集成。简化 i18n 复杂性（如嵌套翻译、复数），适用于多语言应用。比传统库更灵活、可扩展。
 
-国际化不仅仅是简单的文本翻译；它还包括格式和布局中的文化细微差别。利用
-
-[Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) 等原生浏览器 API 进行日期/数字/货币格式化是最佳实践，与自定义实现相比，可以提高性能并减少包大小。这直接影响了全球市场覆盖和用户满意度。
+国际化不仅仅是简单的文本翻译，还涉及格式与布局中的文化差异。利用 [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) 等原生浏览器 API 进行日期/数字/货币格式化是最佳实践，相比自定义实现能提高性能并减小包体积，这直接影响全球市场覆盖与用户满意度。
 
 ## **表格：流行国际化库比较**
 

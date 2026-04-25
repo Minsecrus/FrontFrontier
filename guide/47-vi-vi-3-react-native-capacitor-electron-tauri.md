@@ -11,7 +11,7 @@ title: "VI. 新兴技术和专业领域 / VI.3 跨平台开发：移动端 (Reac
 - [**React Native**](https://reactnative.dev/)：使用 React 语法为 Android 和 iOS 创建原生移动应用程序，与原生 API 和组件交互。提供原生 UI 和性能。
 - [**Capacitor**](https://capacitorjs.com/)：Ionic 开发的跨平台工具，使用原生 WebView 将 Web 应用程序（HTML、CSS、JS）转换为 iOS/Android 应用程序。兼容各种 JS 框架并支持 PWA。
 
-React Native 和 Capacitor 之间的选择 反映了一个根本性的权衡：原生 UI/性能 (React Native) 与 Web 开发者熟悉度/PWA 支持 (Capacitor)。这个决定有效地影响了开发速度、性能上限以及重用现有 Web 代码库的能力。
+React Native 和 Capacitor 之间的选择，反映了一个根本性的权衡：原生 UI/性能 (React Native) 与 Web 开发者熟悉度/PWA 支持 (Capacitor)。这一决策直接影响开发速度、性能上限以及复用现有 Web 代码库的能力。
 
 ### **表格：移动应用程序开发框架比较**
 
@@ -24,10 +24,10 @@ React Native 和 Capacitor 之间的选择 反映了一个根本性的权衡：�
 
 ## **VI.3.2 桌面应用程序开发**
 
-- [**Electron**](https://www.electronjs.org/)：捆绑 Chromium 实例和 Node.js 以使用 Web 技术构建跨平台桌面应用程序。导致应用程序体积较大和资源消耗较高。
-- [**Tauri**](https://tauri.app/)：使用操作系统的原生 WebView 和 Rust 进行后端逻辑，与 Electron 相比，应用程序体积更小、内存使用更低、启动时间更快，并注重安全性。
+- [**Electron**](https://www.electronjs.org/)：捆绑 Chromium 实例和 Node.js，以 Web 技术构建跨平台桌面应用。其代价是应用体积较大、资源消耗较高。
+- [**Tauri**](https://tauri.app/)：使用操作系统的原生 WebView 渲染界面，以 Rust 编写后端逻辑。相比 Electron，应用体积更小、内存占用更低、启动更快，且安全性更为突出。
 
-Tauri 基于 Rust 的后端，使用原生 WebView，优先考虑资源效率和安全性，它的出现挑战了 Electron 的主导地位。这一趋势反映了对使用 Web 技术构建更具性能和轻量级桌面应用程序的需求，直接影响了用户体验和系统资源使用。
+Tauri 采用 Rust 驱动的后端与原生的 WebView，在资源效率和安全性上形成了显著优势，对 Electron 的主导地位发起了有力挑战。这一趋势反映了业界对更轻量、更高性能的桌面应用框架的需求，直接影响用户体验和系统资源消耗。
 
 ### **表格：桌面应用程序开发框架比较**
 

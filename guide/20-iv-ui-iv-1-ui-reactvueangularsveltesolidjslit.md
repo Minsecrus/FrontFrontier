@@ -13,7 +13,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 - [**SolidJS**](https://www.solidjs.com/)：轻量级响应式库，优先考虑细粒度响应性，仅更新需要更改的 UI 部分，通常比 React 的虚拟 DOM 性能更好。
 - [**Lit**](https://lit.dev/)：用于构建快速、轻量级 [Web Components](https://www.webcomponents.org/) 的简单库，利用 Web 标准实现响应性、声明式模板和作用域样式。
 
-UI 框架的多样性 反映了对响应性（虚拟 DOM vs. 细粒度 vs. 编译时）和开发者体验（灵活性 vs. 预设风格的结构）的不同理念。Svelte 和 SolidJS 的兴起 表明了最小化运行时开销和包大小的趋势，直接解决了 Core Web Vitals 和用户性能感知问题。
+UI 框架的多样性，反映了在响应性（虚拟 DOM vs. 细粒度 vs. 编译时）和开发者体验（灵活性 vs. 预设风格的结构）上的不同理念。Svelte 和 SolidJS 的兴起，表明了最小化运行时开销和包体积的趋势，直接关系到 Core Web Vitals 和用户对性能的感知。
 
 ## **表格：流行 UI 框架比较 (React, Vue, Svelte, SolidJS)**
 

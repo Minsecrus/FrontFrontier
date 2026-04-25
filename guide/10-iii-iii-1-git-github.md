@@ -16,7 +16,7 @@ title: "III. 基本开发环境和工具 / III.1 版本控制系统：Git 和 Gi
 
 [**GitHub**](https://github.com/) 是流行的 Git 仓库托管平台，提供问题和拉取请求等协作工具。它促进代码审查并集成 CI/CD 工作流。
 
-版本控制 (Git) 和协作平台 (GitHub) 不仅仅是工具，更是现代软件开发的基础实践。它们的采用直接实现了敏捷方法、分布式团队和健壮的代码质量，通过提供清晰的审计跟踪和结构化协作。“Fork and Pull”模式（即复刻仓库再提交拉取请求）是大型开源项目协作的基础。
+版本控制 (Git) 和协作平台 (GitHub) 不仅仅是工具，更是现代软件开发的基础实践。它们的采用直接支撑了敏捷方法、分布式团队和代码质量，通过提供清晰的审计跟踪和结构化协作来实现。”Fork and Pull”模式（即复刻仓库再提交拉取请求）是大型开源项目协作的基础。
 
 除此之外，还有 **[Gitlab](https://about.gitlab.com/), [Gitee](https://gitee.com/), [Bitbucket](https://bitbucket.org/product/)** 等仓库托管平台。
 
