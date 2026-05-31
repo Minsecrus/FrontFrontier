@@ -14,6 +14,14 @@ _出发前的指南针，迷茫时的导航仪。_
     - **查漏补缺**：打开 [Frontend Roadmap](https://roadmap.sh/Frontend)，对照本文，勾选你已经掌握的技能点。
     - **深度追踪**：它不仅有前端（Frontend），还有**全栈（Full Stack）**、**React**、**Vue** 甚至 **AI Engineer** 的专属路线图。
     - **团队标准**：许多大厂和开源团队直接使用它来制定内部晋升和招聘标准。
+- **[The Odin Project](https://www.theodinproject.com/)**
+  - **地位**：完全免费的项目驱动型全栈学习路线，尤其适合从“看懂教程”过渡到“独立完成项目”。
+  - **特点**：强调本地开发环境、Git、命令行、文档阅读和真实项目练习，从基础页面一路推进到复杂 Web 应用。
+  - **如何使用**：把它当作实践主线；每学完本文一个主题，就回到 Odin 的项目里用代码验证，而不是只停留在概念层面。
+- **[Full Stack Open](https://fullstackopen.com/)**
+  - **地位**：赫尔辛基大学出品的现代 Web 应用公开课，偏工业级全栈进阶。
+  - **特点**：覆盖 React、Node.js、TypeScript、GraphQL、测试、CI/CD、Docker 等现代工程主题，并通过提交练习推动学习闭环。
+  - **如何使用**：适合已经掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
 
 ## **1. 权威百科与标准 (The Holy Grail)**
 
@@ -30,7 +38,8 @@ _这些是所有前端开发的基石，遇到问题时的第一检索源。_
 - **[Can I Use](https://caniuse.com/)**
   - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`, Container Queries）。
 - **[Patterns.dev](https://www.patterns.dev/)**
-  - **用途**：免费且深度的电子书，讲解现代 Web 应用的渲染模式（SSR/RSC/Islands）和性能优化模式。
+  - **用途**：免费且深度的电子书，讲解现代 Web 应用的设计模式、渲染模式和性能优化模式。
+  - **重点**：适合系统理解 CSR、SSR、SSG、Streaming、Islands Architecture、Resumability 等现代渲染架构，以及这些模式背后的性能取舍。
 
 ## **2. 核心技术栈深度学习 (Deep Dives)**
 
@@ -39,7 +48,8 @@ _不仅是官方文档，更是进阶教程。_
 - **JavaScript**
   - **[JavaScript.info](https://javascript.info/)**
     - **地位**：被公认为现代最好的 JavaScript 在线教程。
-    - **特点**：内容极新，不仅讲语法，还深入讲解 DOM、事件循环和网络请求。它是从“会写代码”到“理解原理”的最佳桥梁。
+    - **特点**：内容极新，不仅讲语法，还深入讲解 DOM、事件循环、网络请求、原型链、执行上下文和垃圾回收等核心机制。它是从“会写代码”到“理解原理”的最佳桥梁。
+    - **中文站**：[现代 JavaScript 教程](https://zh.javascript.info/) 翻译完整，适合作为系统精读材料。
   - **[You Don't Know JS Yet (GitHub)](https://github.com/getify/You-Dont-Know-JS)**
     - **地位**：Kyle Simpson 的神作。
     - **用途**：如果你想彻底搞懂 **作用域 (Scope)**、**闭包 (Closures)**、**原型链 (Prototypes)** 和 **异步 (Async)**，这是必读的。这是区分初级和高级工程师的分水岭。
@@ -57,6 +67,8 @@ _不仅是官方文档，更是进阶教程。_
 - **Vue 生态**
   - **[Vue.js 官方文档](https://vuejs.org/)**: 以清晰著称，包含 Options API 和 Composition API 的对比。
   - **[Anthony Fu (antfu)](https://antfu.me/)**: Vue/Vite 核心团队成员的博客，了解开源工具链的前沿思想。
+- **中文知识库**
+  - **[千古前端图文教程](https://github.com/qianguyihao/Web)**: 国内开源社区口碑极好的前端知识库，覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题。它的优势是颗粒度细、解释通俗，适合作为查漏补缺和随手检索的“技术字典”。
 
 ## **3. 样式与 UI 设计 (CSS & Design)**
 
