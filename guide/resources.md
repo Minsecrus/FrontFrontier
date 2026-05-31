@@ -18,10 +18,6 @@ _出发前的指南针，迷茫时的导航仪。_
   - **地位**：完全免费的项目驱动型全栈学习路线，尤其适合从“看懂教程”过渡到“独立完成项目”。
   - **特点**：强调本地开发环境、Git、命令行、文档阅读和真实项目练习，从基础页面一路推进到复杂 Web 应用。
   - **如何使用**：把它当作实践主线；每学完本文一个主题，就回到 Odin 的项目里用代码验证，而不是只停留在概念层面。
-- **[Full Stack Open](https://fullstackopen.com/)**
-  - **地位**：赫尔辛基大学出品的现代 Web 应用公开课，偏工业级全栈进阶。
-  - **特点**：覆盖 React、Node.js、TypeScript、GraphQL、测试、CI/CD、Docker 等现代工程主题，并通过提交练习推动学习闭环。
-  - **如何使用**：适合已经掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
 
 ## **1. 权威百科与标准 (The Holy Grail)**
 
@@ -67,6 +63,11 @@ _不仅是官方文档，更是进阶教程。_
 - **Vue 生态**
   - **[Vue.js 官方文档](https://vuejs.org/)**: 以清晰著称，包含 Options API 和 Composition API 的对比。
   - **[Anthony Fu (antfu)](https://antfu.me/)**: Vue/Vite 核心团队成员的博客，了解开源工具链的前沿思想。
+- **现代全栈课程**
+  - **[Full Stack Open](https://fullstackopen.com/)**
+    - **地位**：赫尔辛基大学出品的现代 Web 应用公开课，偏工业级全栈进阶。
+    - **特点**：覆盖 React、Node.js、TypeScript、GraphQL、测试、CI/CD、Docker 等现代工程主题，并通过提交练习推动学习闭环。
+    - **如何使用**：适合已经掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
 - **中文知识库**
   - **[千古前端图文教程](https://github.com/qianguyihao/Web)**: 国内开源社区口碑极好的前端知识库，覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题。它的优势是颗粒度细、解释通俗，适合作为查漏补缺和随手检索的“技术字典”。
 

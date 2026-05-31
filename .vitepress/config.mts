@@ -217,6 +217,10 @@ export default defineConfig({
           items: [
             { text: "总览", link: "/mess/" },
             {
+              text: "网页的三段式",
+              link: "/mess/web_three_part.md",
+            },
+            {
               text: "第三类前端",
               link: "/mess/frontend_as_expression.md",
             },
