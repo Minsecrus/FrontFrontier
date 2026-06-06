@@ -27,35 +27,44 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
   - **CSRF 风险**：由于认证依赖于浏览器自动发送的 Cookie，这种模式天然地面临跨站请求伪造 (CSRF) 的攻击风险，需要额外的安全措施来防范。
   - **跨域不友好**：在前后端分离和跨域请求成为常态的今天，基于 Cookie 的会话管理会遇到诸多跨域策略的限制。
 
-### **2. 基于 Token 的认证 (Token-Based Authentication)**
+### **2. 基于 Token 的认证与 BFF 模式**
 
-为了解决会话认证的扩展性问题，无状态的 (Stateless) Token 认证模式应运而生，并成为现代单页应用 (SPA) 和 API 交互的主流。**JSON Web Token ([JWT](https://jwt.io/))** 是其中最流行的实现标准。
+为了解决会话认证的扩展性问题，无状态的 (Stateless) Token 认证模式应运而生。**JSON Web Token ([JWT](https://jwt.io/))** 是其中最常见的实现标准之一。但在现代 Web 应用中，认证方案并不是简单地“把 JWT 放进浏览器”。更稳妥的做法通常会在短期 access token、refresh token rotation、HttpOnly Cookie、SameSite、CSRF 防护和 BFF (Backend for Frontend) 之间组合取舍。
 
-- **工作流程**：用户登录后，服务器不再创建会话，而是生成一个加密的、包含用户身份信息的 Token (令牌) 并返回给客户端。前端通常将这个 Token 存储在本地（如 Local Storage 或 HttpOnly Cookie）。在后续请求中，前端需要手动将 Token 放入 HTTP 请求的 `Authorization` 头中（通常使用 `Bearer` 模式）发送给服务器。服务器收到请求后，只需验证 Token 的签名是否有效，即可确认用户身份，无需查询任何存储。
+- **工作流程**：用户登录后，认证服务器签发短期 access token，并通过安全通道完成刷新和撤销策略。纯 API 客户端常用 `Authorization: Bearer` 发送 token；浏览器应用则越来越常见地通过 BFF 让服务端持有敏感 token，浏览器只保存合理配置了 HttpOnly、Secure、SameSite 的会话 Cookie。
 - **优势**：
   - **无状态与高扩展性**：服务器无需存储任何会话信息，每次请求都是自包含的。这使得后端服务可以轻松地进行水平扩展，极大地提升了系统的可伸缩性。
-  - **跨域友好与解耦**：Token 可以轻松地在不同域之间传递，非常适合前后端分离的架构和微服务体系。
-  - **防范 CSRF**：由于 Token 通常不存储在 Cookie 中（或者即使存储在 Cookie 中，也需要前端 JS 主动读取并放入请求头），这使得利用浏览器自动行为的 CSRF 攻击变得困难。
+  - **跨域友好与解耦**：Token 可以服务于 API、移动端、第三方集成等多种客户端，但浏览器端要额外考虑 XSS、CSRF 和刷新流程。
+  - **权限表达清晰**：短期 access token 适合表达作用域、受众、过期时间等访问边界。
 - **劣势**：
   - **Token 无法主动撤销**：一旦签发，Token 在其过期之前都是有效的。如果 Token 泄露，服务器无法像撤销 Session 一样使其立即失效。通常需要引入黑名单机制或缩短 Token 有效期来缓解这一问题。
-  - **安全性**：将 Token 存储在 Local Storage 中存在被 XSS 攻击窃取的风险。
+  - **安全性**：将长期或高权限 Token 存储在 Local Storage 中存在被 XSS 攻击窃取的风险，通常不应作为默认方案。
 
 ### **3. OAuth & OpenID Connect (OIDC)**
 
-当你的应用需要允许用户通过第三方服务（如 Google, GitHub, Facebook）登录时，[OAuth](https://oauth.net/) 协议就派上了用场。
+当你的应用需要允许用户通过第三方服务（如 Google, GitHub, Facebook）登录时，[OAuth](https://oauth.net/) 协议就派上了用场。浏览器应用应优先理解 **Authorization Code + PKCE** 流程，而不是旧式隐式流程。
 
 - **OAuth (开放授权)**：它是一个**授权**框架，而非认证协议。其核心目的是允许用户授权一个应用（客户端）去访问其在另一个服务（资源服务器）上的受保护资源，而无需将自己的用户名和密码直接暴露给该应用。例如，你授权一个图片打印网站访问你 Google Photos 里的照片。
 - **OpenID Connect ([OIDC](https://openid.net/connect/))**：它是在 OAuth 2.0 之上构建的简单的**身份认证层**。当 OAuth 只关心“授权”时，OIDC 增加了“认证”的功能。它允许客户端不仅能获得访问资源的授权，还能验证用户的身份并获取基本的用户信息。我们日常使用的“通过 Google/GitHub 登录”功能，实际上就是 OIDC 的应用。
 
-### **4. Single Sign-On (SSO)**
+### **4. Passkeys、WebAuthn 与 FedCM**
+
+现代认证正在从“记住密码并处理 Token”转向更强的浏览器和平台原语：
+
+- **Passkeys / WebAuthn**：用设备安全能力和公钥密码学替代传统密码，降低钓鱼、撞库和弱密码风险。前端需要理解注册、登录、账户恢复和跨设备同步体验，而真正的凭据验证仍在服务端完成。
+- **FedCM (Federated Credential Management)**：为联合登录提供更受浏览器约束的身份交互模型，减少对第三方 Cookie 和隐式跨站追踪的依赖。
+- **BFF 与会话边界**：对安全要求较高的业务来说，把敏感 token 留在服务端，由前端通过同源会话访问 BFF，通常比让浏览器 JavaScript 管理长期 token 更容易控制风险。
+
+### **5. Single Sign-On (SSO)**
 SSO 是一种允许用户使用一套凭据（如用户名和密码）一次性登录到多个相互独立的软件系统中的特性。在企业环境中尤为常见，用户登录一次内部系统后，就可以无缝访问所有其他关联的应用，而无需重复输入密码。SSO 通常基于 [SAML](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security) 或 OIDC 等标准协议实现。
 
 ## **V.6.2 前端开发者的职责与考量**
 
-- **安全地存储凭据**：理解不同存储方式的优劣。将 Token 存储在 `HttpOnly` 类型的 Cookie 中可以有效防止 XSS 攻击，但可能面临 CSRF 风险（需配合 SameSite 等策略）；存储在 Local Storage 中则反之。
-- **管理认证状态**：在前端应用中（如使用 React Context 或 Redux/Pinia），需要全局管理用户的登录状态、用户信息和 Token。
+- **安全地存储凭据**：理解不同存储方式的优劣。将会话标识放在合理配置了 `HttpOnly`、`Secure`、`SameSite` 的 Cookie 中可以有效降低 XSS 窃取风险，但需要配合 CSRF 防护；将长期 token 放进 Local Storage 则要承担更高的 XSS 后果。
+- **管理认证状态**：在前端应用中（如使用 React Context 或 Redux/Pinia），需要全局管理用户的登录状态、用户信息和 token 状态。
 - **实现路由保护**：通过路由守卫或高阶组件，实现需要登录才能访问的私有路由，以及在用户未登录时自动重定向到登录页面。
-- **处理 Token 刷新**：为了安全，访问 Token (Access Token) 的有效期通常较短。前端需要实现一套无感知的 Token 刷新机制（使用刷新 Token - Refresh Token），在访问 Token 过期时自动获取新的 Token，避免中断用户操作。
+- **处理 Token 刷新**：为了安全，access token 的有效期通常较短。前端需要实现一套无感知的 token 刷新机制，在 access token 过期时自动获取新的 token，避免中断用户操作。
+- **支持无密码体验**：在适合的业务里，前端应提供 passkey 注册、登录、设备切换和恢复流程，并明确向用户解释安全边界。
 - **优雅地处理认证错误**：当 API 返回认证失败（如 401 Unauthorized）时，前端应能优雅地处理，例如清除本地凭据、重定向到登录页并提示用户。
 
 理解这些认证与授权模式，不仅仅是后端工程师的职责。前端开发者作为用户体验的直接塑造者和数据交互的实现者，必须深刻理解其在整个系统架构中的运作方式和安全影响，才能构建出既安全可靠又用户友好的现代 Web 应用。

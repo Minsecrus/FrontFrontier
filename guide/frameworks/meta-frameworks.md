@@ -18,9 +18,9 @@ React 生态尤其需要纠正一个旧心智模型：今天已经不是简单�
 [**React Router**](https://reactrouter.com/start/framework) 已明确提供 **Framework Mode**，把路由模块、`loader`、`action`、SSR、预渲染和部署适配器整合为完整应用框架。  
 [**Remix**](https://remix.run/) 仍然很重要，但更适合被理解为这条“路由模块 / Web 标准 / 服务端优先”路线的重要来源和演进语境，而不是与 React Router 完全割裂的另一套世界。
 
-- [**Next.js**](https://nextjs.org/)：React 全栈框架，强项是 App Router、RSC、流式渲染、缓存策略和成熟的商业生态。适合内容站、全栈产品和需要较强平台能力的团队。
+- [**Next.js**](https://nextjs.org/)：React 全栈框架，强项是 App Router、RSC、流式渲染、缓存策略、Cache Components、Turbopack 默认集成和成熟的商业生态。适合内容站、全栈产品和需要较强平台能力的团队。
 - [**React Router Framework Mode**](https://reactrouter.com/start/framework)：React Router 已经不只是“客户端路由库”，而是可直接构建全栈应用的官方路线之一。适合希望保持 Web 标准思维、路由模块清晰、渐进增强友好的项目。
-- [**TanStack Start**](https://tanstack.com/start/latest)：基于 TanStack Router 的全栈框架，强调类型安全路由、Server Functions、Streaming 和前后端协同。适合重视类型系统和工程一致性的团队。
+- [**TanStack Start**](https://tanstack.com/start/latest)：基于 TanStack Router 的全栈框架，强调类型安全路由、Server Functions、Streaming 和前后端协同。它很适合重视类型系统和工程一致性的团队，但仍要关注其成熟度和生态变化。
 - [**Nuxt**](https://nuxt.com/)：Vue 生态事实上的全栈主力框架。文件路由、自动导入、模块生态和 SSR/SSG/混合渲染体验都很成熟。
 - [**SvelteKit**](https://svelte.dev/docs/kit)：Svelte 官方应用框架，默认 SSR，支持 SSG/SPA/混合渲染；`load`、`actions` 与 adapter 组合让“同一套代码，多平台部署”非常自然。
 - [**Astro**](https://astro.build/)：内容优先和低 JavaScript 负载场景下非常强。Islands 架构适合文档站、博客、营销站和媒体站。
@@ -33,7 +33,7 @@ React 生态尤其需要纠正一个旧心智模型：今天已经不是简单�
 
 | 框架名称                                                                   | 底层 UI 框架                  | 主要渲染策略         | 数据/服务端模型                     | 典型定位                                | 理想用例(示例)                 |
 | :------------------------------------------------------------------------- | :---------------------------- | :------------------- | :---------------------------------- | :-------------------------------------- | :----------------------------- |
-| [**Next.js**](https://nextjs.org/)                                         | [React](https://react.dev/)   | SSR, SSG, ISR, 混合  | RSC、Route Handlers、缓存与流式输出 | React 全栈主流路线之一                  | 全栈应用、内容站、商业化产品   |
+| [**Next.js**](https://nextjs.org/)                                         | [React](https://react.dev/)   | SSR, SSG, ISR, 混合  | RSC、Route Handlers、Cache Components、Turbopack | React 全栈主流路线之一                  | 全栈应用、内容站、商业化产品   |
 | [**React Router Framework Mode**](https://reactrouter.com/start/framework) | [React](https://react.dev/)   | SSR、预渲染、混合    | Route modules、`loader`、`action`   | Web 标准与渐进增强取向的 React 主线之一 | 数据驱动应用、路由复杂项目     |
 | [**TanStack Start**](https://tanstack.com/start/latest)                    | [React](https://react.dev/)   | SSR, Streaming, 混合 | Server Functions、类型安全路由      | 强类型工程化路线                        | 中大型全栈应用、复杂协作型项目 |
 | [**Nuxt**](https://nuxt.com/)                                              | [Vue](https://vuejs.org/)     | SSR, SSG, SPA, 混合  | 约定式文件路由、自动导入、Nitro     | Vue 生态默认主力                        | Vue 全栈应用、企业项目         |

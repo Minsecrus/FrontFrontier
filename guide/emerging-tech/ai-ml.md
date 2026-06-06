@@ -7,7 +7,7 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 **目的**：直接在浏览器中运行机器学习模型，实现实时推理、增强用户体验和保护隐私的 AI。
 
 - [**TensorFlow.js**](https://www.tensorflow.org/js)：用于机器学习的 JavaScript 库，允许直接在浏览器或 Node.js 中开发和使用 ML 模型。支持运行现有模型、重新训练和开发新模型。
-- [**ONNX Runtime Web**](https://onnxruntime.ai/docs/get-started/with-javascript/web.html)：用于在浏览器和 Node.js 中运行 ONNX（开放神经网络交换）模型，支持 WebAssembly、WebGPU 等不同执行后端。
+- [**ONNX Runtime Web**](https://onnxruntime.ai/docs/get-started/with-javascript/web.html)：用于在浏览器和 Node.js 中运行 ONNX（开放神经网络交换）模型，支持 WebAssembly、WebGPU 等不同执行后端，并在部分环境中探索 WebNN。
 - [**MediaPipe**](https://developers.google.com/mediapipe)：一套库和工具，用于在包括 Web 在内的平台上应用 AI/ML 技术（例如，对象检测、手势识别等计算机视觉任务）。
 - **LLM/RAG 集成**：
   - [**LangChain**](https://www.langchain.com/)：提供用于管理和优化应用程序中大型语言模型 (LLM) 的模块。
@@ -21,7 +21,7 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 除了 TensorFlow.js、MediaPipe、ONNX Runtime Web 这类“你自己带模型进浏览器”的路线之外，另一个值得关注的变化是：**浏览器本身开始提供内建 AI API**。  
 这意味着有些文本处理和轻量生成任务，不再一定要由开发者自己托管模型或完全依赖远端 API。
 
-以 Chrome 当前推进的 Built-in AI 能力为例，浏览器开始围绕本地模型提供一组更高层的任务 API。其中一部分已经可以让开发者试验，另一部分仍处于预览或逐步开放阶段，例如：
+以 Chrome 当前推进的 Built-in AI 能力为例，浏览器开始围绕本地模型提供一组更高层的任务 API。这些能力的可用性、权限模型和跨浏览器支持仍在变化，适合按“渐进增强”方式接入，例如：
 
 - **Prompt API**：执行通用提示式任务
 - **Summarizer API**：生成摘要
@@ -53,7 +53,7 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
   - **去中心化**：无需云基础设施投资即可大规模部署 ML 系统，符合去中心化 Web 架构的理念，减少了单点故障和控制。
   - **渐进式增强**：通过将计算密集型 ML 任务卸载到设备硬件上，任何 Web 应用程序都可以通过 ML 功能得到丰富，现有 Web 内容也可以逐步增强。
 - **缺点**：
-  - **硬件加速受限**：浏览器中的 ML 推理目前使用 WebGL 图形 API，但缺乏对 ML 专用硬件加速器的访问，这限制了体验范围并导致在现代硬件上效率低下。
+  - **硬件加速差异明显**：浏览器中的 ML 推理可以使用 Wasm、WebGL、WebGPU，部分环境也在探索 WebNN。不同设备和浏览器的后端能力差异很大，不能假设所有用户都能获得同样性能。
   - **性能不均**：不同地区互联网连接速度的差异以及生产级模型的大尺寸，意味着设备端推理的用户体验可能不均等。
   - **功耗与环境成本**：Web ML 应用计算和能源密集，广泛采用会加剧环境问题。将大型 ML 模型分发到每个客户端会增加环境成本。
   - **模型大小与复杂性**：大型或复杂模型可能难以在浏览器中高效运行，可能导致浏览器响应缓慢甚至无响应。
@@ -87,7 +87,7 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
   - **定制化能力**：**Model Maker** 允许开发者利用迁移学习，在几分钟内用少量数据定制专属的手势或分类模型；**Studio** 则提供了可视化环境，方便在部署前进行性能评估。
   - **实际应用**：[ModiFace](https://www.modiface.com/) 利用其 FaceMesh 技术实现毫秒级的 AR 试妆；谷歌视频会议（Google Meet）利用其实现实时的背景虚化和光照调整。
 - [**ONNX Runtime Web**](https://onnxruntime.ai/docs/tutorials/web/)：微软开源的高性能机器学习跨平台推理引擎的 Web 版本，专门用于在浏览器中运行遵循开放神经网络交换 (ONNX) 标准的模型。
-  - **主要特点与实际应用**：ONNX 的核心优势在于“跨生态兼容性”。开发者可以将 PyTorch、TensorFlow、Scikit-learn 等绝大多数主流后端框架训练的模型导出为 ONNX 格式，直接在前端部署。ONNX Runtime Web 对底层硬件加速 API（Wasm、WebGL、WebGPU、WebNN）的适配极为成熟。**实际应用示例**包括：微软的 Microsoft 365 (Office) Web 版广泛使用它来实现客户端的文本预测和图像处理；网页版的复杂图像处理工具（如基于 U-2-Net 的一键抠图背景移除、图像超分辨率重建）；甚至结合 WebGPU 运行轻量化的 Stable Diffusion 推理环节或大语言模型（LLM）的量化版本。
+  - **主要特点与实际应用**：ONNX 的核心优势在于“跨生态兼容性”。开发者可以将 PyTorch、TensorFlow、Scikit-learn 等主流后端框架训练的模型导出为 ONNX 格式，再通过 Wasm、WebGL、WebGPU 等后端在前端部署。WebNN 是值得关注的方向，但仍应按快速演进的能力对待。**实际应用示例**包括：网页版的复杂图像处理工具、图像超分辨率重建、浏览器端语音识别、轻量化大模型推理和客户端语义搜索。
 - [**Transformers.js**](https://huggingface.co/docs/transformers.js/index)：由 Hugging Face 生态支持的 JavaScript 库，旨在将最先进的（State-of-the-Art）机器学习模型直接带入浏览器，且无需搭建任何服务器。
   - **主要特点与实际应用**：它的 API 设计高度模仿了 Python 中著名的 `transformers` 库，使得习惯了 Python AI 开发的工程师能够“零学习成本”平滑迁移到前端。其底层主要依托于 ONNX Runtime Web 进行计算。它支持自然语言处理（文本生成、翻译、问答）、计算机视觉（深度估计、图像分割）、音频（语音转文本、文字转语音）以及多模态任务。**实际应用示例**包括：纯浏览器端运行的 Whisper 语音识别引擎（实现隐私优先的本地录音转写）、本地化的代码补全浏览器插件、前端构建的纯本地 RAG（检索增强生成）应用、以及基于离线特征向量（Embeddings）提取的客户端语义搜索应用。
 - [**TensorFlow.js**](https://www.tensorflow.org/js)：用于在浏览器和 Node.js 中进行机器学习的 JavaScript 库。
@@ -97,7 +97,7 @@ title: "VI. 新兴技术和专业领域 / VI.7 前端 AI/ML 集成：浏览器�
 这些框架通过提供**预训练模型与定制化**的双重策略，极大地推动了前端 AI/ML 的发展。MediaPipe 等框架提供了开箱即用的预训练模型，方便开发者快速集成 AI 功能。同时，它们也提供了 Model Maker 等工具，允许开发者使用自己的数据集对模型进行定制，以满足特定的应用需求。这种方法兼顾了快速原型开发和专业化应用的需求，使得 AI/ML 在前端的普及成为可能。
 
 值得注意的是，前端 ML 的底层执行后端已经不再只有 **WebGL**。  
-**WebAssembly** 仍是最稳妥的通用回退路径，**WebGPU** 正在成为高性能浏览器推理的重要后端，**WebNN** 则代表更贴近系统级 AI/ML 加速能力的方向。（框架层（如 ONNX Runtime Web, Transformers.js）正在屏蔽这些底层差异：开发者只需编写一次代码，框架会自动根据当前环境，按 **WebNN > WebGPU > WebGL > Wasm** 的优先级自动选择最优后端。）  
+**WebAssembly** 仍是最稳妥的通用回退路径，**WebGPU** 正在成为高性能浏览器推理的重要后端，**WebNN** 则代表更贴近系统级 AI/ML 加速能力的方向。框架层（如 ONNX Runtime Web、Transformers.js）会尽量屏蔽这些底层差异，但开发者仍需要显式检测能力、设置回退路径，并避免把尚未广泛稳定的后端写成默认假设。  
 这说明前端 AI/ML 的关键问题，已经不只是“浏览器里能不能跑模型”，而是“在不同设备和浏览器条件下，应该选择哪种执行路径，才能在性能、功耗、兼容性和体验之间取得平衡”。
 
 ## **VI.7.3 混合架构：设备端 AI 与云端 AI 协同**

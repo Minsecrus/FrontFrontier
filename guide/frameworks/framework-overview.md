@@ -6,10 +6,10 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 
 **目的**：提供构建交互式用户界面的结构化方法，封装了底层的 DOM 操作并简化状态管理。
 
-- [**React**](https://react.dev/)：用于构建用户界面的 JavaScript 库，以其组件化架构、声明式方法和庞大生态系统而闻名。在大型应用程序中很受欢迎。使用 [JSX](https://react.dev/learn/writing-markup-with-jsx)。
+- [**React**](https://react.dev/)：用于构建用户界面的 JavaScript 库，以其组件化架构、声明式方法和庞大生态系统而闻名。新的主线能力围绕 Actions、Server Components、Compiler、Activity、Effect Events 和性能分析工具继续扩展。使用 [JSX](https://react.dev/learn/writing-markup-with-jsx)。
 - [**Vue**](https://vuejs.org/)：渐进式框架，通常被视为 React 的灵活性和 Svelte 的简洁性之间的中间地带。因其易于集成、易于理解的语法和全面的文档而备受青睐。
-- [**Angular**](https://angular.dev/)：由 Google 开发的综合框架，以其结构化方法、性能、安全性和可伸缩性而闻名。通常用于企业级应用程序。
-- [**Svelte**](https://svelte.dev/)：“后起之秀”，将工作从浏览器转移到构建过程，在构建时将组件编译成高效的 JavaScript，从而实现更快的运行时性能和更小的包大小。不使用虚拟 DOM。
+- [**Angular**](https://angular.dev/)：由 Google 开发的综合框架，以其结构化方法、性能、安全性和可伸缩性而闻名。Signals、zoneless、独立组件和更清晰的版本兼容策略，让它在企业级应用中继续保持强约束工程路线。
+- [**Svelte**](https://svelte.dev/)：“后起之秀”，将工作从浏览器转移到构建过程，在构建时将组件编译成高效的 JavaScript。Runes 让响应性模型更加显式，也让 SvelteKit 的全栈应用体验更统一。
 - [**SolidJS**](https://www.solidjs.com/)：轻量级响应式库，优先考虑细粒度响应性，仅更新需要更改的 UI 部分，通常比 React 的虚拟 DOM 性能更好。
 - [**Lit**](https://lit.dev/)：用于构建快速、轻量级 [Web Components](https://www.webcomponents.org/) 的简单库，利用 Web 标准实现响应性、声明式模板和作用域样式。
 

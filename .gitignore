@@ -29,3 +29,6 @@ Thumbs.db
 .env.local
 .env.*.local
 .claude/settings.local.json
+
+# Local research scratch
+frontend_guide_2026_update_research/
