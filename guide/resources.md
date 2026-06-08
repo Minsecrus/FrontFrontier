@@ -131,7 +131,7 @@ _眼过千遍不如手过一遍。_
 - **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**
   - 云端 IDE，快速验证想法，无需本地配环境。
 
-### **7. 资讯与社区 (Stay Updated)**
+## **7. 资讯与社区 (Stay Updated)**
 
 _保持技术敏感度。_
 
