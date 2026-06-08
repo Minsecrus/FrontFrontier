@@ -84,6 +84,15 @@ _从“写出 CSS”到“写出好用的 UI”。_
 - **无头组件 (Headless UI)**
   - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**: 提供逻辑和无障碍能力，不带样式的组件库底座。
   - **[shadcn/ui](https://ui.shadcn.com/)**: 复制粘贴式的组件库，当下最火的 UI 构建模式。
+- **UI/UX 设计基础**
+  - **[Refactoring UI](https://www.refactoringui.com/)**: 面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
+  - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**: UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
+  - **[Laws of UX](https://lawsofux.com/)**: 用简洁方式整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
+- **设计系统参考**
+  - **[Material Design](https://m3.material.io/)**: Google 的设计系统，适合学习组件规范、动效、颜色体系和跨平台体验一致性。
+  - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**: Apple 平台设计指南，适合理解系统级交互、平台习惯和高质量原生体验。
+  - **[IBM Carbon Design System](https://carbondesignsystem.com/)**: 面向企业级产品的成熟设计系统，适合学习数据密集界面、组件状态和设计 token 的组织方式。
+  - **[Atlassian Design System](https://atlassian.design/)**: 面向协作和工作流产品的设计系统，适合参考复杂产品中的导航、表单、反馈和内容设计。
 
 ## **4. 工程化与工具链 (Engineering)**
 

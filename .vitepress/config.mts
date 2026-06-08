@@ -217,6 +217,10 @@ export default defineConfig({
           items: [
             { text: "总览", link: "/mess/" },
             {
+              text: "字体后缀里的 Sans、Serif、Mono",
+              link: "/mess/font_suffixes.md",
+            },
+            {
               text: "网页的三段式",
               link: "/mess/web_three_part.md",
             },
