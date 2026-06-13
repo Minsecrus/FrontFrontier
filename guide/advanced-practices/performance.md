@@ -16,7 +16,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.1 性能优化：提供�
   - **代码分割和惰性加载**：仅在需要时加载组件/代码，以减少初始加载时间和包大小。
   - **缓存**：浏览器缓存、CDN（内容分发网络）使用，以减少延迟和改善加载时间。
   - **字体传输优化**：使用 link rel="preload" 和 font-display: optional 来防止布局偏移。
-  - **压缩和连接文件**：删除不必要的字符并组合文件以减少 HTTP 请求。
+  - **压缩和合并文件**：删除不必要的字符并组合文件以减少 HTTP 请求。
   - **避免布局偏移**：为图像/视频添加 width/height 属性，为动态内容保留空间，使用 CSS 进行布局。
 - **工具**：[Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)（用于审计性能、可访问性、SEO 等的开源自动化工具）和 [PageSpeed Insights](https://pagespeed.web.dev/)。
 

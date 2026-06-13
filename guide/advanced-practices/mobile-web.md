@@ -16,7 +16,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.13 移动端 Web 开发�
 
   进阶使用包括基于功能而非设备（避免针对特定设备编写媒体查询，而是根据内容的需求和布局的断点来定义查询）、min-width 优先（移动优先，从最小屏幕开始设计，逐步为更大屏幕添加样式，简化 CSS 结构）、复杂媒体查询（结合 and、or 操作符，以及 prefers-color-scheme（暗模式）、hover（触控/鼠标）、orientation（横屏/竖屏）等特性进行更精细的控制）。
 
-- 容器查询 (Container Queries) todo
+- 容器查询 (Container Queries)，根据容器而非视口的尺寸来应用样式，使组件能根据其父容器的大小自适应调整，实现更细粒度的响应式设计。
 
 - Flexbox 和 Grid 布局，Flexbox 擅长一维布局，如导航菜单、卡片列表等，通过 flex-grow、flex-shrink 和 flex-basis 等属性，灵活控制项目在容器中的伸缩和空间分配；CSS Grid 擅长二维布局，用于创建复杂的页面网格结构，可以轻松定义行和列，实现更强大的布局控制。视口单位 (Viewport Units)，vw (viewport width), vh (viewport height), vmin, vmax 可以用于创建与视口大小直接相关的字体大小、元素尺寸等，实现更细致的响应式效果。
 - 自定义属性 (CSS Variables)，结合媒体查询，可以动态改变 CSS 变量的值，从而实现更灵活的主题和响应式调整。

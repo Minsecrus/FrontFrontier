@@ -19,7 +19,7 @@ WebAssembly 是一种为 Web 浏览器设计的、全新的、可移植的、体
    WASM 最深远的影响之一，是它打破了 Web 开发长期由 JavaScript 主导的语言壁垒。它充当了一座桥梁，使得数十年来在 C++、Rust 等语言中积累的海量高性能库和应用（例如图像处理库、物理引擎、压缩算法）可以被轻松移植到 Web 平台。开发者无需用 JavaScript 重写这些复杂的轮子，可以直接复用整个原生生态系统的强大能力。
 
 3. **可预测的性能与安全性 (Predictable Performance & Security)**
-   与 JavaScript 不同，WASM 的执行性能更加稳定和可预测，因为它避免了 JIT 编译中可能出现的“优化 - 去优化”循环。同时，WASM 运行在一个与 JavaScript 环境隔离的、内存安全的**沙箱 (Sandbox)** 中。它默认无法直接访问 DOM 或任意 Web API，所有与外部世界的交互都必须通过明确的 JavaScript API 作为中介。这种设计确保了 WASM 模块的执行是高度安全的，不会对用户系统造成威胁。
+   与 JavaScript 不同，WASM 的执行性能更加稳定和可预测，因为它避免了 JIT 编译中可能出现的“优化-去优化”循环。同时，WASM 运行在一个与 JavaScript 环境隔离的、内存安全的**沙箱 (Sandbox)** 中。它默认无法直接访问 DOM 或任意 Web API，所有与外部世界的交互都必须通过明确的 JavaScript API 作为中介。这种设计确保了 WASM 模块的执行是高度安全的，不会对用户系统造成威胁。
 
 ## **VI.2.2 应用场景与未来展望**
 

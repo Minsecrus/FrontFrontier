@@ -1,8 +1,8 @@
 ---
-title: "V. 高级主题和专业开发最佳实践 / V.15部署与 DevOps for Frontend"
+title: "V. 高级主题和专业开发最佳实践 / V.15 部署与 DevOps for Frontend"
 ---
 
-# V.15部署与 DevOps for Frontend
+# V.15 部署与 DevOps for Frontend
 
 现代前端开发已不再局限于编写代码，部署和运维（DevOps）的实践已成为前端工程师不可或缺的技能。通过自动化部署流程、容器化和优化静态资源策略，可以确保前端应用快速、可靠、高效地交付到用户手中。
 

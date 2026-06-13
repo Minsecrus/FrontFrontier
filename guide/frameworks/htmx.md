@@ -4,7 +4,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.5 htmx：超媒体驱动�
 
 # IV.5 htmx：超媒体驱动开发
 
-**htmx** 允许用 HTML 实现丰富的交互式 Web 界面，同时最大限度减少 JavaScript 的使用。它通过响应服务器请求来部分更新 HTML，利用 HTTP 方法以及 hx-get、hx-target、hx-trigger、hx-swap 等属性完成工作。
+**htmx** 允许用 HTML 实现丰富的交互式 Web 界面，同时最大限度减少 JavaScript 的使用。它通过向服务器发送请求并用返回的 HTML 片段来部分更新页面，利用 HTTP 方法以及 hx-get、hx-target、hx-trigger、hx-swap 等属性完成工作。
 
 **htmx 的哲学**是优先考虑稳定性，避免引入新的核心功能，专注于通用超媒体控制并支持辅助工具。
 

@@ -27,5 +27,5 @@ title: "VI. 新兴技术和专业领域 / VI.8 边缘计算：Cloudflare Workers
 | [**Vercel Edge Runtime / Functions**](https://vercel.com/docs/functions/runtimes/edge) | Vercel     | Edge Runtime                  | 与前端框架紧密结合的流式输出和边缘逻辑   | 与 Next.js 等框架集成自然，部署体验顺滑             | 独立 Edge Runtime 已被官方标注为 deprecated |
 | [**Deno Deploy**](https://deno.com/deploy)                               | Deno       | Deno Runtime                  | TypeScript 优先的全球部署与托管          | Deno 原生体验、TS 友好、Web 标准取向明确            | 要区分当前平台与已经退出历史舞台的 Classic   |
 
-这个表格帮助学习者理解边缘计算的格局，这是高性能全球应用程序的关键部署策略。它突出了不同提供商如何利用分布式基础设施来最小化延迟和增强可伸缩性。
+这个表格帮助学习者理解边缘计算的格局，这是高性能全球应用程序的关键部署策略。它突出了不同提供商如何利用分布式基础设施来最小化延迟和增强可扩展性。
 

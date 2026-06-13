@@ -124,9 +124,9 @@ _提升开发效率与代码质量的利器。_
 
 _眼过千遍不如手过一遍。_
 
-- **[Frontend Mentor](https://www.Frontendmentor.io/)**
+- **[Frontend Mentor](https://www.frontendmentor.io/)**
   - 提供设计图（Figma）和资源，让你从零实现页面，非常接近真实工作流。
-- **[GreatFrontend](https://www.greatFrontend.com/)**
+- **[GreatFrontend](https://www.greatfrontend.com/)**
   - 专门针对前端大厂面试的准备平台（系统设计、算法、UI 挑战）。
 - **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**
   - 云端 IDE，快速验证想法，无需本地配环境。

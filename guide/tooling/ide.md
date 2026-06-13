@@ -11,7 +11,7 @@ title: "III. 基本开发环境和工具 / III.7 集成开发环境 (IDE) 和编
 - **[VS Code](https://code.visualstudio.com/) (Visual Studio Code)**：微软开发的免费开源文本编辑器，以其可定制、多语言、快速和轻量级而闻名。它为扩展而生。
 - [**WebStorm**](https://www.jetbrains.com/webstorm/)：JetBrains 开发的付费综合 IDE，专注于 JavaScript 和 TypeScript 开发。提供丰富的内置功能，用于运行、调试、单元测试、重构和 Git 操作。
 
-VS Code 和 WebStorm 之间的选择通常反映了可扩展性与开箱即用功能之间的权衡。VS Code 的开源性质和庞大的扩展生态系统 促进了社区驱动的创新，而 WebStorm 的集成方法 提供了更精选、可能更稳定的体验。这种选择影响了开发者生产力和初始设置时间。
+VS Code 和 WebStorm 之间的选择通常反映了可扩展性与开箱即用功能之间的权衡。VS Code 的开源性质和庞大的扩展生态系统促进了社区驱动的创新，而 WebStorm 的集成方法提供了更精选、可能更稳定的体验。这种选择影响了开发者生产力和初始设置时间。
 
 ### **表格：流行前端 IDE/编辑器比较**
 
@@ -24,5 +24,5 @@ VS Code 和 WebStorm 之间的选择通常反映了可扩展性与开箱即用�
 
 ## **III.7.2 其他传统编辑器和 IDE**
 
-- [**HBuilderX**](https://www.dcloud.io/hbuilderx.html)：DCloud（数字天堂）推出的一款为前端开发者服务的通用 IDE。它针对 Vue 开发进行了特别优化，并在 uniapp 跨平台应用的开发上提供了极高的效率和强大的支持。
+- [**HBuilderX**](https://www.dcloud.io/hbuilderx.html)：DCloud（数字天堂）推出的一款为前端开发者服务的通用 IDE。它针对 Vue 开发进行了特别优化，并在 uni-app 跨平台应用的开发上提供了极高的效率和强大的支持。
 - [**Sublime Text**](https://www.sublimetext.com/)：一款经典的、备受赞誉的代码编辑器，以其极致的轻量、闪电般的启动速度和强大的性能而著称。它拥有一个成熟的插件生态系统（Package Control），并通过“无干扰模式”和多光标编辑等功能，为追求高效编码的开发者提供了优雅的体验。

@@ -11,13 +11,13 @@ title: "VI. 新兴技术和专业领域 / VI.4 Web 图形，数据可视化和�
 
 - [**Canvas 2D Context**](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)：一个 JavaScript API，用于在 `<canvas>` HTML 元素上绘制 2D 图形（形状、文本、图像）。提供像素级控制。
 - **SVG (Scalable Vector Graphics)**：一种基于 XML 的语言，用于描述矢量图像。可伸缩、可访问，并且易于使用 CSS/JS 进行样式化/脚本化。
-- **D3.js (Data-Driven Documents)**：一个 JavaScript 库，通过将数据绑定到 DOM 来创建动态、交互式数据可视化。提供低级控制以实现独特设计。
+- **D3.js (Data-Driven Documents)**：一个 JavaScript 库，通过将数据绑定到 DOM 来创建动态、交互式数据可视化。提供底层控制以实现独特设计。
 - **图表库 ([Chart.js](https://www.chartjs.org/), [ECharts](https://echarts.apache.org/), [AntV](https://antv.vision/))**：用于创建常见图表类型的高级库，通常基于 Canvas 或 SVG。
 - **基于节点的编辑器 ([React Flow](https://reactflow.dev/), [Vue Flow](https://vueflow.dev/), [Svelte Flow](https://svelteflow.dev/))**：用于构建交互式基于节点的编辑器和图表的库。
 
 ### **3D 图形**
 
-- [**WebGL**](https://www.khronos.org/webgl/)：一个 JavaScript API，用于在浏览器中渲染交互式 2D 和 3D 图形，利用 GPU。复杂，低级。
+- [**WebGL**](https://www.khronos.org/webgl/)：一个 JavaScript API，用于在浏览器中渲染交互式 2D 和 3D 图形，利用 GPU。复杂，底层。
 - [**WebGPU**](https://www.w3.org/TR/webgpu/)：WebGL 的继任者，提供与现代 GPU 更好的兼容性、GPGPU 计算支持、更快的操作和对更高级 GPU 功能的访问。
 - [**Three.js**](https://threejs.org/)：基于 JavaScript 的 WebGL 引擎，简化了 3D 场景创建，适用于通用 Web 动画。
 - [**Babylon.js**](https://www.babylonjs.com/)：强大的 WebGL 框架，专注于基于 Web 的游戏开发，具有碰撞检测等高级功能。

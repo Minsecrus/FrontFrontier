@@ -30,14 +30,14 @@ title: "VI. 新兴技术和专业领域 / VI.1 渐进式 Web 应用程序 (PWA)�
 
 这个模型为 PWA 的性能优化提供了明确的量化目标。
 
-- **Performance Metrics (性能指标):** 指的是像 LCP (最大内容绘制)、FID (首次输入延迟)、CLS (累积布局偏移) 这类核心 Web 指标 (Core Web Vitals)。它们是用来量化 RAIL 模型目标的具体工具，帮助你判断你的应用到底快不快。
-- **使用 Lighthouse / DevTools：** 这两者是实践工具。Lighthouse 是自动化的网站质量评估工具，它可以直接为你分析 [PWA](https://web.dev/progressive-web-apps/) 的各项指标并给出优化建议。Chrome DevTools (开发者工具) 提供了更深入的性能分析面板，让你能像侦探一样找到性能瓶颈。
+- **Performance Metrics（性能指标）：** 指的是像 LCP（最大内容绘制）、FID（首次输入延迟）、CLS（累积布局偏移）这类核心 Web 指标（Core Web Vitals）。它们是用来量化 RAIL 模型目标的具体工具，帮助你评估应用的实际性能表现。
+- **使用 Lighthouse / DevTools：** 这两者是实践工具。Lighthouse 是自动化的网站质量评估工具，它可以直接为你分析 [PWA](https://web.dev/progressive-web-apps/) 的各项指标并给出优化建议。Chrome DevTools（开发者工具）提供了更深入的性能分析面板，让你能深入定位性能瓶颈。
 
 ## **VI.1.2 浏览器 API**
 
-这一部分提供了让网站突破传统页面限制、拥有更强功能和更像原生应用体验的技术基础。它们是实现 PWA 可靠 (Reliable) 和 有吸引力 (Engaging) 特征的关键。
+这一部分提供了让网站突破传统页面限制、拥有更强功能和更像原生应用体验的技术基础。它们是实现 PWA 可靠性（Reliable）和吸引力（Engaging）的关键特征。
 
-- **Service Workers:** 这是 PWA 技术栈的基石和灵魂。它是在浏览器背景中独立于页面的脚本，能够拦截和处理网络请求。它赋予了 PWA 两大超能力：
+- **Service Workers:** 这是 PWA 技术栈的基石和灵魂。它是在浏览器后台中独立于页面的脚本，能够拦截和处理网络请求。它赋予了 PWA 两大核心能力：
 - **离线访问**：即使设备没有网络连接，Service Worker 也能从缓存中返回内容，让应用可以离线使用。这是实现“可靠”的关键。
 - **消息推送**：即使用户关闭了浏览器页面，Service Worker 也能接收从服务器发来的推送通知，从而可以重新吸引用户回来。
 - **Storage (存储):** 包括 Web Storage (LocalStorage, SessionStorage) 和 IndexedDB 等。为了实现离线体验，你必须能把应用数据（如文章内容、用户信息）存储在用户的设备上。Service Worker 经常与这些存储 API 配合使用。

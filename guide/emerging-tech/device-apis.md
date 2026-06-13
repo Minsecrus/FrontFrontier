@@ -31,7 +31,7 @@ Web API 向直接设备集成的扩展，标志着 Web 与原生应用之间界�
 
 - **用例**：该 API 使得 Web 应用程序能够与附近的低功耗蓝牙（BLE）设备（蓝牙 4.0 或更高版本）进行交互，例如心率监测器、智能灯泡、零售亭和玩具等。
 - **功能**：开发者可以请求蓝牙设备（`navigator.bluetooth.requestDevice`），连接到其通用属性配置文件（GATT）服务器，读取和写入蓝牙特性，接收 GATT 通知，以及断开连接。它还支持读取和写入蓝牙描述符，这些描述符提供有关特性值的附加信息。
-- **安全与隐私**：Web Bluetooth API 要求在安全上下文（HTTPS）中运行。`requestDevice()` 方法必须由用户手势（例如点击）触发，以作为安全预防措施。该 API 旨在通过限制对某些难以安全实现的蓝牙功能的访问，最大限度地减少恶意网站暴露的设备攻击面。
+- **安全与隐私**：Web Bluetooth API 要求在安全上下文（HTTPS）中运行。`requestDevice()` 方法必须由用户手势（例如点击）触发，以作为安全预防措施。该 API 旨在通过限制对某些难以安全实现的蓝牙功能的访问，最大限度地减少恶意网站可利用的设备攻击面。
 - **浏览器支持与成熟度**：Web Bluetooth API 的可用性有限，被认为是实验性技术，并非所有主流浏览器都支持。例如，Chrome、Edge 和 Opera（桌面和 Android）提供部分支持，而 Firefox 和 Safari 则不支持。尽管如此，该标准正在成熟，工具集和 API 正在涌现，Chrome 53 已通过 Origin Trial（源试用）支持蓝牙功能。
 - **Electron 环境**：在 Electron 中，开发者可以通过 webContents 上的 `select-bluetooth-device` 事件来选择蓝牙设备，并通过 ses.`setDevicePermissionHandler` 提供默认权限，从而实现更灵活的设备管理。
 
@@ -39,7 +39,7 @@ Web API 向直接设备集成的扩展，标志着 Web 与原生应用之间界�
 
 WebUSB API 提供了一种将非标准通用串行总线（USB）兼容设备服务暴露给 Web 的方法，使 USB 更安全、更易于使用。
 
-- **用例**：该 API 主要用于访问非标准 USB 设备，如科学和工业设备，以及固件刷写（暗示性地提及）。值得注意的是，它不支持常见的设备，如网络摄像头、HID 设备或大容量存储设备。
+- **用例**：该 API 主要用于访问非标准 USB 设备，如科学和工业设备，以及固件刷写（隐含提及）。值得注意的是，它不支持常见的设备，如网络摄像头、HID 设备或大容量存储设备。
 - **安全与隐私**：与 Web Bluetooth 类似，WebUSB API 也仅在安全上下文（HTTPS）中运行。`requestDevice()` 方法同样需要用户手势触发。权限策略（Permissions Policy）机制允许开发者选择性地启用或禁用 WebUSB 等浏览器功能和 API。然而，WebUSB 也带来潜在的安全隐患，例如网站可能利用它建立 ADB 连接并入侵连接的 Android 手机。
 - **浏览器支持与成熟度**：WebUSB API 的可用性有限，同样被视为实验性技术。Chrome、Edge 和 Opera（桌面和 Android）从早期版本开始提供全面支持，但 Firefox 和 Safari 仍不支持。该 API 已在 Chrome 61 中默认启用。
 - **Electron 环境**：在 Electron 中，WebUSB API 提供了 `select-usb-device` 事件，以及 `usb-device-added`、`usb-device-removed` 和 `usb-device-revoked` 事件来处理设备的插拔和撤销。ses.`setDevicePermissionHandler` 可用于设置默认权限，ses.`setUSBProtectedClassesHandler` 则允许使用默认不可用的受保护 USB 类。
