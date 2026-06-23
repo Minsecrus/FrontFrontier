@@ -28,6 +28,21 @@ title: "III. 基本开发环境和工具 / III.8 新兴开发环境与 AI 驱动
 
 因此，本章不再把重点放在具体模型名次上，而是强调：**选模型是工程决策，不是追星行为**。先看任务类型、上下文长度、代码库规模、安全要求、预算，再看具体模型。
 
+### **从 Prompt Engineering 到 Loop Engineering**
+
+AI 辅助开发的重心正在从“写一句好提示词”，扩展到“设计一套可持续工作的工程系统”。因此，社区中常用 **Prompt Engineering → Context Engineering → Harness Engineering → Loop Engineering** 来描述这一层层外扩的能力边界。这个说法不应被理解为严格的历史阶段，也不是后者淘汰前者；更准确地说，它们是逐层叠加的工程关注点。
+
+| 层级 | 关注点 | 在开发工作流中的含义 |
+| :--- | :--- | :--- |
+| **Prompt Engineering** | 怎么说 | 用清晰的角色、目标、约束、输出格式和示例，让模型更容易理解任务。 |
+| **Context Engineering** | 给什么信息 | 管理模型能看到的上下文，包括相关文件、错误日志、设计稿、接口契约、仓库规则和历史决策。[Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 将其概括为在推理过程中维护最合适的信息集合。 |
+| **Harness Engineering** | 让模型在什么系统里工作 | 为 Agent 配置工具、权限、沙箱、测试命令、质量门禁、可观测性和人类审批机制。[Martin Fowler](https://martinfowler.com/articles/harness-engineering.html) 将 coding agent 的 harness 视为包裹在模型外部、帮助约束和反馈其行为的工程结构。 |
+| **Loop Engineering** | 如何持续推进和自我修正 | 设计“计划 → 执行 → 观察 → 修复 → 验收”的循环，让 Agent 能在工具反馈、测试结果、guardrails 和人工确认之间迭代，而不是只生成一次答案。[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/agents/) 这类框架也把 tools、handoffs、guardrails、tracing、human-in-the-loop 等能力作为 Agent 系统的一部分。 |
+
+在真实项目中，这四层往往同时存在。一个简单请求可能只需要 prompt；一个多文件重构则需要准确上下文；一个能运行命令和改代码的 Coding Agent 需要 harness；而接近生产级的自动化开发流程，还必须设计可停止、可审查、可恢复、可追踪的 loop。
+
+这也是为什么“提示词工程”本身正在变窄：它仍然重要，但已经不是 AI 工程化的全部。成熟团队真正关心的是，模型是否能在正确上下文、正确工具、正确边界和正确反馈循环中工作。
+
 大语言模型的革新为 AI 驱动开发工具注入了强大动力，推动编程范式全面转向”人与 AI 的深度协同创作”。在这一新范式下，开发者需要学会精准表达意图、明确工程约束并严格审查输出结果，才能充分发挥其潜力。
 
 ## **III.8.3 AI 原生 IDE：从“辅助”到“协作”的范式转变**
