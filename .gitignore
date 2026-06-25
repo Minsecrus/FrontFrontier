@@ -32,3 +32,6 @@ Thumbs.db
 
 # Local research scratch
 frontend_guide_2026_update_research/
+
+# Generated guide bundle
+modern-frontend-guide.md
