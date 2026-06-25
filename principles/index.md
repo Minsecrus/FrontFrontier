@@ -11,7 +11,7 @@
 - `Object.defineProperty` 风格的响应式
 - `Dep / Watcher` 依赖收集
 - 模板编译与 `v-model`
-- Vue 2 教学模型与 Vue 3 现代实现的区别（现在的 Vue 早已不是如此实现的）
+- Vue 2 教学模型与 Vue 3 现代实现的区别
 
 ## 后续计划
 

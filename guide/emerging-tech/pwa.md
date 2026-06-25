@@ -30,7 +30,7 @@ title: "VI. 新兴技术和专业领域 / VI.1 渐进式 Web 应用程序 (PWA)�
 
 这个模型为 PWA 的性能优化提供了明确的量化目标。
 
-- **Performance Metrics（性能指标）：** 指的是像 LCP（最大内容绘制）、FID（首次输入延迟）、CLS（累积布局偏移）这类核心 Web 指标（Core Web Vitals）。它们是用来量化 RAIL 模型目标的具体工具，帮助你评估应用的实际性能表现。
+- **Performance Metrics（性能指标）：** 当前稳定的 Core Web Vitals 主要是 LCP（最大内容绘制）、INP（Interaction to Next Paint，交互到下一次绘制）和 CLS（累积布局偏移）。LCP 关注加载速度，INP 关注整体交互响应性，CLS 关注视觉稳定性。它们是用来量化用户体验的具体工具，帮助你评估应用的真实加载、响应和视觉稳定性。
 - **使用 Lighthouse / DevTools：** 这两者是实践工具。Lighthouse 是自动化的网站质量评估工具，它可以直接为你分析 [PWA](https://web.dev/progressive-web-apps/) 的各项指标并给出优化建议。Chrome DevTools（开发者工具）提供了更深入的性能分析面板，让你能深入定位性能瓶颈。
 
 ## **VI.1.2 浏览器 API**

@@ -29,7 +29,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
 
 ### **2. 基于 Token 的认证与 BFF 模式**
 
-为了解决会话认证的扩展性问题，无状态的 (Stateless) Token 认证模式应运而生。**JSON Web Token ([JWT](https://jwt.io/))** 是其中最常见的实现标准之一。但在现代 Web 应用中，认证方案并不是简单地“把 JWT 放进浏览器”。更稳妥的做法通常会在短期 access token、refresh token rotation、HttpOnly Cookie、SameSite、CSRF 防护和 BFF (Backend for Frontend) 之间组合取舍。
+为了解决会话认证的扩展性问题，无状态的 (Stateless) Token 认证模式应运而生。**JSON Web Token ([JWT](https://jwt.io/))** 是其中最常见的实现标准之一。在现代 Web 应用中，认证方案通常会在短期 access token、refresh token rotation、HttpOnly Cookie、SameSite、CSRF 防护和 BFF (Backend for Frontend) 之间组合取舍。
 
 - **工作流程**：用户登录后，认证服务器签发短期 access token，并通过安全通道完成刷新和撤销策略。纯 API 客户端常用 `Authorization: Bearer` 发送 token；浏览器应用则越来越常见地通过 BFF 让服务端持有敏感 token，浏览器只保存合理配置了 HttpOnly、Secure、SameSite 的会话 Cookie。
 - **优势**：
@@ -38,11 +38,11 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
   - **权限表达清晰**：短期 access token 适合表达作用域、受众、过期时间等访问边界。
 - **劣势**：
   - **Token 无法主动撤销**：一旦签发，Token 在其过期之前都是有效的。如果 Token 泄露，服务器无法像撤销 Session 一样使其立即失效。通常需要引入黑名单机制或缩短 Token 有效期来缓解这一问题。
-  - **安全性**：将长期或高权限 Token 存储在 Local Storage 中存在被 XSS 攻击窃取的风险，通常不应作为默认方案。
+  - **安全性**：长期或高权限 Token 更适合放在具备服务端控制和浏览器安全属性保护的方案中，例如 HttpOnly Cookie 或 BFF 会话。
 
 ### **3. OAuth & OpenID Connect (OIDC)**
 
-当你的应用需要允许用户通过第三方服务（如 Google, GitHub, Facebook）登录时，[OAuth](https://oauth.net/) 协议就派上了用场。浏览器应用应优先理解 **Authorization Code + PKCE** 流程，而不是旧式隐式流程。
+当你的应用需要允许用户通过第三方服务（如 Google, GitHub, Facebook）登录时，[OAuth](https://oauth.net/) 协议就派上了用场。浏览器应用应优先理解 **Authorization Code + PKCE** 流程。
 
 - **OAuth (开放授权)**：它是一个**授权**框架，而非认证协议。其核心目的是允许用户授权一个应用（客户端）去访问其在另一个服务（资源服务器）上的受保护资源，而无需将自己的用户名和密码直接暴露给该应用。例如，你授权一个图片打印网站访问你 Google Photos 里的照片。
 - **OpenID Connect ([OIDC](https://openid.net/connect/))**：它是在 OAuth 2.0 之上构建的简单的**身份认证层**。当 OAuth 只关心“授权”时，OIDC 增加了“认证”的功能。它允许客户端不仅能获得访问资源的授权，还能验证用户的身份并获取基本的用户信息。我们日常使用的“通过 Google/GitHub 登录”功能，实际上就是 OIDC 的应用。
@@ -63,7 +63,7 @@ SSO 是一种允许用户使用一套凭据（如用户名和密码）一次性�
 - **安全地存储凭据**：理解不同存储方式的优劣。将会话标识放在合理配置了 `HttpOnly`、`Secure`、`SameSite` 的 Cookie 中可以有效降低 XSS 窃取风险，但需要配合 CSRF 防护；将长期 token 放进 Local Storage 则要承担更高的 XSS 后果。
 - **管理认证状态**：在前端应用中（如使用 React Context 或 Redux/Pinia），需要全局管理用户的登录状态、用户信息和 token 状态。
 - **实现路由保护**：通过路由守卫或高阶组件，实现需要登录才能访问的私有路由，以及在用户未登录时自动重定向到登录页面。
-- **处理 Token 刷新**：为了安全，access token 的有效期通常较短。前端需要实现一套无感知的 token 刷新机制，在 access token 过期时自动获取新的 token，避免中断用户操作。
+- **处理 Token 刷新**：为了安全，access token 的有效期通常较短。前端需要实现一套无感知的 token 刷新机制，在 access token 过期时自动获取新的 token，保持用户操作连续。
 - **支持无密码体验**：在适合的业务里，前端应提供 passkey 注册、登录、设备切换和恢复流程，并明确向用户解释安全边界。
 - **优雅地处理认证错误**：当 API 返回认证失败（如 401 Unauthorized）时，前端应能优雅地处理，例如清除本地凭据、重定向到登录页并提示用户。
 

@@ -7,8 +7,8 @@ title: "VI. 新兴技术和专业领域 / VI.8 边缘计算：Cloudflare Workers
 **目的**：在更靠近用户的地方（网络“边缘”）运行无服务器函数，以减少延迟并提高性能。
 
 - [**Cloudflare Workers**](https://workers.cloudflare.com/)：在 Cloudflare 全球网络上运行的无服务器函数，提供低延迟。
-- [**Vercel Edge Runtime / Functions**](https://vercel.com/docs/functions/runtimes/edge)：Vercel 提供的边缘运行时能力，适合低延迟响应、流式输出和贴近前端框架的部署体验。需要注意的是，Vercel 官方已将独立 Edge Runtime 标注为 deprecated，使用时应关注其最新迁移建议，而不要把它当作默认长期选项。
-- [**Deno Deploy**](https://deno.com/deploy)：基于 Deno Runtime 的全球部署平台。学习时要区分当前平台与历史上的 **Deploy Classic**，后者已经成为历史文档/迁移语境，不应再与当前平台混为一谈。
+- [**Vercel Edge Runtime / Functions**](https://vercel.com/docs/functions/runtimes/edge)：Vercel 提供的边缘运行时能力，适合低延迟响应、流式输出和贴近前端框架的部署体验。Vercel 官方已将独立 Edge Runtime 标注为 deprecated，使用时应关注其最新迁移建议。
+- [**Deno Deploy**](https://deno.com/deploy)：基于 Deno Runtime 的全球部署平台。学习时要区分当前平台与历史上的 **Deploy Classic**，后者已经成为历史文档/迁移语境。
 
 **边缘计算**是对传统中心化服务器架构局限性的直接回应，尤其对全球应用而言。通过将计算移到更靠近用户的位置，它有效减少了延迟（TTFB、E2E 延迟）并提升了感知性能，这对现代 Web 体验至关重要。
 
@@ -17,7 +17,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 边缘计算：Cloudflare Workers
 - 适合边缘的任务：鉴权、重写/重定向、轻量 API、A/B 实验、地理位置感知、流式响应、缓存编排
 - 不适合边缘的任务：重 CPU 计算、强 Node.js 依赖、大型二进制处理、需要完整长连接生态的服务
 
-也就是说，边缘不是默认最优，而是针对特定负载的部署策略。
+也就是说，边缘计算是一种针对特定负载的部署策略。
 
 ## **表格：边缘计算平台比较**
 

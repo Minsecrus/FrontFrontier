@@ -14,9 +14,9 @@ title: "IV. 前端框架和库：构建现代 UI / IV.4 元框架：增强开发
 - **内容驱动站点**：常见选择是 [**Astro**](https://astro.build/) 或 VitePress 这类内容优先工具。
 - **偏实验/性能导向路线**：如 [**Qwik**](https://qwik.builder.io/)。
 
-React 生态尤其需要纠正一个旧心智模型：今天已经不是简单的“Next.js 或 Remix”二选一。  
+React 生态已经形成了更丰富的路线选择。  
 [**React Router**](https://reactrouter.com/start/framework) 已明确提供 **Framework Mode**，把路由模块、`loader`、`action`、SSR、预渲染和部署适配器整合为完整应用框架。  
-[**Remix**](https://remix.run/) 仍然很重要，但更适合被理解为这条“路由模块 / Web 标准 / 服务端优先”路线的重要来源和演进语境，而不是与 React Router 完全割裂的另一套世界。
+[**Remix**](https://remix.run/) 仍然很重要，更适合被理解为这条“路由模块 / Web 标准 / 服务端优先”路线的重要来源和演进语境，并与 React Router 的现代演进一起理解。
 
 - [**Next.js**](https://nextjs.org/)：React 全栈框架，强项是 App Router、RSC、流式渲染、缓存策略、Cache Components、Turbopack 默认集成和成熟的商业生态。适合内容站、全栈产品和需要较强平台能力的团队。
 - [**React Router Framework Mode**](https://reactrouter.com/start/framework)：React Router 已经不只是“客户端路由库”，而是可直接构建全栈应用的官方路线之一。适合希望保持 Web 标准思维、路由模块清晰、渐进增强友好的项目。
@@ -24,7 +24,7 @@ React 生态尤其需要纠正一个旧心智模型：今天已经不是简单�
 - [**Nuxt**](https://nuxt.com/)：Vue 生态事实上的全栈主力框架。文件路由、自动导入、模块生态和 SSR/SSG/混合渲染体验都很成熟。
 - [**SvelteKit**](https://svelte.dev/docs/kit)：Svelte 官方应用框架，默认 SSR，支持 SSG/SPA/混合渲染；`load`、`actions` 与 adapter 组合让“同一套代码，多平台部署”非常自然。
 - [**Astro**](https://astro.build/)：内容优先和低 JavaScript 负载场景下非常强。Islands 架构适合文档站、博客、营销站和媒体站。
-- [**Qwik**](https://qwik.builder.io/)：以 resumability 为卖点的创新路线，强调极低启动成本，但其学习和生态成本也更高，不应被当作多数团队的默认首选。
+- [**Qwik**](https://qwik.builder.io/)：以 resumability 为卖点的创新路线，强调极低启动成本，适合愿意投入学习和生态评估成本的团队。
 
 元框架、Islands、RSC、Resumability 等路线的兴起，本质上都在回答同一个问题：**如何减少首屏等待、降低客户端 JavaScript 负担、同时保留交互能力。**  
 它们解决的不只是 SEO，也包括 Core Web Vitals、缓存策略、部署模型和团队工程效率。
@@ -41,7 +41,7 @@ React 生态尤其需要纠正一个旧心智模型：今天已经不是简单�
 | [**Astro**](https://astro.build/)                                          | 框架无关                      | SSG 为主, Islands    | 内容优先、按岛加载交互              | 内容站和低 JS 负载强项                  | 博客、文档站、营销站、媒体站   |
 | [**Qwik**](https://qwik.builder.io/)                                       | 框架无关                      | 可恢复性, SSG/SSR    | 惰性恢复、细粒度加载                | 创新性能路线                            | 对启动性能极端敏感的实验性项目 |
 
-对学习者而言，更重要的问题不是“哪个框架最先进”，而是：
+对学习者而言，更重要的问题包括：
 
 - 你的团队在哪个生态里最熟
 - 你的项目是内容驱动还是交互驱动

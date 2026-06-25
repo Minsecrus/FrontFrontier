@@ -4,7 +4,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.6 状态管理解决方案
 
 # IV.6 状态管理解决方案：集中化应用程序数据
 
-**目的**：在复杂应用程序中高效地管理组件之间的应用程序状态（数据），避免“prop drilling”。
+**目的**：在复杂应用程序中高效地管理组件之间的应用程序状态（数据），减少“prop drilling”。
 
 谈状态管理，第一步要先区分：
 
@@ -12,19 +12,19 @@ title: "IV. 前端框架和库：构建现代 UI / IV.6 状态管理解决方案
 - **客户端共享状态**：主题、用户偏好、跨组件业务状态
 - **服务端状态**：接口请求结果、缓存、重新获取、失效策略
 
-很多项目的问题并不是“没有状态管理库”，而是把服务端状态和客户端状态混在一起。  
+很多项目的状态复杂度来自服务端状态和客户端状态混在一起。  
 像 TanStack Query、SWR 这类工具更适合处理服务端状态；本章讨论的库主要针对**客户端共享状态**。
 
 - **[Redux](https://redux.js.org/) ([Redux Toolkit](https://redux-toolkit.js.org/))**：广泛使用的状态管理库，遵循单向数据流和集中式存储。Redux Toolkit 简化了 Redux 逻辑。
 - [**Zustand**](https://zustand-demo.pmnd.rs/)：极简的状态管理库，专注于简单性和性能，使用单一存储。
 - [**Jotai**](https://jotai.org/)：原子（自下而上）状态管理库，其中状态由单个原子组成，根据原子依赖性优化渲染。
 - [**Pinia**](https://pinia.vuejs.org/)：Vue 官方生态当前的主流选择之一。相较 Vuex 更直观、类型友好、样板更少，适合作为 Vue 3 新项目的默认起点。
-- [**Vuex**](https://vuex.vuejs.org/)：Vue.js 的传统状态管理方案。今天更应将其视为**存量项目知识**，而不是 Vue 新项目的默认推荐。
+- [**Vuex**](https://vuex.vuejs.org/)：Vue.js 的传统状态管理方案。今天更适合作为**存量项目知识**来理解。
 
-如果你在旧文章、旧项目里看到 [**Recoil**](https://recoiljs.org/)，需要特别注意：它在官方 GitHub 仓库层面已经进入归档状态，不应再作为 React 新项目的优先选择。
+如果你在旧文章、旧项目里看到 [**Recoil**](https://recoiljs.org/)，需要特别注意：它在官方 GitHub 仓库层面已经进入归档状态，新项目应优先评估仍在活跃维护的方案。
 
 状态管理库的演进趋势很明确：更少样板代码、更好的 TypeScript 支持、更清晰的心智模型。  
-因此，新项目通常优先在 **Redux Toolkit / Zustand / Jotai / Pinia** 之间做选择，而不是再回到 Recoil、Vuex 这样的历史方案上。
+因此，新项目通常优先在 **Redux Toolkit / Zustand / Jotai / Pinia** 之间做选择。
 
 ## **表格：主要状态管理库比较**
 
@@ -41,5 +41,5 @@ title: "IV. 前端框架和库：构建现代 UI / IV.6 状态管理解决方案
 
 - React 新项目：先想清楚是否真的需要全局状态；需要时优先看 Zustand 或 Redux Toolkit，细粒度组合场景再看 Jotai
 - Vue 新项目：默认先看 Pinia
-- 看到 Recoil / Vuex：优先理解为“接手旧项目时要会”，而不是“新项目默认该选”
+- 看到 Recoil / Vuex：优先理解为“接手旧项目时要会”
 

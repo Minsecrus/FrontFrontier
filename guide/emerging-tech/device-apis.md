@@ -50,7 +50,7 @@ WebUSB API 提供了一种将非标准通用串行总线（USB）兼容设备服
 
 - **用例**：WebHID API 可用于访问各种 HID 设备，包括 Elgato StreamDeck 和 blink(1) 等。
 - **安全与隐私**：设备访问必须通过浏览器提供的选择器对话框由用户授予，类似于 WebUSB 和 Web Bluetooth。值得注意的是，生成受信任输入（例如键盘、鼠标、安全密钥）的设备通常不会被访问，因为它们在顶层 HID 集合中被视为受保护用途。
-- **浏览器支持与成熟度**：WebHID API 也是一项实验性技术，可用性有限。它在 Chrome、Edge 和 Opera 的桌面版本中从较新版本（例如 Chrome 89、Opera 75）开始提供全面支持，但在移动设备、Firefox 和 Safari 中仍不受支持。尽管它不是 W3C 标准，但自 Chrome 89（2021 年 3 月）起已默认启用。
+- **浏览器支持与成熟度**：WebHID API 也是一项实验性技术，可用性有限。它在 Chrome、Edge 和 Opera 的桌面版本中从较新版本（例如 Chrome 89、Opera 75）开始提供全面支持；移动设备、Firefox 和 Safari 需要准备替代路径。它自 Chrome 89（2021 年 3 月）起已默认启用。
 - **Electron 环境**：在 Electron 中，WebHID API 提供了 `select-hid-device` 事件来选择 HID 设备，以及 `hid-device-added` 和 `hid-device-removed` 事件来处理设备插拔。`ses.setDevicePermissionHandler` 可用于提供默认权限，而 `ses.setPermissionCheckHandler` 则可用于禁用特定来源的 HID 访问。Electron 默认使用与 Chromium 相同的黑名单，但可以通过 `disable-hid-blocklist` 标志覆盖。
 
 这些设备集成 API（Web Bluetooth、WebUSB 和 WebHID）虽然功能强大，但目前大多处于**实验性阶段，且浏览器支持有限**。这意味着开发者在生产环境中采用这些 API 时需要谨慎权衡，充分考虑其生产就绪度、潜在的安全隐患和用户体验影响。由于浏览器兼容性不一，开发者可能需要为不支持的浏览器提供回退方案或限制应用范围。

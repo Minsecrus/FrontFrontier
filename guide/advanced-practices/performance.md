@@ -17,17 +17,17 @@ title: "V. 高级主题和专业开发最佳实践 / V.1 性能优化：提供�
   - **缓存**：浏览器缓存、CDN（内容分发网络）使用，以减少延迟和改善加载时间。
   - **字体传输优化**：使用 link rel="preload" 和 font-display: optional 来防止布局偏移。
   - **压缩和合并文件**：删除不必要的字符并组合文件以减少 HTTP 请求。
-  - **避免布局偏移**：为图像/视频添加 width/height 属性，为动态内容保留空间，使用 CSS 进行布局。
+  - **保持布局稳定**：为图像/视频添加 width/height 属性，为动态内容保留空间，使用 CSS 进行布局。
 - **工具**：[Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)（用于审计性能、可访问性、SEO 等的开源自动化工具）和 [PageSpeed Insights](https://pagespeed.web.dev/)。
 
-性能优化不再是一项事后补救的工作，而是一项核心设计原则，由用户期望和搜索引擎排名因素共同驱动。Core Web Vitals 提供了一套可衡量的框架来改善用户感知体验。**关键 CSS** 和**惰性加载**等技术，正是针对"初始负载过大导致用户体验差"这一因果链条的有效解法。
+性能优化已经成为一项核心设计原则，由用户期望和搜索引擎排名因素共同驱动。Core Web Vitals 提供了一套可衡量的框架来改善用户感知体验。**关键 CSS** 和**惰性加载**等技术，正是针对"初始负载过大导致用户体验差"这一因果链条的有效解法。
 
 ## **表格：Core Web Vitals 优化技术**
 
 | Core Web Vital                  | 解决的问题     | 关键技术（示例）                                                                                                                  | 工具（示例）                                                         |
 | :------------------------------ | :------------- | :-------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
 | [**LCP**](https://web.dev/lcp/) | 感知加载速度慢 | 优化图像，关键 CSS，服务器响应时间，预加载英雄图像                                                                                | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) |
-| [**INP**](https://web.dev/inp/) | 交互响应慢     | 避免阻塞主线程的长时间任务，优化事件回调，减少 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) 大小 | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) |
+| [**INP**](https://web.dev/inp/) | 交互响应慢     | 拆分主线程长任务，优化事件回调，减少 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) 大小 | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) |
 | **CLS**                         | 视觉稳定性差   | 为图像/视频设置尺寸，为广告/动态内容保留空间，优化字体传输                                                                        | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/) |
 
 这个表格提供了与可衡量性能指标直接相关的可操作策略。它帮助开发者理解如何改善 Web 性能以及为什么特定技术有效，将技术实现与用户体验和 SEO 联系起来。

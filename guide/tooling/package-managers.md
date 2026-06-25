@@ -13,7 +13,7 @@ title: "III. 基本开发环境和工具 / III.4 包管理器：npm、Yarn 和 p
 
 从 npm 到 Yarn、pnpm 和 Bun 的演变，反映了行业对效率（速度、磁盘空间）、可靠性（严格的依赖检查，防止“幽灵依赖”）和供应链安全的持续追求。这直接影响构建时间、CI/CD 性能和大型项目的稳定性。
 
-现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，避免同一仓库被不同工具生成互相冲突的锁文件。
+现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，让同一仓库始终生成一致的锁文件。
 
 ## **表格：流行 JavaScript 包管理器比较**
 

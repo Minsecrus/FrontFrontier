@@ -12,16 +12,16 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 - [**esbuild**](https://esbuild.github.io/)：用 [Go](https://go.dev/) 编写的超高速编译/打包工具，经常被当作构建链中的基础能力使用，例如预打包、转换、压缩或作为其他工具的底层引擎。
 - [**Rollup**](https://rollupjs.org/)：偏向库构建的打包器，擅长 tree-shaking 和生成干净的 ESM/CJS 输出。很多工具会把它作为生产构建阶段的核心部件。
 - [**Turbopack**](https://turbo.build/pack)：面向 [Next.js](https://nextjs.org/) 生态的 Rust 增量打包器，强调大型应用开发期的响应速度与按需计算能力。
-- [**SWC**](https://swc.rs/)：基于 Rust 的 TypeScript/JavaScript 编译器，核心定位是“编译与转换”而不是通用应用打包器，常作为框架或工具链的底层编译层。
+- [**SWC**](https://swc.rs/)：基于 Rust 的 TypeScript/JavaScript 编译器，核心定位是“编译与转换”，常作为框架或工具链的底层编译层。
 
-前端工具链的真实趋势并不是“某一个新工具统一天下”，而是出现了更清晰的分层：
+前端工具链正在形成更清晰的职责分层：
 
 - 开发服务器与工程入口：Vite、Rsbuild、框架内置 dev server
 - 通用应用打包器：Webpack、Rspack、Turbopack
 - 库构建与产物优化：Rollup、Rolldown
 - 编译与转换层：esbuild、SWC、Oxc
 
-因此，讨论构建工具时必须区分“开发体验”“应用打包”“库打包”“编译层”这几个不同职责，而不能把它们混成同一类。
+因此，讨论构建工具时应区分“开发体验”“应用打包”“库打包”“编译层”这几个不同职责。
 
 ## **表格：领先构建工具/打包器比较**
 
@@ -33,9 +33,9 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 | [**esbuild**](https://esbuild.github.io/)   | [Go](https://go.dev/)                           | 转换、压缩、预打包                       | 极快、嵌入式能力强                       | 常作为底层引擎                      |
 | [**Rollup**](https://rollupjs.org/)         | JavaScript                                      | 库构建、产物优化                         | Tree-shaking、ESM 优先                   | 仍是库生态核心之一                  |
 | [**Turbopack**](https://turbo.build/pack)   | Rust                                            | [Next.js](https://nextjs.org/) 开发/构建 | 增量计算、按需工作、默认集成度提升       | Next.js 专用路线                    |
-| [**SWC**](https://swc.rs/)                  | Rust                                            | 编译、转换、压缩                         | 快速 TS/JS 转换、JSX 支持                | 更像编译层，不应与应用 bundler 混谈 |
+| [**SWC**](https://swc.rs/)                  | Rust                                            | 编译、转换、压缩                         | 快速 TS/JS 转换、JSX 支持                | 编译层工具                          |
 
-选择这些工具时，最实用的判断标准不是“谁最快”，而是：
+选择这些工具时，最实用的判断标准包括：
 
 - 你做的是应用还是库
 - 你是在新建项目还是迁移老项目
