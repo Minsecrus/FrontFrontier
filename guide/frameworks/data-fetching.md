@@ -1,8 +1,8 @@
 ---
-title: "IV. 前端框架和库：构建现代 UI / IV.7 数据获取和缓存库：SWR、TanStack Query、Axios、Fetch API"
+title: "IV. 前端框架和库：构建现代 UI / IV.9 数据获取和缓存库：SWR、TanStack Query、Axios、Fetch API"
 ---
 
-# IV.7 数据获取和缓存库：SWR、TanStack Query、Axios、Fetch API
+# IV.9 数据获取和缓存库：SWR、TanStack Query、Axios、Fetch API
 
 **目的**：简化 HTTP 请求，管理数据获取，并为服务器数据实现缓存策略。
 
@@ -23,4 +23,40 @@ title: "IV. 前端框架和库：构建现代 UI / IV.7 数据获取和缓存库
 | [**TanStack Query**](https://tanstack.com/query/latest)                     | 服务器状态管理                                                   | 综合数据管理                  | 细粒度控制，垃圾回收   | 良好       | 内置       | 复杂数据管理，高级缓存，乐观更新，性能优化                                                                       |
 
 这个表格有助于区分基本 HTTP 请求工具和为复杂服务器状态管理而设计的工具。它指导学习者选择不仅获取数据而且智能管理其生命周期的库，这对于现代高性能应用程序至关重要。
+
+::: details 启发式示例：fetch vs TanStack Query
+
+`fetch` 只负责“发出一次请求并拿到响应”：
+
+```ts
+async function loadUser(userId: string) {
+  const response = await fetch(`/api/users/${userId}`);
+
+  if (!response.ok) {
+    throw new Error("Failed to load user");
+  }
+
+  return response.json();
+}
+```
+
+TanStack Query 管的是服务器状态生命周期：缓存、加载态、错误态、重新验证、窗口聚焦后刷新、请求去重等。
+
+```tsx
+function UserProfile({ userId }: { userId: string }) {
+  const userQuery = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => loadUser(userId),
+  });
+
+  if (userQuery.isLoading) return <p>Loading...</p>;
+  if (userQuery.isError) return <p>Load failed</p>;
+
+  return <h2>{userQuery.data.name}</h2>;
+}
+```
+
+判断边界可以很朴素：一次性请求用 `fetch` 很自然；同一份远端数据会被多个组件读取、缓存、刷新和重试时，就进入 TanStack Query 这类服务器状态工具的领域。
+
+:::
 

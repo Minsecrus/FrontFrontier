@@ -85,6 +85,14 @@ export default defineConfig({
                   link: "/guide/frameworks/web-components",
                 },
                 { text: "UI 组件库", link: "/guide/frameworks/ui-libraries" },
+                {
+                  text: "无头组件与组件代码所有权",
+                  link: "/guide/frameworks/headless-ui",
+                },
+                {
+                  text: "数据可视化组件库",
+                  link: "/guide/frameworks/data-visualization-libraries",
+                },
                 { text: "元框架", link: "/guide/frameworks/meta-frameworks" },
                 { text: "HTMX", link: "/guide/frameworks/htmx" },
                 { text: "状态管理", link: "/guide/frameworks/state-management" },
@@ -155,7 +163,11 @@ export default defineConfig({
                   text: "跨端开发",
                   link: "/guide/emerging-tech/cross-platform",
                 },
-                { text: "Web 图形与数据可视化", link: "/guide/emerging-tech/web-graphics" },
+                { text: "Web 图形与沉浸式体验", link: "/guide/emerging-tech/web-graphics" },
+                {
+                  text: "Web 数据可视化",
+                  link: "/guide/emerging-tech/data-visualization",
+                },
                 { text: "Web 音频和媒体流", link: "/guide/emerging-tech/web-audio-media" },
                 { text: "Web3", link: "/guide/emerging-tech/web3" },
                 { text: "AI/ML", link: "/guide/emerging-tech/ai-ml" },

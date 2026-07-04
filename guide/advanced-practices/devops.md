@@ -10,6 +10,26 @@ title: "V. 高级主题和专业开发最佳实践 / V.15 部署与 DevOps for F
 
 CI/CD（Continuous Integration/Continuous Delivery/Deployment）流水线是一套自动化流程，旨在将代码从开发者的本地环境快速、安全地交付到生产环境。其核心阶段包括：持续集成 (CI)，开发者频繁地将代码合并到共享主干分支。每次合并都会触发自动化构建、测试（单元测试、集成测试、端到端测试）、代码质量检查（Linting、静态分析）等，以确保代码的质量和集成时的兼容性。持续交付 (CD)，代码通过 CI 阶段后，可以随时部署到生产环境。这意味着代码库始终处于可发布状态，但部署到生产环境需要人工触发。持续部署 (CD)，在持续交付的基础上，代码通过所有自动化测试后，会自动部署到生产环境，无需人工干预。
 
+::: details 启发式示例：一次 push 后的 CI 流程
+
+```txt
+git push
+  -> checkout source
+  -> setup Node.js and package manager
+  -> install dependencies from lockfile
+  -> run lint and typecheck
+  -> run unit tests
+  -> build static assets
+  -> upload build artifact
+  -> deploy to CDN or hosting platform
+  -> run smoke check
+  -> monitor errors and performance
+```
+
+这条链路把“代码能在我机器上跑”推进到“代码能被自动、可重复地交付”。前端 CI 的关键不是步骤越多越好，而是把格式、类型、测试、构建和部署这些容易出错的环节固定下来。
+
+:::
+
 ## **V.15.2 容器化**
 
 容器化（如 [Docker](https://www.docker.com/)）通过将应用程序及其所有依赖项（代码、运行时、系统工具、库等）打包到一个独立的、可移植的“容器”中，确保应用在任何环境中都能以相同的方式运行。

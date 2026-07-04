@@ -1,8 +1,8 @@
 ---
-title: "VI. 新兴技术和专业领域 / VI.9 设备集成：Web Bluetooth、Web USB、WebHID、Generic Sensor API"
+title: "VI. 新兴技术和专业领域 / VI.10 设备集成：Web Bluetooth、Web USB、WebHID、Generic Sensor API"
 ---
 
-# VI.9 设备集成：Web Bluetooth、Web USB、WebHID、Generic Sensor API
+# VI.10 设备集成：Web Bluetooth、Web USB、WebHID、Generic Sensor API
 
 **目的**：允许 Web 应用程序直接与连接到用户计算机或移动设备的硬件设备交互。
 
@@ -25,7 +25,7 @@ Web API 向直接设备集成的扩展，标志着 Web 与原生应用之间界�
 
 这个表格帮助学习者理解 Web 应用程序与物理硬件集成的能力和局限性。它突出了这些强大 API 的安全隐患和实验性质。
 
-## **VI.9.1 Web Bluetooth API**
+## **VI.10.1 Web Bluetooth API**
 
 [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) 允许网站以安全和保护隐私的方式与蓝牙设备进行通信。
 
@@ -35,7 +35,7 @@ Web API 向直接设备集成的扩展，标志着 Web 与原生应用之间界�
 - **浏览器支持与成熟度**：Web Bluetooth API 的可用性有限，被认为是实验性技术，并非所有主流浏览器都支持。例如，Chrome、Edge 和 Opera（桌面和 Android）提供部分支持，而 Firefox 和 Safari 则不支持。尽管如此，该标准正在成熟，工具集和 API 正在涌现，Chrome 53 已通过 Origin Trial（源试用）支持蓝牙功能。
 - **Electron 环境**：在 Electron 中，开发者可以通过 webContents 上的 `select-bluetooth-device` 事件来选择蓝牙设备，并通过 ses.`setDevicePermissionHandler` 提供默认权限，从而实现更灵活的设备管理。
 
-## **VI.9.2 WebUSB API**
+## **VI.10.2 WebUSB API**
 
 WebUSB API 提供了一种将非标准通用串行总线（USB）兼容设备服务暴露给 Web 的方法，使 USB 更安全、更易于使用。
 
@@ -44,7 +44,7 @@ WebUSB API 提供了一种将非标准通用串行总线（USB）兼容设备服
 - **浏览器支持与成熟度**：WebUSB API 的可用性有限，同样被视为实验性技术。Chrome、Edge 和 Opera（桌面和 Android）从早期版本开始提供全面支持，但 Firefox 和 Safari 仍不支持。该 API 已在 Chrome 61 中默认启用。
 - **Electron 环境**：在 Electron 中，WebUSB API 提供了 `select-usb-device` 事件，以及 `usb-device-added`、`usb-device-removed` 和 `usb-device-revoked` 事件来处理设备的插拔和撤销。ses.`setDevicePermissionHandler` 可用于设置默认权限，ses.`setUSBProtectedClassesHandler` 则允许使用默认不可用的受保护 USB 类。
 
-## **VI.9.3 WebHID API**
+## **VI.10.3 WebHID API**
 
 [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API) 用于访问人机界面设备（HID），如键盘和游戏手柄。它比 WebUSB 和 Web Bluetooth API 更高级，但比 Gamepad API 和基本输入（指针/键盘）更低级。
 

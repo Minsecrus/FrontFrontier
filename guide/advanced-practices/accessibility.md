@@ -32,6 +32,39 @@ ARIA 的核心作用包括：定义角色 (role)，描述元素是什么或做�
 
 在具体场景与代码示例中，当使用 `<div>` 或 `<span>` 等非语义化元素构建自定义按钮时，需要添加 `role="button"` 和`tabindex="0"` 使其可聚焦，并使用 `aria-pressed` 等状态属性来表示其状态。通过 JavaScript 监听点击事件，并切换 `aria-pressed` 的状态。对于复杂表单元素的关联，当某个输入框的标签由多个元素组成，或标签文本不在 `<label for>` 的直接关联范围内时，可以使用 `aria-labelledby` 将这个输入框与提供标签文本的元素关联起来。`aria-describedby` 用于提供额外描述信息，例如输入框的提示或错误信息。对于动态内容区域的通知，如聊天消息或通知中心，使用 `aria-live` 属性告知屏幕阅读器该区域的内容会动态变化。已有原生语义的元素应直接使用其内置语义，例如 `<button>` 本身已经具备按钮角色。
 
+::: details 启发式示例：button vs div role button
+
+优先使用原生按钮：
+
+```html
+<button type="button" aria-pressed="false">
+  收藏
+</button>
+```
+
+如果受限于历史结构，被迫用 `div` 模拟按钮，就必须补齐角色、焦点和键盘行为：
+
+```html
+<div role="button" tabindex="0" aria-pressed="false" id="favorite">
+  收藏
+</div>
+
+<script>
+  const favorite = document.querySelector("#favorite");
+
+  favorite.addEventListener("keydown", (event) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      favorite.click();
+    }
+  });
+</script>
+```
+
+启发式判断是：能用 `<button>` 就不要用 `div role="button"`。ARIA 可以补语义，但不会自动补原生按钮的键盘行为、禁用状态、表单集成和浏览器默认交互细节。
+
+:::
+
 ## **V.3.2 辅助技术测试方法**
 
 仅仅添加 ARIA 属性是不够的，必须通过实际测试来验证其效果。使用屏幕阅读器进行测试是关键步骤。常见的屏幕阅读器包括：Windows 上的免费开源 [NVDA](https://www.nvaccess.org/) (NonVisual Desktop Access) 和流行的商业软件 [JAWS](https://www.freedomscientific.com/products/software/jaws/) (Job Access With Speech)；macOS 和 iOS 内置的 [VoiceOver](https://www.apple.com/voiceover/info/guide/_1121.html)；Android 设备内置的 TalkBack。

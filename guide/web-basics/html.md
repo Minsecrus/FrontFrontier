@@ -52,6 +52,36 @@ HTML 表单（`<form>` 标签）对于收集用户输入至关重要。
 - **按钮语义**：表单中的 `<button>` 默认是提交按钮。取消、关闭、展开等非提交行为应显式写 `type="button"`，让这些操作稳定执行为普通按钮行为。
 - **错误提示**：错误信息应靠近相关字段，并用文本、颜色和图标共同说明问题与修复方式。
 
+::: details 启发式示例：语义化表单
+
+```html
+<form action="/signup" method="post">
+  <fieldset>
+    <legend>创建账号</legend>
+
+    <label for="email">邮箱</label>
+    <input id="email" name="email" type="email" autocomplete="email" required>
+
+    <label for="password">密码</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      autocomplete="new-password"
+      minlength="8"
+      required
+    >
+
+    <p id="password-help">至少 8 个字符。</p>
+    <button type="submit">注册</button>
+  </fieldset>
+</form>
+```
+
+这个例子展示的是结构，不是视觉。`label` 让字段有可访问名称，`type` 带来移动键盘和基础校验，`fieldset` / `legend` 给相关字段建立分组，`button type="submit"` 明确提交行为。
+
+:::
+
 ## **II.2.5 调试 HTML**
 
 HTML 容错性很强，浏览器会尽量把错误标签修复成可渲染页面。这种“能显示”并不代表结构正确。

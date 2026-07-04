@@ -11,6 +11,29 @@ Linter 和 Formatter 的结合使用，是团队协作和代码可维护性的�
 
 在团队项目中，ESLint 和 Prettier 通常会与 [Husky](https://typicode.github.io/husky/) 和 [lint-staged](https://github.com/lint-staged/lint-staged) 配合使用。Husky 用于管理 Git hooks，例如在 `pre-commit` 阶段触发检查；lint-staged 则只对暂存区中的文件运行 lint 或 format，降低每次提交的扫描成本。它们把低成本、快速反馈的质量检查提前到提交之前，减少明显格式问题和基础 lint 错误进入代码审查。
 
+::: details 启发式示例：lint-staged + Husky
+
+```json
+{
+  "scripts": {
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,css}": ["prettier --write"]
+  }
+}
+```
+
+```sh
+npx husky init
+echo "npx lint-staged" > .husky/pre-commit
+```
+
+Husky 负责在提交前触发 hook，lint-staged 负责只处理已经暂存的文件。这样既能拦住明显问题，又不会每次提交都扫描整个仓库。
+
+:::
+
 ## **表格：ESLint 和 Prettier 比较**
 
 | 工具名称                             | 主要目的           | 配置方式           | 集成方式         | 语言支持（示例）                                                     | 优点（示例）         |

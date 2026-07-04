@@ -20,6 +20,51 @@ title: "V. 高级主题和专业开发最佳实践 / V.8 测试策略：确保�
 
 从 Jest 到 Vitest 的转变，凸显了行业对更快开发反馈循环的持续追求，直接影响了开发者生产力。Cypress 和 Playwright 之间的选择，体现了易用性/以 JS 为中心与跨浏览器/语言多功能性之间的权衡。全面的测试（单元、集成、E2E、视觉回归）是保障代码质量的关键手段，有助于减少技术债务并提升用户信任。
 
+::: details 启发式示例：Testing Library 用户视角测试
+
+```tsx
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { expect, test } from "vitest";
+import { SubscribeForm } from "./SubscribeForm";
+
+test("submits an email address", async () => {
+  const user = userEvent.setup();
+
+  render(<SubscribeForm />);
+
+  await user.type(screen.getByLabelText("Email"), "me@example.com");
+  await user.click(screen.getByRole("button", { name: "Subscribe" }));
+
+  expect(screen.getByText("Thanks for subscribing")).toBeInTheDocument();
+});
+```
+
+这个测试没有查询 `.input-primary` 或组件内部状态，而是按用户能感知的 label、button name 和反馈文本来断言。Testing Library 的启发是：测试行为和可访问名称，而不是实现细节。
+
+:::
+
+::: details 启发式示例：Playwright 登录流程
+
+```ts
+import { expect, test } from "@playwright/test";
+
+test("user can sign in", async ({ page }) => {
+  await page.goto("/login");
+
+  await page.getByLabel("Email").fill("me@example.com");
+  await page.getByLabel("Password").fill("correct-horse-battery-staple");
+  await page.getByRole("button", { name: "Sign in" }).click();
+
+  await expect(page).toHaveURL("/dashboard");
+  await expect(page.getByRole("heading", { name: "Dashboard" })).toBeVisible();
+});
+```
+
+Playwright 适合覆盖跨页面、真实浏览器、真实路由和网络边界。它验证的是完整用户流程，而不是单个组件是否调用了某个函数。
+
+:::
+
 ## **表格：流行测试框架比较**
 
 | 框架名称                                  | 类型（示例）    | 速度       | 浏览器支持（示例）                                                                                                                                   | 语言支持（示例）                                          | 模拟能力                                | 调试工具             | 社区/生态系统 | 理想用例（示例）                                         |

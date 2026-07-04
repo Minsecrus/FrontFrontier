@@ -15,6 +15,30 @@ title: "III. 基本开发环境和工具 / III.4 包管理器：npm、Yarn 和 p
 
 现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，让同一仓库始终生成一致的锁文件。
 
+::: details 启发式示例：packageManager + Corepack
+
+```json
+{
+  "name": "frontend-app",
+  "private": true,
+  "packageManager": "pnpm@9.15.9",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  }
+}
+```
+
+```sh
+corepack enable
+corepack prepare pnpm@9.15.9 --activate
+pnpm install --frozen-lockfile
+```
+
+`packageManager` 告诉团队和 CI：这个仓库应该用哪个包管理器和版本。Corepack 则负责按这个声明准备对应工具，减少“有人用 npm、有人用 pnpm、锁文件来回变”的问题。
+
+:::
+
 ## **表格：流行 JavaScript 包管理器比较**
 
 | 特性         | [npm](https://www.npmjs.com/)          | [Yarn](https://yarnpkg.com/)                 | [pnpm](https://pnpm.io/)                     | [Bun](https://bun.sh/)                    |

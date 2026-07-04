@@ -1,8 +1,8 @@
 ---
-title: "VI. 新兴技术和专业领域 / VI.8 边缘计算：Cloudflare Workers、Vercel Edge Runtime、Deno Deploy"
+title: "VI. 新兴技术和专业领域 / VI.9 边缘计算：Cloudflare Workers、Vercel Edge Runtime、Deno Deploy"
 ---
 
-# VI.8 边缘计算：Cloudflare Workers、Vercel Edge Runtime、Deno Deploy
+# VI.9 边缘计算：Cloudflare Workers、Vercel Edge Runtime、Deno Deploy
 
 **目的**：在更靠近用户的地方（网络“边缘”）运行无服务器函数，以减少延迟并提高性能。
 
