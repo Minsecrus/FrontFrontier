@@ -44,6 +44,95 @@ TypeScript 的成功并非孤立的，它与整个现代前端生态紧密相连
 - **声明文件（Declaration Files, .d.ts）**：理解如何为纯 JS 库编写类型声明，或使用 `@types/*` 包。掌握类型与运行时的边界——类型只存在于编译时，运行时需用如 zod、io-ts 等库桥接。
 - **类型与运行时边界**：明确类型擦除的现实，学会在需要时引入运行时校验（如 zod）来补足类型系统的盲区。
 
+<BadGoodExample bad-title="类型断言代替验证" good-title="在系统边界验证 unknown">
+<template #bad>
+
+```ts
+type User = {
+  id: string;
+  name: string;
+};
+
+const response = await fetch("/api/me");
+const user = (await response.json()) as User;
+
+// 断言只说服了编译器，接口仍可能返回 null
+// 或 { name: 42 }。
+console.log(user.name.toUpperCase());
+```
+
+</template>
+<template #good>
+
+```ts
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+});
+
+type User = z.infer<typeof UserSchema>;
+
+const response = await fetch("/api/me");
+if (!response.ok) {
+  throw new Error(`Request failed: ${response.status}`);
+}
+
+const input: unknown = await response.json();
+const user: User = UserSchema.parse(input);
+
+console.log(user.name.toUpperCase());
+```
+
+</template>
+</BadGoodExample>
+
+类型系统负责检查静态可见的代码；网络响应、LocalStorage 和 URL 参数还需要运行时验证。启发式判断是：应用内部依赖静态类型；数据跨越不可信边界时，先以 `unknown` 接收，再验证并转换成内部类型。
+
+<BadGoodExample bad-title="三个布尔值描述加载状态" good-title="辨识联合排除不可能状态">
+<template #bad>
+
+```ts
+type UserState = {
+  loading: boolean;
+  hasError: boolean;
+  user?: User;
+};
+
+// 类型允许这种自相矛盾的状态：
+const state: UserState = {
+  loading: true,
+  hasError: true,
+  user: { id: "1", name: "Ada" },
+};
+```
+
+</template>
+<template #good>
+
+```ts
+type UserState =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; user: User }
+  | { status: "error"; message: string };
+
+function getLabel(state: UserState): string {
+  switch (state.status) {
+    case "idle": return "尚未加载";
+    case "loading": return "加载中";
+    case "success": return state.user.name;
+    case "error": return state.message;
+  }
+}
+```
+
+</template>
+</BadGoodExample>
+
+联合类型可以让“不可能状态”无法被构造，并提供准确的自动补全。多个字段总是一起变化时，优先考虑它们是否其实是一个有限状态模型。
+
 ## **II.6.4 TypeScript 的延伸：与 JSDoc 的协同艺术**
 
 然而，在现实的工程世界中，我们并非总能从一张白纸开始。我们面对的是庞大的历史代码库、需要快速验证的独立脚本，或是那些无法立即引入编译流程的边缘项目。这是否意味着 TypeScript 的力量在这些场景下就无能为力了？
@@ -59,6 +148,44 @@ TypeScript 的成功并非孤立的，它与整个现代前端生态紧密相连
 对于任何一个大型团队而言，将一个成熟的纯 JavaScript 项目一夜之间重构为 TypeScript 是不现实的。JSDoc 提供了一条无与伦比的渐进式迁移路径。你无需改动任何文件后缀，只需在现有的 `.js` 文件中添加 JSDoc 类型注释，然后在 `tsconfig.json` 中开启 `checkJs` 选项。
 
 一瞬间，TypeScript 编译器这位“最严格的质检员”便开始巡视你的 JavaScript 代码。它会读取 JSDoc 提供的类型信息，像检查 `.ts` 文件一样，在开发阶段就揪出那些隐藏的类型错误。这使得团队可以**逐个模块、逐个函数地**为历史代码库增加类型安全，最终实现从 JavaScript 到 TypeScript 的平滑、无痛演进。JSDoc 在这里，是连接过去与未来的坚实桥梁。
+
+::: details 启发式示例：先检查 JavaScript，再决定是否改后缀
+
+```js
+// @ts-check
+
+/** @typedef {{ id: string, name: string }} User */
+
+/**
+ * @param {User[]} users
+ * @param {string} id
+ * @returns {User | undefined}
+ */
+export function findUser(users, id) {
+  return users.find((user) => user.id === id);
+}
+
+// TypeScript 语言服务会指出参数需要 string，实际得到 number。
+findUser([{ id: "1", name: "Ada" }], 1);
+```
+
+项目级迁移时，可以用配置逐步扩大检查范围：
+
+```json
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "strict": true
+  },
+  "include": ["src/**/*.js"]
+}
+```
+
+渐进迁移先让编译器看见真实契约，再按模块修复错误、收紧边界和更换文件后缀。
+
+:::
 
 ### **2. 轻量级类型检查的利器：零成本享受智能提示**
 

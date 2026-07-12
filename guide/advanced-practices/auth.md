@@ -67,5 +67,62 @@ SSO 是一种允许用户使用一套凭据（如用户名和密码）一次性�
 - **支持无密码体验**：在适合的业务里，前端应提供 passkey 注册、登录、设备切换和恢复流程，并明确向用户解释安全边界。
 - **优雅地处理认证错误**：当 API 返回认证失败（如 401 Unauthorized）时，前端应能优雅地处理，例如清除本地凭据、重定向到登录页并提示用户。
 
+<BadGoodExample bad-title="把前端状态当成权限证明" good-title="前端表达体验，服务端执行授权" vertical>
+<template #bad>
+
+```ts
+const role = localStorage.getItem("role");
+
+if (role === "admin") {
+  showDeleteButton();
+}
+
+// 接口权限由服务端鉴权与授权策略保护。
+async function deleteUser(userId: string) {
+  await fetch(`/api/admin/users/${userId}`, {
+    method: "DELETE",
+  });
+}
+```
+
+</template>
+<template #good>
+
+```ts
+// 浏览器：通过同源 BFF 会话恢复 UI，
+// 敏感 token 不需要暴露给页面 JavaScript。
+const sessionResponse = await fetch("/bff/session", {
+  credentials: "same-origin",
+});
+
+const session = sessionResponse.ok
+  ? await sessionResponse.json()
+  : null;
+
+if (session?.permissions.includes("users:delete")) {
+  showDeleteButton();
+}
+
+// 服务端：每个受保护操作都重新认证并授权。
+export async function DELETE(request: Request) {
+  const session = await requireSessionFromCookie(request);
+
+  if (!session.permissions.includes("users:delete")) {
+    return Response.json(
+      { message: "Forbidden" },
+      { status: 403 },
+    );
+  }
+
+  await deleteRequestedUser(request);
+  return new Response(null, { status: 204 });
+}
+```
+
+</template>
+</BadGoodExample>
+
+在 BFF 模式中，会话 Cookie 应由服务端设置合理的 `HttpOnly`、`Secure`、`SameSite` 等属性，并配套 CSRF 防护、轮换和撤销策略。前端路由守卫和按钮显隐用于改善体验，服务端则对每次请求执行授权。客户端还应区分 401（需要恢复或重新登录）与 403（身份有效但无权操作）。
+
 理解这些认证与授权模式，不仅仅是后端工程师的职责。前端开发者作为用户体验的直接塑造者和数据交互的实现者，必须深刻理解其在整个系统架构中的运作方式和安全影响，才能构建出既安全可靠又用户友好的现代 Web 应用。
 

@@ -15,6 +15,56 @@ Storybook 提供了**完全独立于主应用的、受控的开发环境**。在
 - **专注且高效的开发流程**：开发者可以直接定位某个特定 UI（例如，某个复杂表单在第三步才会出现的错误提示）。在 Storybook 里，可以直接为这个错误提示组件编写故事，并在干净、无干扰的环境中进行开发和调试，开发效率得到指数级提升。
 - **系统性的边界情况覆盖**：通过为组件编写一系列故事，开发者可以系统性地覆盖其所有可能的状态和用例，包括那些在真实应用中难以复现的极端情况（如文本过长、加载失败、网络延迟等）。这使得组件的健壮性和可靠性在开发阶段就得到了充分的保障。
 
+::: details 启发式示例：Story 记录可复现状态
+
+下面以 UX 工程章节中的 `ProfileForm` 为例，固定默认态、提交态、错误态和用户交互。Story 直接描述组件输入，不需要先登录、打开设置页再制造接口失败。
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, fn } from "storybook/test";
+import { ProfileForm } from "./ProfileForm";
+
+const meta = {
+  component: ProfileForm,
+  args: {
+    state: { status: "idle" },
+    onSubmit: fn(),
+  },
+  tags: ["autodocs"],
+} satisfies Meta<typeof ProfileForm>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const Default: Story = {
+  play: async ({ canvas, userEvent, args }) => {
+    await userEvent.type(canvas.getByLabelText("显示名称"), "Ada");
+    await userEvent.click(canvas.getByRole("button", { name: "保存" }));
+    await expect(args.onSubmit).toHaveBeenCalledWith("Ada");
+  },
+};
+
+export const Submitting: Story = {
+  args: {
+    state: { status: "submitting" },
+  },
+};
+
+export const ServerError: Story = {
+  args: {
+    state: {
+      status: "error",
+      message: "这个名称已经被使用，请换一个。",
+    },
+  },
+};
+
+```
+
+一个 Story 应回答“如何稳定得到这个状态”。默认态之外，优先覆盖 loading、empty、error、disabled、长文本、窄容器和关键交互；只有颜色或间距变化时再依赖视觉回归。`play` 函数适合验证组件内的真实操作，跨路由和跨服务流程仍应交给端到端测试。
+
+:::
+
 ## **2. 超越文档：“活的”协作与设计系统平台**
 
 Storybook 表面上是组件浏览器，但其真正的威力在于它成为了连接团队不同角色的桥梁，是设计系统得以落地和演进的基石。

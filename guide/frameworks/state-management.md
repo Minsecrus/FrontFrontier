@@ -43,3 +43,60 @@ title: "IV. 前端框架和库：构建现代 UI / IV.8 状态管理解决方案
 - Vue 新项目：默认先看 Pinia
 - 看到 Recoil / Vuex：优先理解为“接手旧项目时要会”
 
+::: details 启发式示例：Store 保存事实，派生值随用随算
+
+把 `subtotal` 与购物车条目同时保存，会形成两个事实来源：
+
+```ts
+const useCartStore = create((set) => ({
+  items: [],
+  subtotal: 0,
+  addItem: (item) => set((state) => ({
+    items: [...state.items, item],
+    subtotal: state.subtotal + item.price * item.quantity,
+  })),
+  // removeItem、修改数量、恢复缓存时都必须记得同步 subtotal。
+}));
+```
+
+更稳定的做法是只保存无法从别处得到的事实：
+
+```ts
+type CartItem = {
+  id: string;
+  price: number;
+  quantity: number;
+};
+
+type CartStore = {
+  items: CartItem[];
+  addItem: (item: CartItem) => void;
+  removeItem: (id: string) => void;
+};
+
+const useCartStore = create<CartStore>((set) => ({
+  items: [],
+  addItem: (item) => set((state) => ({
+    items: [...state.items, item],
+  })),
+  removeItem: (id) => set((state) => ({
+    items: state.items.filter((item) => item.id !== id),
+  })),
+}));
+
+function CartSummary() {
+  const subtotal = useCartStore((state) =>
+    state.items.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    ),
+  );
+
+  return <output>小计：{subtotal}</output>;
+}
+```
+
+启发式判断是：能从现有状态确定性计算出来的值，优先做 selector 或普通计算；计算成本经过测量确实过高时，再增加记忆化。保持单一事实来源，可以减少副本带来的同步路径。
+
+:::
+

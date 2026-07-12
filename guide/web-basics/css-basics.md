@@ -49,6 +49,65 @@ CSS（层叠样式表）用于样式化和布局网站，控制外观、颜色�
 
 **移动优先设计**是由移动互联网使用驱动的战略转变。它优先考虑受限环境下的核心内容和功能，然后逐步增强以适应更大屏幕，从而有效实现响应式设计。
 
+::: details 启发式示例：页面响应式与组件响应式解决不同问题
+
+同一张商品卡可能出现在主内容区，也可能出现在窄侧栏。媒体查询只知道视口宽度，容器查询能知道组件实际获得了多少空间。
+
+```html
+<section class="card-slot">
+  <article class="product-card">
+    <img src="/shoe.jpg" alt="灰色跑鞋">
+    <div>
+      <h2>城市跑鞋</h2>
+      <p>轻量鞋面，适合日常慢跑。</p>
+    </div>
+  </article>
+</section>
+```
+
+<CodeCompare left-title="媒体查询：跟随页面" right-title="容器查询：跟随组件">
+<template #left>
+
+```css
+.product-card {
+  display: grid;
+  gap: 1rem;
+}
+
+@media (min-width: 48rem) {
+  .product-card {
+    grid-template-columns: 10rem 1fr;
+  }
+}
+```
+
+</template>
+<template #right>
+
+```css
+.card-slot {
+  container-type: inline-size;
+}
+
+.product-card {
+  display: grid;
+  gap: 1rem;
+}
+
+@container (min-width: 32rem) {
+  .product-card {
+    grid-template-columns: 10rem 1fr;
+  }
+}
+```
+
+</template>
+</CodeCompare>
+
+判断方式是：页面导航、整体栅格等宏观变化通常看视口；可复用组件需要根据自身插槽宽度变化时，优先考虑容器查询。
+
+:::
+
 ## **II.3.6 调试 CSS：从结果反推规则**
 
 CSS 调试的核心是回答三个问题：规则有没有匹配？匹配后有没有被覆盖？最终计算值为什么是这样？
@@ -127,4 +186,43 @@ CSS 使用各种单位（rem、em、vw、vh）和函数（clamp()、calc()）来
 - **结构清晰：** 仅通过阅读类名，就能直观地理解 UI 元素的结构和组件间的从属关系。
 - **高可读性：** 类名本身就成为了一种文档，清晰地传达了其功能和状态。
 - **易于维护：** 所有样式都基于单一的类选择器，选择器结构保持扁平，样式覆盖和修改也更简单安全。
+
+<BadGoodExample bad-title="靠选择器权重抢样式" good-title="让组件状态显式可见">
+<template #bad>
+
+```css
+#shop .products article.card h3 {
+  color: var(--text-color);
+}
+
+#shop .products article.card.featured h3 {
+  color: var(--accent-color) !important;
+}
+```
+
+</template>
+<template #good>
+
+```css
+@layer components {
+  .product-card__title {
+    color: var(--text-color);
+  }
+
+  .product-card--featured .product-card__title {
+    color: var(--accent-color);
+  }
+}
+```
+
+</template>
+</BadGoodExample>
+
+```html
+<article class="product-card product-card--featured">
+  <h3 class="product-card__title">本周推荐</h3>
+</article>
+```
+
+启发式判断是：如果一次普通状态变化需要增加 ID、继续加深选择器或引入 `!important`，通常说明组件边界和状态命名需要进一步明确。BEM 只给需要独立样式或状态控制的元素命名。
 

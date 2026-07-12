@@ -37,8 +37,8 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [Linter & Formatter](/guide/tooling/lint-format)
 - [Git 进阶](/guide/tooling/git-workflows)
 - [高级工程化工作流](/guide/tooling/engineering-workflows)
-- [AI 辅助开发](/guide/tooling/ai-tools)
-- [设计协作实践](/guide/tooling/design-collaboration)
+- [AI 协作能力](/guide/tooling/ai-tools)
+- [设计协作能力](/guide/tooling/design-collaboration)
 
 ### 第四章 前端框架和库
 

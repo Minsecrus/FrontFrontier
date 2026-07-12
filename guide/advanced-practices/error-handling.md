@@ -39,6 +39,72 @@ title: "V. 高级主题和专业开发最佳实践 / V.10 错误处理和防御�
 - **区分用户错误和系统错误**：用户输错内容，应提示如何修正；系统异常，应提供重试、反馈或稍后再试。
 - **记录错误上下文**：捕获错误后应记录必要信息，让问题可以被定位和复盘。
 
+<BadGoodExample bad-title="所有失败都进入同一个 catch" good-title="让失败类型决定恢复动作" vertical>
+<template #bad>
+
+```ts
+async function submitProfile(input: ProfileInput) {
+  try {
+    await fetch("/api/profile", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(input),
+    });
+    toast("保存成功");
+  } catch {
+    toast("保存失败");
+  }
+}
+```
+
+</template>
+<template #good>
+
+```ts
+type SaveProfileResult =
+  | { ok: true }
+  | {
+      ok: false;
+      kind: "validation";
+      fields: Record<string, string>;
+    }
+  | { ok: false; kind: "conflict"; message: string }
+  | { ok: false; kind: "unauthenticated" }
+  | { ok: false; kind: "network"; retryable: boolean }
+  | { ok: false; kind: "server"; requestId?: string };
+
+async function submitProfile(input: ProfileInput) {
+  const result: SaveProfileResult = await saveProfile(input);
+
+  if (result.ok) {
+    toast("保存成功");
+    return;
+  }
+
+  switch (result.kind) {
+    case "validation":
+      form.setErrors(result.fields);
+      return;
+    case "conflict":
+      showInlineMessage(result.message);
+      return;
+    case "unauthenticated":
+      redirectToLogin({ returnTo: location.href });
+      return;
+    case "network":
+      showRetryAction({ enabled: result.retryable });
+      return;
+    case "server":
+      showIncidentMessage({ requestId: result.requestId });
+  }
+}
+```
+
+</template>
+</BadGoodExample>
+
+请求层应负责把断网、超时、HTTP 状态码和服务端错误体标准化成稳定结果；组件层负责把结果转换为用户能执行的下一步。搜索词改变后触发的 `AbortError` 属于主动取消，应直接结束旧流程。异常日志只保留 request ID、路由和版本等必要诊断上下文，并对请求数据执行脱敏与最小化处理。
+
 ## **表格：常见错误类型与处理方式**
 
 | 错误类型       | 常见表现                         | 处理策略                                      |

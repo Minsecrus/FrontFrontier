@@ -149,6 +149,61 @@ Input 的核心是输入、校验和修正：
 - 错误信息要靠近输入框，并说明修复方式。
 - 对邮箱、手机号、金额、日期等格式化输入，要考虑复制粘贴和移动端键盘。
 
+::: details 启发式示例：把异步表单状态做成显式契约
+
+```tsx
+import { useId, type FormEvent } from "react";
+
+type SaveState =
+  | { status: "idle" | "submitting" }
+  | { status: "success" | "error"; message: string };
+
+type ProfileFormProps = {
+  state: SaveState;
+  onSubmit: (name: string) => void;
+};
+
+export function ProfileForm({ state, onSubmit }: ProfileFormProps) {
+  const isSubmitting = state.status === "submitting";
+  const fieldId = useId();
+  const messageId = `${fieldId}-message`;
+  const feedback = "message" in state ? state : null;
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    onSubmit(String(data.get("displayName") ?? ""));
+  }
+
+  return (
+    <form onSubmit={handleSubmit} aria-busy={isSubmitting}>
+      <label htmlFor={fieldId}>显示名称</label>
+      <input
+        id={fieldId}
+        name="displayName"
+        aria-invalid={state.status === "error" || undefined}
+        aria-describedby={state.status === "error" ? messageId : undefined}
+        disabled={isSubmitting}
+      />
+
+      {feedback && (
+        <p id={messageId} role={feedback.status === "error" ? "alert" : "status"}>
+          {feedback.message}
+        </p>
+      )}
+
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "保存中…" : "保存"}
+      </button>
+    </form>
+  );
+}
+```
+
+组件用一个判别联合表示明确状态，保持 `loading`、`success` 与 `error` 互斥。提交中锁定输入和按钮，错误靠近字段并可被辅助技术宣布，成功反馈同时使用文字和颜色。父级负责真正的请求和状态转换，因此这些状态可以在 Storybook、测试和真实页面中被稳定复现。
+
+:::
+
 ### **Modal / Dialog**
 
 Modal 的核心是打断和决策：
@@ -157,6 +212,41 @@ Modal 的核心是打断和决策：
 - 主操作和取消操作要清晰区分。
 - 打开后焦点应进入 Dialog，关闭后焦点应回到触发元素。
 - 复杂长流程更适合独立页面或 Drawer。
+
+::: details 启发式示例：先使用原生 Dialog 语义
+
+```html
+<button type="button" id="open-delete-dialog">删除项目</button>
+
+<dialog id="delete-dialog" aria-labelledby="delete-dialog-title">
+  <form method="dialog">
+    <h2 id="delete-dialog-title">确认删除项目？</h2>
+    <p>删除后无法恢复。</p>
+
+    <button value="cancel">取消</button>
+    <button value="confirm">确认删除</button>
+  </form>
+</dialog>
+
+<script>
+  const trigger = document.querySelector("#open-delete-dialog");
+  const dialog = document.querySelector("#delete-dialog");
+
+  trigger.addEventListener("click", () => dialog.showModal());
+
+  dialog.addEventListener("close", () => {
+    if (dialog.returnValue === "confirm") {
+      deleteProject();
+    }
+
+    trigger.focus();
+  });
+</script>
+```
+
+原生 `<dialog>` 已提供模态层、Escape 关闭和焦点约束等基础行为。自定义 Dialog 或无头组件仍需完整实现并验证初始焦点、关闭条件、背景滚动、嵌套弹层和焦点归还。
+
+:::
 
 ### **Table**
 
@@ -189,4 +279,3 @@ Toast 的核心是轻量反馈：
 - 通过埋点、漏斗、RUM、用户反馈和可用性测试验证用户是否真的能完成任务。
 
 好的 UI/UX 需要让用户在真实限制下仍然能理解、操作、恢复并完成目标。前端工程师的价值，正在于把这种体验落实到组件、状态、性能和可访问性这些可执行的工程细节中。
-

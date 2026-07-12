@@ -64,10 +64,10 @@ export default defineConfig({
                   link: "/guide/tooling/lint-format",
                 },
                 { text: "IDE 配置", link: "/guide/tooling/ide" },
-                { text: "AI 辅助开发", link: "/guide/tooling/ai-tools" },
+                { text: "AI 协作能力", link: "/guide/tooling/ai-tools" },
                 { text: "浏览器开发者工具", link: "/guide/tooling/devtools" },
                 {
-                  text: "设计协作实践",
+                  text: "设计协作能力",
                   link: "/guide/tooling/design-collaboration",
                 },
               ],

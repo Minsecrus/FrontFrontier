@@ -33,6 +33,34 @@ JavaScript 随着 ES6+ 特性（如 let/const、箭头函数和增强的数据�
 
 掌握异步 JavaScript（Promises、`async`/`await`、事件循环）对于构建响应式前端应用至关重要。缺乏深入理解，开发者可能会创建”卡顿”的 UI 或陷入”回调地狱”，直接影响用户体验和代码可维护性。宏任务和微任务之间的区别，解释了复杂异步流中微妙的时间差异。
 
+::: details 启发式示例：先猜事件循环的输出顺序
+
+```js
+console.log("A");
+
+setTimeout(() => console.log("B: timeout"), 0);
+
+queueMicrotask(() => console.log("C: microtask"));
+
+Promise.resolve().then(() => console.log("D: promise"));
+
+console.log("E");
+```
+
+实际输出是：
+
+```txt
+A
+E
+C: microtask
+D: promise
+B: timeout
+```
+
+推理时逐轮问三个问题：当前调用栈是否已经清空？微任务队列里有哪些任务？进入下一轮事件循环后，哪个宏任务可以执行？`queueMicrotask` 和 Promise 回调都进入微任务队列，并按入队顺序执行；`setTimeout` 至少要等到下一轮。
+
+:::
+
 ## **II.5.3 DOM 操作：与网页交互**
 
 直接修改文档对象模型 ([DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)) 以响应用户操作或数据更改来更新内容、样式或结构。DOM 操作是 JavaScript 与 HTML 和 CSS 交互的核心机制。框架抽象了这一点，但底层概念仍然是基础。
@@ -184,5 +212,53 @@ ES 模块的广泛采用，是从旧的、效率较低的模块模式（[CommonJ
 - 用 IndexedDB 保存较大的草稿或收藏数据。
 - 用 DevTools 的 Elements、Network、Sources 和 Application 面板观察真实运行结果。
 
-这样的练习把“语言语法”“浏览器 API”“用户交互”“网络请求”“本地存储”和“调试方法”连成一条完整路径。它比单独背 API 更接近真实前端开发。
+::: details 启发式示例：只让最后一次搜索更新界面
 
+下面只保留搜索请求最关键的竞态边界：
+
+```js
+const form = document.querySelector("#search-form");
+let controller;
+let latestRequest = 0;
+
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const requestId = ++latestRequest;
+  controller?.abort();
+
+  const data = new FormData(form);
+  const keyword = String(data.get("keyword") ?? "").trim();
+  if (!keyword) return;
+
+  controller = new AbortController();
+
+  try {
+    const response = await fetch(
+      `/api/products?q=${encodeURIComponent(keyword)}`,
+      { signal: controller.signal },
+    );
+
+    if (!response.ok) {
+      throw new Error(`请求失败：${response.status}`);
+    }
+
+    const products = await response.json();
+    if (requestId !== latestRequest) return;
+
+    renderProducts(products);
+  } catch (error) {
+    const wasAborted =
+      error instanceof DOMException && error.name === "AbortError";
+    if (wasAborted || requestId !== latestRequest) return;
+
+    showSearchError();
+  }
+});
+```
+
+`AbortController` 用于停止已经过时的工作，请求序号则保证只有最新意图能写入 UI。两层约束解决的问题不同：取消是一种优化，“提交结果前再次确认”才是正确性边界。真实项目还应验证接口响应，并把用户提示与诊断日志分开。
+
+:::
+
+这样的练习把“语言语法”“浏览器 API”“用户交互”“网络请求”“本地存储”和“调试方法”连成一条完整路径。它比单独背 API 更接近真实前端开发。

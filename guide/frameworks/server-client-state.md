@@ -46,5 +46,67 @@ title: "IV. 前端框架和库：构建现代 UI / IV.10 理解服务器状态�
 | URL 状态         | 浏览器地址栏   | 搜索、筛选、分页、排序           | Router、URLSearchParams、框架路由能力           |
 | 表单状态         | 用户输入       | 输入值、校验错误、提交状态       | 原生表单、React Hook Form、框架 Action          |
 
+<BadGoodExample bad-title="按页面建一个万能 Store" good-title="按所有权和生命周期拆分">
+<template #bad>
+
+```tsx
+const usePageStore = create((set) => ({
+  keyword: "",
+  products: [],
+  isLoading: false,
+  productError: null,
+  isDetailsOpen: false,
+  formDraft: { note: "" },
+  theme: "light",
+
+  loadProducts: async () => {
+    set({ isLoading: true });
+    const products = await fetch("/api/products")
+      .then((response) => response.json());
+    set({ products, isLoading: false });
+  },
+}));
+```
+
+</template>
+<template #good>
+
+```tsx
+function ProductsPage() {
+  // 可分享、可前进后退：URL 状态
+  const [params, setParams] = useSearchParams();
+  const keyword = params.get("q") ?? "";
+
+  // 远端拥有、需要缓存和失效：服务器状态
+  const products = useQuery({
+    queryKey: ["products", { keyword }],
+    queryFn: () => fetchProducts(keyword),
+  });
+
+  // 只影响当前组件树：本地 UI 状态
+  const [selectedProductId, setSelectedProductId] =
+    useState<string | null>(null);
+
+  // 当前表单编辑过程：表单状态
+  const form = useForm({ defaultValues: { note: "" } });
+
+  // 真正跨页面共享且由客户端拥有：共享状态
+  const theme = usePreferencesStore((state) => state.theme);
+
+  function updateKeyword(nextKeyword: string) {
+    const next = new URLSearchParams(params);
+    nextKeyword ? next.set("q", nextKeyword) : next.delete("q");
+    setParams(next, { replace: true });
+  }
+
+  // 根据以上状态渲染页面……
+}
+```
+
+</template>
+</BadGoodExample>
+
+这个拆分让每份状态交给最了解其生命周期的系统。判断时依次问：它能否从 props 或其他状态计算出来？刷新后是否应该保留？是否应该出现在 URL？真正的数据所有者是谁？多个远距离组件共同修改且由浏览器拥有的数据，适合进入客户端共享 store。
+
 清晰区分这些状态，是现代前端架构中非常基础但又常被忽略的一步。  
 它直接影响组件边界、数据获取位置、缓存策略、用户体验和代码可维护性。很多状态管理问题都需要先判断这份状态到底属于哪里。

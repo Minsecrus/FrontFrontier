@@ -45,6 +45,66 @@ title: "VI. 新兴技术和专业领域 / VI.1 渐进式 Web 应用程序 (PWA)�
 - **Location (地理位置), Device Orientation (设备方向), Payments (支付), Credentials (凭证管理):** 这些 API 允许 Web 应用访问通常只有原生应用才能访问的设备硬件和系统功能。能够获取用户位置、感知设备旋转、调用原生支付界面等，极大地模糊了 Web 应用和原生应用之间的界限。
 - **Notifications (通知):** 通常与 Service Worker 配合使用，是实现消息推送的具体 API。这是 PWA 能够像原生 App 一样，在用户不活跃时重新吸引其注意力的核心功能，是“有吸引力”的重要体现。
 
+::: details 启发式示例：离线能力是一组明确的缓存决策
+
+Manifest 负责 `name`、`start_url`、`display`、`icons` 等安装元数据，页面通过 `navigator.serviceWorker.register("/sw.js")` 注册 Service Worker。下面只展示最关键的缓存决策：
+
+```js
+const CACHE = "reader-v2";
+const APP_SHELL = ["/offline.html", "/styles.css", "/app.js"];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE).then((cache) => cache.addAll(APP_SHELL)),
+  );
+});
+
+self.addEventListener("fetch", (event) => {
+  const request = event.request;
+  if (request.method !== "GET") return;
+
+  if (request.mode === "navigate") {
+    event.respondWith(networkFirst(request));
+    return;
+  }
+
+  const url = new URL(request.url);
+  const isAsset =
+    url.origin === self.location.origin &&
+    ["style", "script", "image"].includes(request.destination);
+
+  if (isAsset) event.respondWith(cacheFirst(request));
+});
+
+async function networkFirst(request) {
+  try {
+    return await fetch(request);
+  } catch {
+    const cache = await caches.open(CACHE);
+    return (await cache.match("/offline.html")) ??
+      new Response("当前离线。", { status: 503 });
+  }
+}
+
+async function cacheFirst(request) {
+  const cache = await caches.open(CACHE);
+  const cached = await cache.match(request);
+  if (cached) return cached;
+
+  const response = await fetch(request);
+
+  if (response.ok) {
+    await cache.put(request, response.clone());
+  }
+
+  return response;
+}
+```
+
+缓存策略应按资源风险和更新方式选择。带身份信息的页面和接口默认走网络；静态资源适合 cache-first，导航更适合 network-first。改变预缓存资源时应更新缓存版本，并在 `activate` 阶段只清理本应用的旧缓存；运行时缓存还要设置数量或过期上限。
+
+:::
+
 PWA（Progressive Web Apps）代表着移动端 Web 体验的未来方向，它融合了 Web 的开放性与原生应用的优势。其核心特性包括：可安装性 (Installability)，通过 [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) 文件定义应用的名称、图标、主题色、启动 URL 等，使其可以被添加到用户主屏幕，提供类似原生应用的启动体验。离线能力 (Offline Capability)，通过 Service Worker 拦截网络请求，实现资源缓存、离线访问和断网提示，提供可靠的用户体验。推送通知 (Push Notifications)，通过 Service Worker 和 [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API)，允许 Web 应用向用户发送推送通知，即使应用未打开也能接收消息，增强用户粘性。后台同步 (Background Sync)，允许 Web 应用在用户离线时发起网络请求，并在用户重新上线时自动同步数据，例如离线提交表单。Web Share API / Web Share Target API，允许 Web 应用调用操作系统的原生分享功能，或作为分享目标接收来自其他应用的分享内容。SEO 优化，PWA 同样需要 SEO。提交站点地图、创建自定义 URL（使用 HTML5 History API）、监控性能、优化元数据和 Schema、考虑混合渲染（SSR/SSG）等都是 PWA SEO 的关键策略。
 
 “移动优先”是一种设计思维，而非单纯的技术实现。响应式设计、Touch 事件和性能优化是移动端 Web 开发的技术细节，而这些技术的应用恰恰体现了“移动优先”（Mobile-First）的设计思维。它要求开发者在设计和开发之初就考虑移动设备的限制——小屏幕、触摸交互、有限带宽——并以此为基础逐步扩展到桌面端。这不仅是布局的适应，更是用户体验、交互模式和性能策略的根本转变。专业级前端工程师需要将移动端体验作为核心关注点，理解其对整个开发流程和技术选型的深远影响。从 UI 设计到代码实现，再到性能监控，都必须以移动用户为中心。这种思维转变直接关系到用户覆盖率和产品竞争力，是构建未来 Web 应用的关键。

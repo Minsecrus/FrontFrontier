@@ -34,6 +34,43 @@ XSS 的本质是让不可信数据进入可执行上下文。传统做法强调�
 - **CSP Report-Only 迁移**：已有项目可以先部署 `Content-Security-Policy-Report-Only` 收集违规报告，分析 inline script、第三方脚本和动态执行代码，再逐步切换到强制策略。
 - **Trusted Types**：适合大型前端应用治理 DOM XSS。启用后，危险 DOM sink 需要接收 `TrustedHTML`、`TrustedScript` 或 `TrustedScriptURL` 等可信类型，团队可以把安全处理逻辑收敛到少数策略中。
 
+<BadGoodExample bad-title="把不可信数据拼进 HTML" good-title="按文本和节点处理数据">
+<template #bad>
+
+```js
+function renderProduct(product) {
+  results.innerHTML = `
+    <li class="product">
+      <strong>${product.name}</strong>
+      <span>${product.description}</span>
+    </li>
+  `;
+}
+```
+
+</template>
+<template #good>
+
+```js
+function renderProduct(product) {
+  const item = document.createElement("li");
+  const name = document.createElement("strong");
+  const description = document.createElement("span");
+
+  item.className = "product";
+  name.textContent = product.name;
+  description.textContent = product.description;
+  item.append(name, description);
+
+  results.replaceChildren(item);
+}
+```
+
+</template>
+</BadGoodExample>
+
+这里的边界是“这份数据是否应该被解释为 HTML”。普通名称、评论和描述应作为文本处理；确实需要保留格式的富文本，应使用经过审计且配置明确的 sanitizer，并结合 CSP 等纵深防御。HTML 清洗应交给经过审计的解析与净化方案。
+
 示例方向：
 
 ```http
