@@ -42,6 +42,10 @@ export default defineConfig({
                   text: "TypeScript",
                   link: "/guide/web-basics/typescript",
                 },
+                {
+                  text: "浏览器运行时与渲染管线",
+                  link: "/guide/web-basics/browser-runtime",
+                },
               ],
             },
             {
@@ -105,7 +109,7 @@ export default defineConfig({
                   link: "/guide/frameworks/server-client-state",
                 },
                 {
-                  text: "现代后端集成模式",
+                  text: "API 与数据契约",
                   link: "/guide/frameworks/backend-integration",
                 },
               ],
@@ -213,6 +217,10 @@ export default defineConfig({
             {
               text: "Mini Vue：从响应式到模板编译",
               link: "/principles/mini-vue",
+            },
+            {
+              text: "Preact 11：内核剖析",
+              link: "/principles/preact",
             },
           ],
         },

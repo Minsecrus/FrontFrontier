@@ -1,54 +1,254 @@
 ---
-title: "IV. 前端框架和库：构建现代 UI / IV.11 现代后端集成模式"
+title: "IV. 前端框架和库：构建现代 UI / IV.11 API 与数据契约：从 HTTP 到现代后端集成"
 ---
 
-# IV.11 现代后端集成模式
+# IV.11 API 与数据契约：从 HTTP 到现代后端集成
 
-前端应用与后端服务的数据交互是其核心功能之一。随着前端复杂度的提升和业务场景的多样化，传统的 RESTful API 模式在某些情况下暴露出局限性。现代前端开发引入了更多灵活、高效的后端集成模式，以满足不同场景下的数据获取、实时通信和内容管理需求。
+API 契约定义前端与服务端共同遵守的通信规则。它覆盖请求意图、数据结构、错误格式、缓存方式、并发行为和版本演进。契约越清楚，前端越容易生成稳定状态、定位失败并安全重试。
 
-## **IV.11.1 GraphQL**
+一条数据从服务端进入界面，通常经过五层：
 
-[GraphQL](https://graphql.org/) 是一种为 API 而生的查询语言和数据操作语言，由 Facebook 于 2015 年发布，旨在解决 REST API 中存在的“过度获取（Over-fetching）”和“不足获取（Under-fetching）”问题。相较于 REST，GraphQL 允许客户端精确地声明它需要的数据结构和字段。服务器只会返回客户端请求的精确数据，减少不必要的数据传输，实现客户端驱动的数据获取。客户端可以在一个 GraphQL 请求中获取多个相关资源的数据，减少了 HTTP 请求次数，尤其适用于需要聚合多个数据源的场景。GraphQL 使用 Schema 定义语言（SDL）来定义 API 的类型系统和数据服务，明确了所有可用数据及其访问/修改方式，这提供了强大的类型安全和自文档化能力，即强类型 Schema。GraphQL API 通常通过废弃字段（deprecated fields）和添加新字段的方式实现向后兼容，降低 REST 中常见 URL 版本化问题的复杂度。它特别适用于客户端数据需求动态变化或不同客户端（Web、移动）需要不同数据集的场景，提供了高度灵活性。
+> 传输方式 → 协议语义 → 数据结构 → 业务语义 → 界面状态
 
-GraphQL 与 REST 存在显著差异。在请求方式上，REST 使用 HTTP 动词（GET, POST, PUT, DELETE）和 URL 来标识资源和操作；GraphQL 所有请求通常通过 HTTP POST 发送，使用 query（查询数据）、mutation（修改数据）和 subscription（实时数据更新）来定义操作。在数据返回方面，REST 返回服务器定义的整个资源结构；GraphQL 只返回客户端在查询中指定的数据。服务器端 Schema 是 GraphQL 的强制要求，用于定义数据结构和操作；REST 的 Schema 则更多依赖文档或约定。版本化方面，REST 通常通过 URL 版本化；GraphQL 通常通过 API 向后兼容性维持演进。
+GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基础契约后，工具选型会更容易解释。
 
-在 GraphQL 的库使用方面，[Apollo Client](https://www.apollographql.com/docs/react/) 是功能强大、灵活的 GraphQL 客户端，提供了数据缓存、状态管理、错误处理、乐观 UI 更新等开箱即用的功能，与 React、Vue、Angular 等前端框架集成良好。[Relay](https://relay.dev/) 由 Facebook 开发，与 React 深度集成，专注于提供极致性能和数据一致性。它采用编译时优化，对数据依赖有更严格的要求，学习曲线相对较陡峭。
+## **IV.11.1 契约包含哪些层次**
 
-## **IV.11.2 gRPC-Web**
+| 契约层次 | 需要回答的问题 | 示例 | 工具或规范示例 |
+| :--- | :--- | :--- | :--- |
+| **传输** | 数据通过什么通道到达，连接怎样恢复 | 请求响应、服务器推送、双向消息 | HTTP、SSE、WebSocket |
+| **协议语义** | 这次操作想做什么，成功与失败怎样表达 | GET 读取、PATCH 更新、404 资源缺失、ETag 校验 | [HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html) |
+| **结构** | 字段、类型、必填项和嵌套关系是什么 | 用户包含 id、name、role | TypeScript、JSON Schema、OpenAPI、GraphQL SDL、Protobuf |
+| **业务语义** | 字段代表什么，允许哪些状态变化 | 金额的币种、订单状态转换、权限范围 | 领域文档、状态机、示例数据 |
+| **界面映射** | 前端如何呈现等待、空数据、冲突与失败 | loading、empty、validation error、conflict | 组件状态、路由状态、服务器状态工具 |
 
-gRPC（Google Remote Procedure Call）是高性能、开源的 RPC 框架，[gRPC-Web](https://github.com/grpc/grpc-web) 是其 JavaScript 实现，允许浏览器客户端直接与 gRPC 服务通信。gRPC-Web 基于 HTTP/2 和 Protocol Buffers（Protobuf）进行数据序列化，实现了高性能。Protobuf 是一种高效、紧凑的二进制序列化格式，比 JSON 更小、解析更快，显著提升了通信性能。HTTP/2 的多路复用、头部压缩等特性也进一步优化了传输效率。通过 Protobuf 定义服务接口（IDL），可以自动生成多种语言的客户端和服务器端代码，确保了前后端接口的严格一致性，减少了集成错误，实现了强类型接口。gRPC 支持多种编程语言，非常适合微服务架构中不同服务使用不同语言的场景，提供了多语言支持。除了传统的请求 - 响应模式，gRPC 还支持服务器端流、客户端流和双向流，适用于实时通信和数据流处理，即流式通信。
+结构验证只能确认“数据长得对”。业务规则还需要回答“数据表达的事情是否成立”。例如，金额字段是数字属于结构规则；金额必须大于零且币种受支持属于业务规则。
 
-gRPC-Web 的适用场景包括：微服务间通信，gRPC 因其高性能和多语言特性，被广泛认为是内部微服务间通信的最佳选择。当后端采用 gRPC 构建微服务时，gRPC-Web 允许前端直接复用 Protobuf 定义，实现端到端的强类型通信，减少了 API 网关的转换开销，适用于前端与后端微服务直接通信。它也适用于需要极致性能和强类型契约的场景，例如实时数据仪表盘、高并发交易系统等。然而，gRPC-Web 需要代理（如 [Envoy](https://www.envoyproxy.io/)）来转换浏览器请求为 gRPC 协议，增加了部署复杂性。
+## **IV.11.2 用 HTTP 语义表达操作意图**
 
-## **IV.11.3 tRPC：类型安全**
+[RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) 定义了 HTTP 方法、状态码、条件请求和表示元数据。前端应根据这些语义决定缓存、重试和界面反馈。
 
-在追求极致开发者体验和端到端类型安全的过程中，**[tRPC](https://trpc.io/) (TypeScript Remote Procedure Call)** 提供了一种颠覆性的、无需代码生成或 Schema 定义的 API 构建方式。它并非一种新的协议，而是巧妙地利用了 TypeScript 的类型推断能力，使得前端可以直接像调用本地函数一样调用后端 API，并且获得完整的类型提示和安全保障。
+### **方法、安全性与幂等性**
 
-- **核心理念**：tRPC 的魔法在于，开发者在后端定义 API 路由和逻辑，前端便能通过类型导入直接推断出 API 的完整类型签名。这意味着，当你在前端调用某个后端函数时，其参数类型、返回值类型都会被自动识别。整个过程**没有中间的 Schema 定义语言（如 GraphQL 的 SDL）或代码生成步骤**，实现了真正的“单一事实来源”（Single Source of Truth），即后端的 TypeScript 代码本身。
+| 方法 | 常见意图 | 安全方法 | 幂等方法 | 前端常见场景 |
+| :--- | :--- | :--- | :--- | :--- |
+| **GET** | 读取资源表示 | 是 | 是 | 列表、详情、搜索 |
+| **POST** | 创建资源或触发一次动作 | 否 | 通常否 | 创建订单、提交任务 |
+| **PUT** | 用完整表示替换目标资源 | 否 | 是 | 保存完整配置 |
+| **PATCH** | 对资源执行部分更新 | 否 | 取决于补丁语义 | 修改资料中的部分字段 |
+| **DELETE** | 删除目标资源 | 否 | 是 | 删除收藏、撤销资源 |
 
-- **开发者体验的革命**：这种模式极大地简化了全栈开发流程。当前后端 API 发生变更时（例如修改某个函数参数），TypeScript 编译器会立刻在前端代码中标记出所有需要修改的地方，从根本上消除了前后端数据契约不一致的风险。它带来了无与伦比的开发速度和重构信心，使得全栈 TypeScript 应用的开发体验如丝般顺滑。
+“幂等”描述多次相同请求产生的预期效果与一次相同。响应状态可以随资源当前状态变化，例如第一次 DELETE 返回 204，后续请求返回 404，删除效果仍然保持一致。
 
-- **与 GraphQL 和 REST 的对比**：
-  - 相较于 REST，tRPC 提供了端到端的类型安全，减少手动维护 API 文档和类型定义的繁琐工作。
-  - 相较于 GraphQL，tRPC 在实现类型安全的同时，省去了编写 Schema 和解析复杂查询的开销，其心智模型更接近于传统的函数调用，更为轻量和直接。
+重试策略应来自方法语义和业务契约：
 
-tRPC 的兴起，代表了在全栈 TypeScript 生态中对“零配置、零模板代码”的极致追求。虽然它强依赖于 TypeScript，但在构建类型安全的现代 Web 应用时，它提供了一种比 GraphQL 更轻量、比 REST 更安全的创新范式。
+- GET、PUT、DELETE 等幂等操作可以在网络失败后按策略重试。
+- POST 需要由服务端提供明确的去重或幂等机制，例如业务请求 ID。
+- 429 与 503 可以结合 **Retry-After** 和指数退避安排重试。
+- 身份失效、字段校验失败和权限不足应直接进入对应恢复流程。
 
-## **IV.11.4 实时通信方案**
+### **状态码与错误正文**
 
-在需要实时数据更新的场景中，前端需要建立持久连接与服务器进行通信。
+状态码提供机器可读的第一层结果：
 
-**WebSocket** 是一种计算机通信协议，通过单个 TCP 连接提供全双工（双向）通信通道。其优势在于客户端和服务器可以同时发送和接收消息，适用于需要频繁双向交互的场景。一旦连接建立，后续数据传输无需重复发送 HTTP 头部，减少了开销和延迟，实现了低延迟、高效率。相比 HTTP 轮询，WebSocket 在建立连接后，数据帧开销极小，协议开销小。它理想的适用场景包括聊天应用、在线游戏、实时协作工具、实时股价更新、通知系统等。然而，WebSocket 没有内置重连机制（需要手动实现），且连接维护对服务器资源消耗较大。
+- **2xx**：请求已经按相应语义成功处理。
+- **400 / 422**：请求格式或业务输入需要修正。
+- **401**：客户端需要恢复认证或重新登录。
+- **403**：当前身份缺少执行该操作的权限。
+- **404**：目标资源不存在或当前主体不可见。
+- **409**：当前资源状态与操作发生冲突。
+- **412**：条件请求中的前置条件失败。
+- **429**：请求频率超过服务允许范围。
+- **5xx**：服务端或上游系统发生失败。
 
-**Server-Sent Events (SSE)** 是一种允许网页从服务器获取更新的标准，主要用于服务器到客户端的单向通信。其优势在于基于标准 HTTP 协议，实现相对简单，尤其是在客户端，即单向通信的实现较为简单。当连接断开时，浏览器会自动尝试重新连接服务器，提供了内置重连机制。由于基于 HTTP，通常不会被企业防火墙阻挡，即不存在防火墙问题。它还可以逐条处理和丢弃消息，不会像 XHR 那样缓冲整个响应，提高了内存效率。SSE 理想的适用场景包括实时博客、新闻订阅、股票行情、直播评论、进度条更新等只需服务器推送数据的场景。其缺点在于仅支持 UTF-8 文本消息，不支持二进制数据，存在数据格式限制。此外，每个浏览器通常只能有 6 个并发的 SSE 连接，存在并发连接限制。
+[RFC 9457 Problem Details](https://www.rfc-editor.org/rfc/rfc9457.html) 提供了通用错误正文结构，核心字段包括 type、title、status、detail 和 instance。服务可以增加 fieldErrors、requestId 等扩展字段，让前端稳定映射表单错误并关联服务端日志。
 
-## **IV.11.5 Headless CMS 集成**
+### **缓存与条件请求**
 
-Headless CMS（无头内容管理系统）是一种内容管理后端，它只提供内容管理和 API 服务，不包含前端展示层。前端框架（特别是元框架如 Next.js, Nuxt.js）通过 API（REST 或 GraphQL）从 Headless CMS 获取内容，并负责内容的渲染和展示。其优势在于实现了前后端分离，允许前端团队完全掌控 UI 和用户体验，不受 CMS 模板的限制。前端可以选择任何喜欢的框架和技术栈，实现了技术栈自由。同一内容可以通过 API 发布到网站、移动应用、智能设备等多个渠道，支持多渠道发布。内容模型可定制，易于扩展以适应业务需求，提供了灵活性与可扩展性。
+[RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) 定义 HTTP 缓存行为。几个常见指令承担不同责任：
 
-在实践中，[Strapi](https://strapi.io/) 是开源的、基于 Node.js/React/TypeScript 的 Headless CMS，拥有庞大的社区和丰富的插件生态系统。开发者可以自托管，完全掌控数据和定制性。[Contentful](https://www.contentful.com/) 是流行的 SaaS（软件即服务）Headless CMS，提供云端内容管理和 API 服务，具有友好的 UI 界面和强大的内容建模能力。
+- **max-age** 定义响应保持新鲜的时间。
+- **private** 限制响应由单个用户的私有缓存保存。
+- **no-cache** 允许保存响应，并要求复用前先向源站验证。
+- **no-store** 要求缓存避免保存请求或响应。
+- **ETag** 为某个资源表示提供验证器。
 
-Headless CMS 与前端框架（特别是元框架）结合紧密。元框架如 Next.js（React）、Nuxt.js（Vue）和 [SvelteKit](https://kit.svelte.dev/)（Svelte）非常适合与 Headless CMS 结合，实现内容驱动的网站。它们通常提供服务器端渲染（SSR）、静态站点生成（SSG）和增量静态再生（ISR）等功能，可以预先渲染内容，提升首屏加载速度和 SEO 表现。其工作流程是：开发者在 Headless CMS 中创建和管理内容，前端框架在构建时（SSG）或请求时（SSR）通过 API 获取内容，并将其渲染为 HTML。当内容更新时，可以通过 Webhook 触发前端应用的重新构建或增量更新。
+客户端可以携带 **If-None-Match** 验证缓存；表示未变化时，服务端返回 304。更新操作可以携带 **If-Match** 表达“只修改我读到的版本”；资源已经变化时，服务端返回 412，前端再显示冲突并帮助用户合并。
+
+## **IV.11.3 静态类型与运行时验证共同守住边界**
+
+TypeScript 会在编译后擦除类型。网络响应、URL 参数、本地存储和跨窗口消息需要运行时验证，再转换成应用内部类型。
+
+| 契约方式 | 契约来源 | 前端获得的能力 | 工具示例说明 |
+| :--- | :--- | :--- | :--- |
+| **代码内 Schema** | 前端或共享包中的验证定义 | 运行时验证和类型推导可以放在一起 | Zod、Valibot 用 Schema 推导 TypeScript 类型 |
+| **JSON Schema** | 独立的 JSON 结构规范 | 跨语言验证、文档和测试数据生成 | [JSON Schema](https://json-schema.org/) 描述 JSON 的结构约束 |
+| **OpenAPI** | HTTP 路径、方法、参数、响应和 Schema | 文档、客户端生成、Mock 与契约检查 | [OpenAPI Specification](https://spec.openapis.org/oas/) 描述 HTTP API |
+| **GraphQL Schema** | 服务端 SDL | 查询字段、变量和响应类型生成 | GraphQL Code Generator、Apollo、Relay |
+| **Protobuf** | 独立 IDL | 多语言代码生成和紧凑二进制消息 | gRPC、gRPC-Web |
+| **TypeScript 推断** | 同一 TypeScript 工程中的服务端路由 | 端到端编辑器提示和重构反馈 | tRPC 共享路由类型 |
+
+生成的 TypeScript 类型负责开发期反馈，运行时验证负责处理真实输入。使用 OpenAPI、GraphQL 或 Protobuf 时，团队还要明确生成代码版本、兼容策略和部署顺序。
+
+::: details 启发式示例：统一验证成功与失败响应
+
+```ts
+import { z } from "zod";
+
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  role: z.enum(["member", "admin"]),
+});
+
+const ProblemSchema = z.object({
+  title: z.string(),
+  detail: z.string().optional(),
+}).passthrough();
+
+class ApiError extends Error {
+  constructor(
+    readonly status: number,
+    readonly requestId: string | null,
+    message: string,
+  ) {
+    super(message);
+  }
+}
+
+export async function getUser(userId: string, signal: AbortSignal) {
+  const response = await fetch(
+    "/api/users/" + encodeURIComponent(userId),
+    {
+      signal,
+      headers: {
+        Accept: "application/json, application/problem+json",
+      },
+    },
+  );
+  const body: unknown = await response.json().catch(() => null);
+
+  if (!response.ok) {
+    const problem = ProblemSchema.safeParse(body);
+    throw new ApiError(
+      response.status,
+      response.headers.get("x-request-id"),
+      problem.success
+        ? problem.data.detail ?? problem.data.title
+        : "请求失败",
+    );
+  }
+
+  return UserSchema.parse(body);
+}
+```
+
+这个边界依次检查 HTTP 状态、错误结构和成功结构。组件只需要处理 ApiError、取消状态和已经验证的 User 数据。
+
+:::
+
+## **IV.11.4 请求生命周期：取消、竞态与重试**
+
+稳定请求层需要覆盖整个生命周期：
+
+- **取消**：页面离开、搜索条件变化或组件卸载时，通过 AbortSignal 结束已经失去价值的请求。
+- **超时**：由应用策略定义最大等待时间，并把超时与用户主动取消分开记录。
+- **竞态**：连续搜索等场景只接收当前查询对应的结果，旧请求完成后不覆盖新状态。
+- **去重**：多个组件读取同一资源时，共享进行中的请求或服务器状态缓存。
+- **重试**：根据幂等性、失败类型、Retry-After 和退避策略决定。
+- **可观测性**：保留 request ID、路由模板、状态码、耗时和发布版本，同时执行数据最小化。
+
+数据获取库和路由 loader 可以封装缓存、去重与重新验证。API 契约仍然负责告诉这些工具：什么可以重试、何时过期、哪些失败需要用户操作。
+
+## **IV.11.5 更新并发与分页稳定性**
+
+### **用 ETag 防止覆盖新版本**
+
+假设用户打开资料页时收到：
+
+```http
+HTTP/1.1 200 OK
+ETag: "profile-v7"
+Content-Type: application/json
+
+{"id":"42","name":"Ada"}
+```
+
+保存时把读取到的版本带回服务端：
+
+```http
+PATCH /api/users/42 HTTP/1.1
+If-Match: "profile-v7"
+Content-Type: application/json
+
+{"name":"Ada Lovelace"}
+```
+
+当前版本仍是 profile-v7 时，服务端执行更新并返回新的 ETag。其他人已经更新该资源时，服务端返回 412，前端展示最新数据和冲突恢复入口。
+
+### **分页契约要定义顺序**
+
+| 分页方式 | 契约内容 | 适合场景 | 需要处理的边界 |
+| :--- | :--- | :--- | :--- |
+| **Offset / page** | offset、limit 或 page、pageSize，可选 total | 数据变化较少、需要跳页的后台表格 | 插入和删除可能造成重复或跳项 |
+| **Cursor** | opaque cursor、limit、nextCursor、hasNextPage | 持续变化的信息流和大数据集合 | 排序必须稳定，cursor 的有效期需要约定 |
+
+分页结果还应明确：
+
+- 排序字段和相同值时的稳定次序；
+- 筛选条件是否编码进 cursor；
+- total 是精确值、估算值还是省略；
+- 空页、末页和 cursor 失效怎样表达；
+- 新数据到达后，列表采用刷新、插入还是提示用户。
+
+## **IV.11.6 契约演进与兼容性**
+
+前后端可以独立部署，因此兼容窗口属于契约的一部分。
+
+- 优先增加可选字段，并为新字段提供清晰默认语义。
+- 调整必填字段时，先让服务端接受新旧两种输入，再升级客户端，最后收紧服务端。
+- 枚举扩展时，为客户端定义未知值的展示与记录策略。
+- 废弃字段需要公告、迁移窗口和调用量观测。
+- 破坏性语义变化可以使用新路径、媒体类型或明确版本策略。
+- OpenAPI diff、Schema 检查和 consumer contract test 可以在 CI 中阻止意外破坏。
+
+客户端生成可以减少手写类型漂移；运行时 Schema、兼容测试和部署顺序共同保证真实系统的安全演进。
+
+## **IV.11.7 现代后端集成模式**
+
+这些方案采用不同方式表达查询、类型与连接，前面的 HTTP、错误、验证和演进原则仍然适用。
+
+### **GraphQL：由客户端声明响应形状**
+
+[GraphQL](https://graphql.org/) 通过 Schema 定义字段、参数和操作。客户端使用 query 读取数据、mutation 修改数据，并只声明当前界面需要的字段。
+
+[Apollo Client](https://www.apollographql.com/docs/react/) 展示了规范化缓存、错误处理和乐观更新等客户端能力；[Relay](https://relay.dev/) 展示了编译期数据依赖与片段组合。实际系统还要治理查询复杂度、字段权限、缓存键、错误数组和 Schema 废弃流程。
+
+### **gRPC-Web：以 Protobuf 作为跨语言契约**
+
+[gRPC-Web](https://github.com/grpc/grpc-web) 让浏览器客户端使用 Protobuf 生成的类型与服务通信。它适合后端已经采用 gRPC、团队重视多语言代码生成和严格消息结构的场景。
+
+浏览器调用通常经过 Envoy 等代理或网关。团队需要核对调用类型、流式支持、错误映射、网关配置和浏览器网络限制，再决定它是否适合公开 Web 客户端。
+
+### **tRPC：共享 TypeScript 路由类型**
+
+[tRPC](https://trpc.io/) 从服务端 TypeScript 路由推断输入与输出类型，适合同一团队维护的全栈 TypeScript 应用。它提供紧密的编辑器反馈和重构体验。
+
+运行时输入校验、认证授权、错误结构、缓存语义和公共 API 兼容期仍需显式设计。跨语言客户端较多时，OpenAPI、GraphQL 或 Protobuf 通常更容易共享契约。
+
+### **实时通信：先确定消息方向**
+
+- **轮询**适合更新频率低、实现成本敏感的状态查询。
+- **SSE**使用 HTTP 向客户端持续发送文本事件，浏览器提供 EventSource 和自动重连语义。
+- **WebSocket**提供全双工文本或二进制消息，适合聊天、协作和高频双向交互。
+
+实时消息契约还要定义消息类型、版本、顺序、重复处理、确认、心跳、重连恢复、背压和认证续期。
+
+### **Headless CMS：内容模型也是数据契约**
+
+Headless CMS 通过 REST 或 GraphQL 提供内容，前端负责展示与交互。[Strapi](https://strapi.io/) 代表可自托管方案，[Contentful](https://www.contentful.com/) 代表 SaaS 内容平台。
+
+集成时需要确认内容模型、草稿预览、多语言字段、资源 URL、Webhook、缓存失效和发布回滚。Next.js、Nuxt、SvelteKit 等元框架可以在构建期或请求期读取内容，并按页面需求选择 SSG、SSR 或增量更新。
 
 ## **表格：API 通信模式对比 (GraphQL vs. REST)**
 
@@ -77,7 +277,20 @@ Headless CMS 与前端框架（特别是元框架）结合紧密。元框架如 
 | **防火墙兼容性** | 可能受企业防火墙影响                   | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)，通常无防火墙问题                                                |
 | **典型用例**     | 聊天、在线游戏、实时协作、高频数据更新 | 新闻订阅、股票行情、直播评论、进度条、通知                                                                                      |
 
-前端对数据获取的“控制权”日益增强。在传统 REST API 中，服务器决定返回的数据结构，前端可能面临过度获取或不足获取的问题。GraphQL 的出现，将数据获取的“控制权”从服务器转移到客户端。前端可以精确地定义所需数据，按需获取，减少了网络传输量和多次请求。gRPC-Web 则通过强类型契约和二进制传输，进一步优化了数据传输的效率和可靠性。这种趋势反映了现代前端应用日益复杂和独立，对后端数据的消费需求更加精细化和动态化。专业级前端工程师既是 UI 的构建者，也是数据需求的定义者和优化者，需要深入理解不同通信协议的优劣，并根据业务场景和性能目标做出最佳选择，从而直接影响用户体验和系统效率。
+表中的 SSE 并发连接数字主要对应 HTTP/1.x 的同源连接限制；HTTP/2 使用多路复用，并由客户端与服务端协商并发流数量。生产方案应按实际协议、浏览器和网关配置验证。
 
-实时通信与内容管理模式的“解耦”与“专业化”是现代前端发展的另一个重要方向。实时通信需求（如聊天、通知）和内容管理需求（如博客、电商商品）是现代 Web 应用中的常见功能。WebSocket 和 SSE 提供了专门的实时通信协议，比传统 HTTP 轮询更高效；Headless CMS 则将内容管理从前端展示中彻底解耦。这些方案都体现了对特定领域需求的“专业化”和“解耦”处理。这意味着前端架构正在向更细粒度的服务拆分和专业化方向发展。开发者可以利用专门的实时通信服务和无头 CMS 来构建更灵活、可扩展和高性能的应用。这要求前端工程师既要掌握 UI 层面的技术，也要理解整个系统架构的演进，并能够集成和利用各种专业化服务。
+## **IV.11.8 前端 API 契约检查清单**
 
+接入一个接口前，可以逐项确认：
+
+1. 路径、方法和请求 Content-Type 是否表达清楚操作意图。
+2. 路径参数、查询参数、请求体和成功响应是否有可执行 Schema。
+3. 错误是否同时具有正确状态码、稳定结构和用户可恢复信息。
+4. [认证与授权](/guide/advanced-practices/auth)、[Cookie 与 CORS 安全边界](/guide/advanced-practices/security-basics)是否已经明确。
+5. 取消、超时、竞态、重试和幂等策略是否与业务风险匹配。
+6. Cache-Control、ETag、客户端缓存与更新失效是否形成一致策略。
+7. 更新冲突、分页顺序和实时消息恢复是否有确定语义。
+8. request ID、耗时、状态码和发布版本是否能支持跨端排障。
+9. Schema 变更、废弃周期、契约测试和部署顺序是否可追踪。
+
+稳定的数据契约让协议、类型、业务和界面状态彼此对齐。前端由此可以把网络中的不确定输入，转换成可验证、可恢复、可演进的产品行为。具体的缓存生命周期可以继续阅读[数据获取](/guide/frameworks/data-fetching)和[服务器状态与客户端状态](/guide/frameworks/server-client-state)。

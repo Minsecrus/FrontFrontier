@@ -26,6 +26,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [CSS 进阶](/guide/web-basics/css-architecture)
 - [JavaScript](/guide/web-basics/javascript)
 - [TypeScript](/guide/web-basics/typescript)
+- [浏览器运行时与渲染管线](/guide/web-basics/browser-runtime)
 
 ### 第三章 基本开发环境和工具
 
@@ -52,7 +53,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [状态管理](/guide/frameworks/state-management)
 - [数据获取](/guide/frameworks/data-fetching)
 - [服务器状态与客户端状态](/guide/frameworks/server-client-state)
-- [现代后端集成模式](/guide/frameworks/backend-integration)
+- [API 与数据契约](/guide/frameworks/backend-integration)
 
 ### 第五章 高级主题和专业开发最佳实践
 
