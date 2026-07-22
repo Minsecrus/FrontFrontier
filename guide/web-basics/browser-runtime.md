@@ -24,7 +24,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 | **合成与栅格化区域** | 把绘制指令转换为图块与图层，并组合成最终画面 | 图层数量、栅格化成本、滚动和动画是否稳定 | DevTools Layers、Rendering |
 | **Worker 执行环境** | 在独立全局环境中执行 JavaScript 计算或处理网络事件 | 消息传递、计算耗时、Worker 调用栈 | DevTools Sources、Performance |
 
-页面的大部分 DOM、样式和事件回调都由渲染器主线程管理。主线程持续被长任务占用时，输入事件、样式计算和下一帧画面都会等待。
+页面的大部分 DOM、样式和事件回调都由渲染器主线程管理。长任务持续占用主线程时，输入事件、样式计算和下一帧画面都会等待。
 
 ## **II.7.2 从响应字节到第一帧**
 
@@ -34,16 +34,16 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 2. **接收响应**：服务器返回状态码、响应头和正文。HTML 可以边到达、边解析。
 3. **构建 DOM**：HTML 解析器把标签转换成节点，并逐步构建 DOM 树。
 4. **发现子资源**：解析器和预加载扫描器发现样式表、脚本、字体、图片等资源并安排请求。
-5. **构建样式信息**：CSS 被解析，浏览器结合层叠、继承和选择器匹配计算元素最终样式。
+5. **构建样式信息**：浏览器解析 CSS，结合层叠、继承和选择器匹配计算元素最终样式。
 6. **布局**：浏览器根据样式、视口和内容计算元素的尺寸与位置。
-7. **绘制**：文字、颜色、边框、阴影和图片被转换成绘制指令。
+7. **绘制**：浏览器把文字、颜色、边框、阴影和图片转换成绘制指令。
 8. **合成**：不同图层按顺序组合，最终画面提交到屏幕。
 
 脚本的加载方式会影响 HTML 解析：
 
-- 普通经典脚本会在解析器遇到它时执行，外部脚本还需要等待下载完成。
+- 普通经典脚本在解析器遇到它时执行，外部脚本还需等待下载完成。
 - 带有 **defer** 的经典脚本在文档解析完成后按文档顺序执行。
-- 带有 **async** 的脚本在资源准备好后执行，多个脚本之间的执行顺序取决于各自完成时间。
+- 带有 **async** 的脚本在资源准备好后执行，多个脚本的执行顺序取决于各自完成时间。
 - 模块脚本默认采用延后执行语义，并遵循模块依赖图。
 
 诊断首屏时，可以把 Network 中的请求瀑布与 Performance 中的主线程轨迹对齐。响应到达很早、画面出现很晚，通常需要继续查看脚本执行、样式计算、布局和绘制记录。
@@ -53,9 +53,9 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 渲染器主线程通过事件循环安排工作。一次简化的循环包含：
 
 1. 从任务队列取出一个任务，例如点击回调、定时器回调或消息事件。
-2. 执行这个任务中的 JavaScript。
+2. 执行该任务中的 JavaScript。
 3. 清空当前微任务队列，例如 Promise 回调和 **queueMicrotask** 回调。
-4. 在浏览器选择更新画面时，运行 **requestAnimationFrame** 回调并完成样式、布局、绘制与合成。
+4. 浏览器决定更新画面时，运行 **requestAnimationFrame** 回调并完成样式、布局、绘制与合成。
 5. 进入下一轮任务处理。
 
 浏览器根据刷新率、页面可见性和系统负载决定具体渲染时机。连续追加微任务会持续占用主线程，因此 Promise 链同样可能推迟下一帧。
@@ -75,11 +75,11 @@ function updateTabIndicator(tab, tabList, indicator) {
 }
 ```
 
-这个例子先读取两个几何信息，再集中写入样式。DOM 写入会使部分样式或布局结果失效；随后立刻读取几何信息可能触发同步样式计算或布局。把读取放在前面、写入放在后面，可以减少读写交错带来的重复工作。
+这个例子先读取两处几何信息，再集中写入样式。DOM 写入会使部分样式或布局结果失效；随后立刻读取几何信息可能触发同步样式计算或布局。把读取放在前面、写入放在后面，可以减少读写交错带来的重复工作。
 
 :::
 
-**requestAnimationFrame** 适合安排下一帧之前的视觉更新。网络请求、复杂数据聚合和大规模解析拥有各自的调度方式，其中计算密集型工作可以进一步交给 Worker。
+**requestAnimationFrame** 适合安排下一帧之前的视觉更新。网络请求、复杂数据聚合和大规模解析各有调度方式，其中计算密集型工作可以进一步交给 Worker。
 
 ## **II.7.4 样式、布局、绘制与合成**
 
@@ -90,7 +90,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 | **Style** | 哪些 CSS 规则匹配元素，最终属性值是什么 | 修改 class、CSS 自定义属性、媒体条件或 DOM 结构 | Performance 中的 Recalculate Style |
 | **Layout** | 元素尺寸、位置以及彼此的几何关系 | 修改宽高、字体、内容、网格轨道或可用空间 | Performance 中的 Layout、Layout Shift |
 | **Paint** | 需要绘制的文字、颜色、边框、阴影和图片 | 修改颜色、背景、阴影或绘制区域 | Rendering 中的 Paint flashing |
-| **Composite** | 图层的顺序、变换、裁剪与最终组合 | transform、opacity 和滚动常有机会主要进入合成阶段 | Layers、Performance 中的 Composite Layers |
+| **Composite** | 图层的顺序、变换、裁剪与最终组合 | transform、opacity 和滚动常可主要进入合成阶段 | Layers、Performance 中的 Composite Layers |
 
 使用 **transform** 和 **opacity** 可以为动画提供更轻的执行路径，最终效果仍取决于浏览器的图层决策。大量图层会增加内存与管理成本，因此应结合 Performance 和 Layers 面板验证。
 
@@ -112,12 +112,12 @@ function updateTabIndicator(tab, tabList, indicator) {
 3. 按用户可见程度安排工作优先级。
 4. 把纯计算、解析、编码或大数据转换移到 Worker。
 
-不同 Worker 说明了不同运行边界：
+不同 Worker 对应不同运行边界：
 
 | 类型 | 作用范围 | 适合的工作 | 关键边界 |
 | :--- | :--- | :--- | :--- |
 | **Dedicated Worker** | 创建它的页面 | 搜索索引、数据聚合、图片处理、压缩和模型推理 | 通过消息与页面通信，DOM 由主线程管理 |
-| **SharedWorker** | 同源的多个浏览上下文 | 多标签页共享连接或协调状态 | 支持度和产品需求需要按目标浏览器验证 |
+| **SharedWorker** | 同源的多个浏览上下文 | 多标签页共享连接或协调状态 | 支持度和产品需求需按目标浏览器验证 |
 | **Service Worker** | 受控作用域内的页面和请求 | 离线缓存、请求代理、后台事件 | 生命周期独立于页面，详见 PWA 章节 |
 | **Worklet** | 浏览器提供的专用渲染或媒体管线 | Paint、Audio 等低层扩展点 | API 专用、执行环境受限 |
 
@@ -154,13 +154,13 @@ self.addEventListener("message", ({ data }) => {
 });
 ```
 
-ArrayBuffer 的所有权已经转移给 Worker，页面线程中的原缓冲区会被分离。这个边界适合一次性交给 Worker 处理的大块数据。
+ArrayBuffer 的所有权已转移给 Worker，页面线程中的原缓冲区随之被分离。这个边界适合一次性交给 Worker 处理的大块数据。
 
 :::
 
 ## **II.7.6 页面生命周期与返回导航**
 
-页面会在 active、hidden、frozen、discarded 等状态之间变化。后台标签页可能受到定时器节流，系统也可能冻结或丢弃页面以节省 CPU、内存和电量。
+页面会在 active、hidden、frozen、discarded 等状态之间变化。后台标签页的定时器可能被节流，系统也可能冻结或丢弃页面以节省 CPU、内存和电量。
 
 常用事件承担不同职责：
 
@@ -169,7 +169,7 @@ ArrayBuffer 的所有权已经转移给 Worker，页面线程中的原缓冲区�
 - **pageshow**：页面首次显示或从 bfcache 恢复时同步可能过期的数据。
 - **beforeunload**：仅在确实存在未保存输入时注册，用于请求用户确认离开。
 
-[Page Lifecycle API](https://developer.chrome.com/docs/web-platform/page-lifecycle-api) 把这些状态放进同一条生命周期中。bfcache 会保存整个页面的运行状态，使前进和后退导航可以快速恢复；HTTP 缓存负责复用网络响应，两者解决不同层次的问题。
+[Page Lifecycle API](https://developer.chrome.com/docs/web-platform/page-lifecycle-api) 把这些状态放进同一条生命周期中。bfcache 会保存整个页面的运行状态，让前进、后退导航可以快速恢复；HTTP 缓存负责复用网络响应，两者解决不同层次的问题。
 
 ```js
 document.addEventListener("visibilitychange", () => {
@@ -189,7 +189,7 @@ window.addEventListener("pageshow", (event) => {
 
 ## **II.7.7 内存与资源所有权**
 
-JavaScript 垃圾回收器会释放已经失去引用的对象。前端内存问题通常来自仍然可达、但业务已经结束的对象：
+JavaScript 垃圾回收器会释放已失去引用的对象。前端内存问题通常来自仍然可达、但业务已经结束的对象：
 
 - 已卸载组件遗留的事件监听器、定时器和订阅；
 - 被 JavaScript 引用保留的 detached DOM；
@@ -220,7 +220,7 @@ DevTools Memory 可以比较 Heap Snapshot、观察 Allocation timeline，并查
 | 操作越多页面越慢 | Memory 快照与分配记录 | retained objects、detached DOM、持续增长的缓存 |
 | 返回上一页仍需完整加载 | Application / Lighthouse bfcache 检查 | 生命周期监听器、未关闭资源和缓存资格原因 |
 
-一个稳定的性能排查流程是：
+稳定的性能排查流程如下：
 
 1. 在接近真实的设备、网络和数据量下稳定复现。
 2. 录制包含问题发生前后的完整轨迹。

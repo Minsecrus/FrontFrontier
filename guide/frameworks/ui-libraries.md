@@ -4,11 +4,11 @@ title: "IV. 前端框架和库 / IV.3 UI 组件库：加速开发的利器"
 
 # IV.3 UI 组件库：加速开发的利器
 
-使用 UI 组件库，会把一部分界面责任交给组件库：
+使用 UI 组件库，意味着把一部分界面责任交给组件库：
 
 - 用统一的视觉语言减少页面之间的不一致；
 - 复用菜单、弹窗、表格等容易出错的交互行为；
-- 获得一套无障碍基础，但仍要对真实页面进行测试；
+- 获得一套无障碍基础，但仍要测试真实页面；
 - 复用主题、国际化和复杂数据组件；
 - 跟随库的升级节奏，承担对应的依赖与迁移成本。
 
@@ -31,7 +31,7 @@ title: "IV. 前端框架和库 / IV.3 UI 组件库：加速开发的利器"
 
 ### **1. 框架是否匹配**
 
-组件库必须匹配当前框架、版本和渲染模式。完成这项硬约束筛选后，再比较其他能力。对于 SSR 或 React Server Components，还要确认组件是否依赖浏览器环境，以及客户端边界会扩大多少。
+组件库必须匹配当前框架、版本和渲染模式。满足这项硬约束后，再比较其他能力。对于 SSR 或 React Server Components，还要确认组件是否依赖浏览器环境，以及客户端边界会扩大多少。
 
 ### **2. 关键组件是否真的够用**
 
@@ -65,7 +65,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **6. 按需使用和升级成本是否可控**
 
-现代库通常提供 ESM、tree-shaking 或独立组件入口，最终产物还会受到导入方式、样式文件、图标包和构建器影响。用生产构建验证按需引入：
+现代库通常提供 ESM、tree-shaking 或独立组件入口，最终产物还取决于导入方式、样式文件、图标包和构建器。用生产构建验证按需引入：
 
 1. 只引入试验页面需要的组件；
 2. 构建生产包并查看依赖分析；
@@ -80,7 +80,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **React：设计系统与组合自由并存**
 
-- [**MUI**](https://mui.com/material-ui/) 是 Material Design 的完整实现，主题和定制层次较清楚；[MUI X](https://mui.com/x/) 延伸到数据网格等复杂场景，[Toolpad](https://mui.com/toolpad/) 则面向内部工具。这说明一个组件生态可以按复杂度继续分层。
+- [**MUI**](https://mui.com/material-ui/) 是 Material Design 的完整实现，主题和定制层次较清楚；[MUI X](https://mui.com/x/) 延伸到数据网格等复杂场景，[Toolpad](https://mui.com/toolpad/) 则面向内部工具。这说明组件生态可以按复杂度继续分层。
 - [**Ant Design**](https://ant.design/) 用统一的企业设计语言覆盖布局、导航、数据录入、数据显示和反馈，适合流程与信息密度较高的中后台。
 - [**Chakra UI**](https://chakra-ui.com/docs/components/concepts/overview) 强调可访问组件、组合方式和 style props，适合希望在现成行为之上建立自有主题的团队。
 - [**Fluent UI**](https://react.fluentui.dev/) 体现了组件库与产品生态的结合，常用于希望接近 Microsoft 生产力产品语言的项目。
@@ -90,7 +90,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 - [**Vuetify**](https://vuetifyjs.com/) 把 Material Design 带进 Vue 生态，适合需要一致视觉语言和大量现成组件的应用。
 - [**Element Plus**](https://element-plus.org/) 常见于 Vue 3 中后台项目，表单、数据展示和主题变量是其主要使用入口。
-- [**Quasar**](https://quasar.dev/introduction-to-quasar/) 不只提供组件，还把 SPA、SSR、PWA、移动端、桌面端和浏览器扩展纳入同一套构建模式。它解释了“组件库”和“应用框架”边界如何重叠。
+- [**Quasar**](https://quasar.dev/introduction-to-quasar/) 不只提供组件，还把 SPA、SSR、PWA、移动端、桌面端和浏览器扩展纳入同一套构建模式。它解释了“组件库”和“应用框架”的边界如何重叠。
 - [**Ant Design Vue**](https://antdv.com/) 适合希望在 Vue 中沿用 Ant Design 语言的团队；[Naive UI](https://www.naiveui.com/) 强调 TypeScript 与主题配置；[PrimeVue](https://primevue.org/) 则强调广泛组件和复杂数据场景。
 
 ### **Angular：官方基础与企业套件并重**
@@ -113,7 +113,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **表格一：主流框架 UI 组件库功能与特性对比**
 
-下表旨在帮助开发者快速了解各主流 UI 组件库的核心功能和特性，以便根据项目需求进行初步筛选。
+下表帮助开发者快速了解各主流 UI 组件库的核心功能和特性，便于根据项目需求初步筛选。
 
 | 库名称                                           | 所属框架                        | 设计风格/理念                              | 无障碍支持   | 定制化模式                                        | 主要适用场景                 |
 | :----------------------------------------------- | :------------------------------ | :----------------------------------------- | :----------- | :------------------------------------------------ | :--------------------------- |

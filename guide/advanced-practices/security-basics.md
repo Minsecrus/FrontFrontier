@@ -11,16 +11,16 @@ title: "V. 高级主题和专业开发最佳实践 / V.5 安全基础：保护�
   - **跨站请求伪造 (CSRF)**：欺骗用户提交非预期表单。缓解措施：使用反 CSRF 令牌。
   - **其他风险**：DoS 攻击、供应链失败、不安全第三方库、不受限制的权限策略、缺乏子资源完整性、日志与监控不足。
 - **缓解策略**：
-  - **内容安全策略 (CSP)**：一个 HTTP 头，控制浏览器允许加载哪些资源，从而防止 XSS 攻击。
-  - **CSP Report-Only**：先用报告模式收集违规信息，修复问题后再切换到强制模式，适合渐进迁移已有项目。
+  - **内容安全策略 (CSP)**：一个 HTTP 头，控制浏览器可以加载哪些资源，防止 XSS 攻击。
+  - **CSP Report-Only**：先以报告模式收集违规信息，修复问题后再切换到强制模式，适合已有项目渐进迁移。
   - **Trusted Types**：通过浏览器原生约束，让 `innerHTML`、`eval` 等危险 DOM sink 只能接收经过策略处理的可信值，降低 DOM XSS 风险。
-  - **跨域资源共享 ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))**：一种基于 HTTP 头的机制，允许服务器指示哪些源被允许跨域加载资源，从而防止未经授权的访问。
+  - **跨域资源共享 ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))**：一种基于 HTTP 头的机制，由服务器声明哪些源可以跨域加载资源，防止未经授权的访问。
   - **Fetch Metadata**：利用 `Sec-Fetch-*` 请求头识别请求来源、模式和目标，在服务端实现资源隔离策略，抵御常见跨站请求。
-  - **子资源完整性 ([SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity))**：一项安全功能，允许浏览器使用加密哈希验证从第三方主机（例如 CDN）获取的文件是否未被意外篡改。
+  - **子资源完整性 ([SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity))**：一项安全功能，让浏览器用加密哈希验证从第三方主机（例如 CDN）获取的文件是否未被意外篡改。
   - **权限策略 (Permissions-Policy)**：限制摄像头、麦克风、地理位置、USB 等敏感浏览器能力的使用范围，降低第三方内容或嵌入页面滥用平台 API 的风险。
   - **Cookie 安全属性**：为会话 Cookie 配置 `HttpOnly`、`Secure`、`SameSite`、合理的 `Path` / `Domain`，并在需要第三方嵌入状态隔离时理解 CHIPS / `Partitioned` Cookie。
   - **供应链治理**：锁定依赖版本、审查锁文件 (lockfile)、启用 SCA 扫描、使用可信发布和来源证明 (provenance)、限制依赖安装脚本，降低恶意包和被劫持发布流程带来的风险。
-  - **防御性编程**：编写不易受意外输入或操作导致错误的健壮代码，包括安全 Web 存储/消息传递和适当的事件处理。
+  - **防御性编程**：编写不易因意外输入或操作而出错的健壮代码，包括安全 Web 存储/消息传递和适当的事件处理。
 
 前端安全是一个持续的过程，需要多层防御策略。客户端验证主要改善用户体验，真正的数据约束和权限判断仍应在服务端完成。CSP、Trusted Types、Fetch Metadata、CORS、SRI、Permissions-Policy 和 Cookie 安全属性的组合，代表了现代 Web 更依赖浏览器原生安全机制的趋势。
 
@@ -81,7 +81,7 @@ Content-Security-Policy-Report-Only: script-src 'nonce-{RANDOM}' 'strict-dynamic
 Content-Security-Policy: require-trusted-types-for 'script'; trusted-types default dompurify
 ```
 
-实际部署时，nonce 需要由服务端为每次响应生成；静态页面可以考虑 hash；报告端点需要配合 `Reporting-Endpoints` 或兼容的报告机制配置。
+实际部署时，服务端需要为每次响应生成 nonce；静态页面可以考虑 hash；报告端点需要配合 `Reporting-Endpoints` 或兼容的报告机制配置。
 
 ## **V.5.2 CSRF、Cookie 与请求边界**
 
@@ -123,11 +123,11 @@ Fetch Metadata 和 CORS 解决的问题不同。CORS 主要决定浏览器是否
 
 复杂应用还需要理解几个容易混淆的响应头：
 
-- **CORP (Cross-Origin-Resource-Policy)**：声明资源是否允许被其他源加载。
+- **CORP (Cross-Origin-Resource-Policy)**：声明资源是否允许其他源加载。
 - **COOP (Cross-Origin-Opener-Policy)**：隔离浏览上下文组，减少跨窗口引用带来的风险。
 - **COEP (Cross-Origin-Embedder-Policy)**：要求页面加载的跨源资源显式允许被嵌入。
 
-COOP + COEP 可以让页面进入 cross-origin isolated 状态，某些高能力 API（例如 SharedArrayBuffer）会依赖这种隔离环境。采用它们时，需要逐个检查第三方脚本、图片、字体、worker 和 iframe 是否支持必要的 CORS 或 CORP 配置。
+COOP + COEP 可以让页面进入 cross-origin isolated 状态，某些高能力 API（例如 SharedArrayBuffer）依赖这种隔离环境。采用时，需要逐个检查第三方脚本、图片、字体、worker 和 iframe 是否支持必要的 CORS 或 CORP 配置。
 
 ## **V.5.5 前端安全检查清单**
 
@@ -156,7 +156,7 @@ COOP + COEP 可以让页面进入 cross-origin isolated 状态，某些高能力
 | **缺乏子资源完整性 ([SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity))** | CDN 资源被篡改，加载恶意代码               | 对 CDN 资源使用 integrity 属性和加密哈希                                                                                  |
 | **跨站资源滥用**                                                                                          | 跨站请求调用内部接口或加载敏感资源         | Fetch Metadata 资源隔离，CORP / COOP / COEP，精确 CORS 策略                                                              |
 | **Cookie 配置不当**                                                                                       | 会话标识暴露、跨站发送范围过宽             | `HttpOnly`、`Secure`、`SameSite`、`__Host-` 前缀、必要时使用 `Partitioned`                                                |
-| **客户端数据验证不足**                                                                                    | 恶意用户绕过客户端验证发送无效数据         | 始终在服务器端进行数据验证，客户端验证仅用于 UX 提升                                                                      |
+| **客户端数据验证不足**                                                                                    | 恶意用户绕过客户端验证发送无效数据         | 始终在服务器端验证数据，客户端验证仅用于提升 UX                                                                           |
 
-这个表格提供了常见前端漏洞及其解决方案的实用指南。它帮助学习者理解具体的威胁以及如何实施对策，这对于构建安全可靠的 Web 应用程序至关重要。
+这个表格提供了常见前端漏洞及其解决方案的实用指南，帮助学习者理解具体威胁及如何实施对策，对构建安全可靠的 Web 应用程序至关重要。
 

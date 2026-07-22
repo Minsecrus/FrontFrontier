@@ -13,7 +13,7 @@ _出发前的指南针，迷茫时的导航仪。_
   - **如何使用**：
     - **查漏补缺**：打开 [Frontend Roadmap](https://roadmap.sh/Frontend)，对照本文，勾选你已经掌握的技能点。
     - **深度追踪**：它不仅有前端（Frontend），还有**全栈（Full Stack）**、**React**、**Vue** 甚至 **AI Engineer** 的专属路线图。
-    - **团队标准**：许多大厂和开源团队直接使用它来制定内部晋升和招聘标准。
+    - **团队标准**：许多大厂和开源团队直接以它为依据，制定内部晋升和招聘标准。
 - **[The Odin Project](https://www.theodinproject.com/)**
   - **地位**：完全免费的项目驱动型全栈学习路线，尤其适合从“看懂教程”过渡到“独立完成项目”。
   - **特点**：强调本地开发环境、Git、命令行、文档阅读和真实项目练习，从基础页面一路推进到复杂 Web 应用。
@@ -43,19 +43,19 @@ _不仅是官方文档，更是进阶教程。_
 
 - **JavaScript**
   - **[JavaScript.info](https://javascript.info/)**
-    - **地位**：被公认为现代最好的 JavaScript 在线教程。
-    - **特点**：内容极新，不仅讲语法，还深入讲解 DOM、事件循环、网络请求、原型链、执行上下文和垃圾回收等核心机制。它是从“会写代码”到“理解原理”的最佳桥梁。
+    - **地位**：公认现代最好的 JavaScript 在线教程。
+    - **特点**：内容极新，不仅讲语法，还深入讲解 DOM、事件循环、网络请求、原型链、执行上下文和垃圾回收等核心机制。是从“会写代码”到“理解原理”的最佳桥梁。
     - **中文站**：[现代 JavaScript 教程](https://zh.javascript.info/) 翻译完整，适合作为系统精读材料。
   - **[You Don't Know JS Yet (GitHub)](https://github.com/getify/You-Dont-Know-JS)**
     - **地位**：Kyle Simpson 的神作。
-    - **用途**：如果你想彻底搞懂 **作用域 (Scope)**、**闭包 (Closures)**、**原型链 (Prototypes)** 和 **异步 (Async)**，这是必读的。这是区分初级和高级工程师的分水岭。
+    - **用途**：如果你想彻底搞懂 **作用域 (Scope)**、**闭包 (Closures)**、**原型链 (Prototypes)** 和 **异步 (Async)**，这是必读的。这是初级与高级工程师的分水岭。
 
   - **[Just JavaScript](https://justjavascript.com/)**
     - **地位**：Dan Abramov (React 核心成员) 出品。
-    - **用途**：重建你对“值与引用”的心智模型。非常适合那些“感觉懂了但经常写出 Bug”的开发者。
+    - **用途**：重建你对“值与引用”的心智模型。非常适合“感觉懂了但经常写出 Bug”的开发者。
 
 - **TypeScript**
-  - **[Total TypeScript](https://www.totaltypescript.com/)**: Matt Pocock 出品的教程，被公认为目前最好的 TS 进阶资源（从泛型到类型体操）。
+  - **[Total TypeScript](https://www.totaltypescript.com/)**: Matt Pocock 出品的教程，公认目前最好的 TS 进阶资源（从泛型到类型体操）。
   - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**: 官方手册，必读。
 - **React 生态**
   - **[React.dev](https://react.dev/)**: 重写后的官方文档，交互式教学非常好。
@@ -67,7 +67,7 @@ _不仅是官方文档，更是进阶教程。_
   - **[Full Stack Open](https://fullstackopen.com/)**
     - **地位**：赫尔辛基大学出品的现代 Web 应用公开课，偏工业级全栈进阶。
     - **特点**：覆盖 React、Node.js、TypeScript、GraphQL、测试、CI/CD、Docker 等现代工程主题，并通过提交练习推动学习闭环。
-    - **如何使用**：适合已经掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
+    - **如何使用**：适合你在掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
 - **中文知识库**
   - **[千古前端图文教程](https://github.com/qianguyihao/Web)**: 国内开源社区口碑极好的前端知识库，覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题。它的优势是颗粒度细、解释通俗，适合作为查漏补缺和随手检索的“技术字典”。
 
@@ -87,7 +87,7 @@ _从“写出 CSS”到“写出好用的 UI”。_
 - **UI/UX 设计基础**
   - **[Refactoring UI](https://www.refactoringui.com/)**: 面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
   - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**: UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
-  - **[Laws of UX](https://lawsofux.com/)**: 用简洁方式整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
+  - **[Laws of UX](https://lawsofux.com/)**: 简洁地整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
 - **设计系统参考**
   - **[Material Design](https://m3.material.io/)**: Google 的设计系统，适合学习组件规范、动效、颜色体系和跨平台体验一致性。
   - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**: Apple 平台设计指南，适合理解系统级交互、平台习惯和高质量原生体验。
@@ -113,7 +113,7 @@ _提升开发效率与代码质量的利器。_
   - **[v0.dev](https://v0.dev/)**: Vercel 出品，用自然语言生成 React/Tailwind 界面代码。
   - **[Cursor](https://cursor.sh/)**: 目前最流行的 AI 原生 IDE，支持全库索引、多文件编辑及模型自定义切换。
   - **[Codex](https://openai.com/codex)**: OpenAI 发布的**独立智能体应用**。支持多 Agent 并行开发、Git Worktree 隔离工作区以及全自动的任务执行与测试。
-  - **[Claude Code](https://code.claude.com/docs/en/overview)**: Anthropic 推出的 **Agentic CLI** 工具。它擅长处理复杂的架构重构、深层 Bug 修复，并支持“Agent Teams”模式，让多个子 Agent 协作审查和开发代码。
+  - **[Claude Code](https://code.claude.com/docs/en/overview)**: Anthropic 推出的 **Agentic CLI** 工具。擅长处理复杂的架构重构、深层 Bug 修复，并支持“Agent Teams”模式，让多个子 Agent 协作审查和开发代码。
 - **AI 集成 (Integration & SDKs)**
   - **[LangChain JS](https://js.langchain.com/)**: 在前端/Node.js 应用中集成 LLM 的标准库。
   - **[Vercel SDK](https://sdk.vercel.ai/)**: 快速构建流式 (Streaming) AI 聊天界面的工具库。
@@ -127,7 +127,7 @@ _眼过千遍不如手过一遍。_
 - **[Frontend Mentor](https://www.frontendmentor.io/)**
   - 提供设计图（Figma）和资源，让你从零实现页面，非常接近真实工作流。
 - **[GreatFrontend](https://www.greatfrontend.com/)**
-  - 专门针对前端大厂面试的准备平台（系统设计、算法、UI 挑战）。
+  - 专注前端大厂面试的准备平台（系统设计、算法、UI 挑战）。
 - **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**
   - 云端 IDE，快速验证想法，无需本地配环境。
 

@@ -12,7 +12,7 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 学习基础 Web 技术时，DevTools 应该和第二章一起使用：学 HTML 时看 Elements 里的真实 DOM；学 CSS 时看 Styles、Computed、Layout 和盒模型；学 JavaScript 时看 Console、Sources、Network 和 Application。这样可以把“代码写了什么”和“浏览器实际执行了什么”对应起来。
 
 - **Elements / Inspector**：检查 DOM 结构、CSS 规则、布局盒模型、伪类状态、计算样式和无障碍树。  
-  当页面“看起来不对”时，应该先确认是 HTML 结构问题、CSS 选择器问题、布局约束问题，还是样式被覆盖。
+  当页面“看起来不对”时，应该先确认是 HTML 结构、CSS 选择器、布局约束问题，还是样式被覆盖。
 - **Console**：查看运行时错误、警告、日志和临时表达式执行结果。  
   Console 适合快速验证假设；复杂问题应结合断点、调用栈和网络记录继续分析。
 - **Sources / Debugger**：通过断点、条件断点、调用栈、作用域变量和 source map 追踪 JavaScript 执行过程。  
@@ -23,10 +23,10 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
   当页面“卡”或交互慢时，应结合 Performance 面板和 Core Web Vitals 指标定位具体瓶颈。
 - **Application / Storage**：检查 Cookie、LocalStorage、SessionStorage、IndexedDB、Cache Storage、Service Worker 和 Manifest。  
   对 PWA、登录态、缓存策略和离线能力的调试，这一面板非常关键。
-- **Lighthouse / 性能审计**：对性能、可访问性、SEO 和最佳实践进行自动化检查。  
-  它适合发现问题线索，并应结合真实用户数据和手动分析一起使用。
+- **Lighthouse / 性能审计**：自动化检查性能、可访问性、SEO 和最佳实践。  
+  它适合发现问题线索，并应结合真实用户数据和手动分析使用。
 
-一个实用的调试顺序是：
+实用的调试顺序是：
 
 1. 先复现问题，确认触发条件和影响范围；
 2. 用 Console 和页面错误信息判断是否存在明显运行时异常；
@@ -62,4 +62,4 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 | 客户端存储 | 在 Application 中查看 Cookie、LocalStorage、SessionStorage、IndexedDB 和 Cache Storage |
 | 性能体验 | 在 Performance 中录制页面加载或交互，观察长任务、布局、绘制和主线程占用 |
 
-把这些观察动作变成习惯后，学习 HTML、CSS 和 JavaScript 就不只是阅读语法，而是在理解浏览器如何把代码变成真实界面。
+把这些观察变成习惯后，学习 HTML、CSS 和 JavaScript 就不只是阅读语法，而是在理解浏览器如何把代码变成真实界面。

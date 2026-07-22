@@ -6,7 +6,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 
 **目的**：理解 AI 功能可以在哪里运行、模型由谁管理，以及怎样在隐私、延迟、兼容性和成本之间做取舍。
 
-前端 AI 包含多种架构。翻译、手势识别、语音转写、语义搜索和聊天助手的模型大小、输入数据与实时要求完全不同。开始选框架之前，先问两个问题：
+前端 AI 包含多种架构。翻译、手势识别、语音转写、语义搜索和聊天助手在模型大小、输入数据与实时要求上完全不同。开始选框架之前，先问两个问题：
 
 1. 模型运行在用户设备还是服务器？
 2. 模型由浏览器、应用还是服务端团队管理？
@@ -16,11 +16,11 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 | 实现路线 | 模型由谁管理 | 工具示例 | 更适合说明的场景 | 主要边界 |
 | :--- | :--- | :--- | :--- | :--- |
 | **浏览器内建 AI** | 浏览器负责模型下载、更新和生命周期 | [Chrome Built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis) 中的翻译、语言检测、摘要等任务 API | 希望用高层 API 完成常见文本任务，并能接受渐进增强 | API 阶段、设备要求和浏览器支持不一致，模型可能尚未下载 |
-| **应用自带模型** | 应用选择模型、格式、缓存和执行后端 | [MediaPipe](https://developers.google.com/mediapipe)、[ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/)、[Transformers.js](https://huggingface.co/docs/transformers.js/en/index)、[TensorFlow.js](https://www.tensorflow.org/js) | 本地视觉、音频、文本或定制模型推理 | 下载体积、内存、功耗、算子支持和设备性能由应用承担 |
+| **应用自带模型** | 应用选择模型、格式、缓存和执行后端 | [MediaPipe](https://developers.google.com/mediapipe)、[ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/)、[Transformers.js](https://huggingface.co/docs/transformers.js/en/index)、[TensorFlow.js](https://www.tensorflow.org/js) | 本地视觉、音频、文本或定制模型推理 | 应用需自行承担下载体积、内存、功耗、算子支持和设备性能 |
 | **服务器模型** | 服务端或模型平台负责部署与更新 | 托管推理 API，以及 [LangChain](https://www.langchain.com/)、[LlamaIndex](https://www.llamaindex.ai/)、[Pinecone](https://www.pinecone.io/) 等 RAG 相关工具 | 大模型、集中更新、复杂推理和共享知识库 | 网络延迟、持续成本、数据传输、认证与合规 |
 | **混合架构** | 浏览器与服务端各负责一部分 | 本地轻量模型 + 远端复杂模型，或本地优先 + 服务端回退 | 同时需要低延迟、隐私和稳定覆盖的产品 | 路由、结果一致性、回退策略和可观测性更复杂 |
 
-表里的工具是四种责任划分的例子。比较时先按层次分组：浏览器内建 API 与 ONNX Runtime Web 管理不同层次，LangChain 与 Pinecone 位于服务端编排和数据层。
+表里的工具分别示例了四种责任划分。比较时先按层次分组：浏览器内建 API 与 ONNX Runtime Web 管理不同层次，LangChain 与 Pinecone 位于服务端编排和数据层。
 
 ## **VI.8.1 用六个问题决定本地还是远端**
 
@@ -34,7 +34,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 
 ### **3. 模型有多大、多久更新一次**
 
-应用自带模型意味着用户要下载它，浏览器还要解码、缓存并占用内存。模型很大或更新频繁时，集中部署更容易控制版本；小而稳定的模型更适合端侧缓存和离线使用。
+应用自带模型意味着用户要下载它，浏览器还要解码并缓存它，占用内存。模型很大或更新频繁时，集中部署更容易控制版本；小而稳定的模型更适合端侧缓存和离线使用。
 
 ### **4. 最差设备能否完成任务**
 
@@ -46,11 +46,11 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 
 ### **6. 模型与凭据能否放到客户端**
 
-浏览器中的模型文件和 JavaScript 都可被用户取得，知识产权保护应采用与此相符的策略。服务端 API 密钥应保存在受控服务端；需要保密的模型、系统提示、数据权限和供应商凭据也应遵循这一边界。
+浏览器中的模型文件和 JavaScript 都可被用户取得，知识产权保护应以此为前提来规划。服务端 API 密钥应保存在受控服务端；需要保密的模型、系统提示、数据权限和供应商凭据也应遵循这一边界。
 
 ## **VI.8.2 浏览器内建 AI 要按渐进增强使用**
 
-浏览器内建 AI 允许应用调用较高层的任务 API，并由浏览器负责底层模型。其可用性受到 API 阶段、设备条件和模型下载状态影响，需要运行时确认。
+浏览器内建 AI 允许应用调用较高层的任务 API，并由浏览器负责底层模型。是否可用取决于 API 阶段、设备条件和模型下载状态，需要在运行时确认。
 
 [Chrome 的入门说明](https://developer.chrome.com/docs/ai/get-started) 提醒开发者检查设备支持和模型状态；首次使用还可能需要下载模型或满足用户激活条件。不同 API 也可能分别处于稳定、试用或开发阶段。
 
@@ -75,7 +75,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 | [**Transformers.js**](https://huggingface.co/docs/transformers.js/en/index) | 用接近 Transformers 的高层 API 运行预训练模型 | 底层使用 ONNX Runtime；浏览器默认可走 Wasm，也可按环境尝试 WebGPU | 文本分类、特征提取、语音和视觉等 Transformer 任务 | 模型下载、量化精度、内存、WebGPU 兼容性与首次加载体验 |
 | [**TensorFlow.js**](https://www.tensorflow.org/js) | 在 JavaScript 中运行或训练 TensorFlow 模型 | 浏览器和 Node.js，可选择不同 backend | 已有 TensorFlow 模型、JS 内训练或定制交互实验 | 模型格式、后端支持、训练资源和目标设备性能 |
 | [**浏览器内建 AI API**](https://developer.chrome.com/docs/ai/built-in-apis) | 浏览器管理模型，应用调用翻译、摘要等任务接口 | 支持该 API 且满足设备条件的浏览器 | 不想自行分发模型的常见文本增强 | API 生命周期、跨浏览器覆盖、下载状态和输出质量 |
-| [**LangChain**](https://www.langchain.com/)、[**LlamaIndex**](https://www.llamaindex.ai/)、[**Pinecone**](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担服务端编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、注入攻击、成本与凭据保护 |
+| [**LangChain**](https://www.langchain.com/)、[**LlamaIndex**](https://www.llamaindex.ai/)、[**Pinecone**](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、注入攻击、成本与凭据保护 |
 
 以 Transformers.js 为例，它给开发者的是高层任务 API，底层仍要依赖 ONNX Runtime 和具体计算后端。理解这层关系后，可以分别评估模型库、推理运行时和 GPU API。
 
@@ -87,10 +87,10 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 
 MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.js runtime 负责加载模型与调度算子；Wasm、WebGPU、WebNN 则提供不同的底层执行路径。
 
-- **WebAssembly（Wasm）**兼容面通常更广，适合作为 CPU 路径和基础回退。它不保证在所有模型上最快，但更容易覆盖没有现代 GPU 能力的设备。
+- **WebAssembly（Wasm）**兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
 - **WebGPU**向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
-- **WebNN**是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍处于标准化和实现演进中，适合作为经过能力检测的增强路径。
-- **WebGL**仍可能出现在既有框架的后端列表中，它原本为图形设计。新项目应依据运行时官方支持和实际测量选择执行路径。
+- **WebNN**是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
+- **WebGL**原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
 
 一个稳妥的选择方式是：先建立可工作的 Wasm 或服务端基线，再对支持的设备启用 WebGPU；只有在目标浏览器确实实现且模型算子受支持时才尝试 WebNN。每条路径都要测首次加载、预热、持续推理、峰值内存、功耗和结果一致性。
 

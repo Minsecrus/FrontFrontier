@@ -15,10 +15,10 @@ title: "V. 高级主题和专业开发最佳实践 / V.8 测试策略：确保�
   - [**Vitest**](https://vitest.dev/)：基于 Vite 构建的快速增长的替代方案，支持 ESM、TypeScript 和即时更新。在观察模式下通常比 Jest 快 10-20 倍。
   - [**Cypress**](https://www.cypress.io/)：专注于 JavaScript 应用程序，提供实时反馈、交互式 GUI 和时间旅行调试。在单个浏览器选项卡中运行测试。
   - [**Playwright**](https://playwright.dev/)：支持跨浏览器和移动测试，多种语言（JS/TS、Python、C#、Java）和并行测试执行。在真实设备上运行测试。
-  - **Testing Library**：轻量级解决方案，通过模拟用户查找节点的方式查询节点，鼓励良好的测试实践，把测试重点放在用户可感知的功能行为上。
-- **视觉回归测试**：比较应用程序 UI 在不同版本之间的视觉外观，以确保没有意外的视觉更改。工具包括 Chromatic (用于 Storybook) 和 Percy (一体化平台)。
+  - **Testing Library**：轻量级解决方案，通过模拟用户查找节点的方式来查询它们，鼓励良好的测试实践，把测试重点放在用户可感知的功能行为上。
+- **视觉回归测试**：比较应用程序 UI 在不同版本间的视觉外观，确保没有意外的视觉更改。工具包括 Chromatic (用于 Storybook) 和 Percy (一体化平台)。
 
-从 Jest 到 Vitest 的转变，凸显了行业对更快开发反馈循环的持续追求，直接影响了开发者生产力。Cypress 和 Playwright 之间的选择，体现了易用性/以 JS 为中心与跨浏览器/语言多功能性之间的权衡。全面的测试（单元、集成、E2E、视觉回归）是保障代码质量的关键手段，有助于减少技术债务并提升用户信任。
+从 Jest 到 Vitest 的转变，凸显了行业对更快开发反馈循环的持续追求，这也直接影响了开发者生产力。Cypress 和 Playwright 之间的选择，体现了易用性/以 JS 为中心与跨浏览器/语言多功能性之间的权衡。全面的测试（单元、集成、E2E、视觉回归）是保障代码质量的关键手段，有助于减少技术债务并提升用户信任。
 
 ::: details 启发式示例：Testing Library 用户视角测试
 
@@ -74,5 +74,5 @@ Playwright 适合覆盖跨页面、真实浏览器、真实路由和网络边界
 | [**Cypress**](https://www.cypress.io/)    | E2E             | 良好       | Chrome, [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Edge](https://www.microsoft.com/en-us/edge)                                          | JavaScript                                                | 实时，内置                              | GUI，时间旅行调试    | 较大，成熟    | JavaScript 密集型前端应用，实时反馈                      |
 | [**Playwright**](https://playwright.dev/) | E2E             | 极速       | Chrome, [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Safari](https://www.apple.com/safari/), [Edge](https://www.microsoft.com/en-us/edge) | JS/TS, Python, C#, Java                                   | 强大，并行                              | 强大，需高级技能     | 正在增长      | 复杂集成场景，跨浏览器/设备测试，并行执行                |
 
-这个表格有助于学习者理解不同测试工具的专业性质。它有助于就构建一个覆盖应用程序质量各个方面的健壮测试策略做出明智的决策，从单个组件到完整用户流程和视觉完整性。
+这个表格有助于学习者理解不同测试工具各自擅长什么。它还能帮助你做出有依据的选择，构建一个覆盖应用程序质量各方面的健壮测试策略，从单个组件到完整用户流程和视觉完整性。
 
