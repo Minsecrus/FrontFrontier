@@ -12,6 +12,8 @@ API 契约定义前端与服务端共同遵守的通信规则。它覆盖请求�
 
 GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基础契约后，工具选型会更容易说清。
 
+在 SSR、流式渲染、Server Components 或 Server Functions 中，前端还必须明确**服务端/客户端运行边界**。服务端模块可能拥有数据库、密钥和用户身份上下文；客户端模块拥有 DOM、浏览器存储和用户交互。两者之间传递的内容需要经过序列化、校验、权限判断和错误处理，形成明确的数据契约。清晰的边界有助于保护密钥、控制数据量、验证输入并保持缓存结果正确。
+
 ## **IV.11.1 契约包含哪些层次**
 
 | 契约层次 | 需要回答的问题 | 示例 | 工具或规范示例 |
@@ -292,5 +294,47 @@ Headless CMS 通过 REST 或 GraphQL 提供内容，前端负责展示与交互�
 7. 更新冲突、分页顺序和实时消息恢复是否有确定语义。
 8. request ID、耗时、状态码和发布版本是否能支持跨端排障。
 9. Schema 变更、废弃周期、契约测试和部署顺序是否可追踪。
+10. 服务端专用模块、客户端专用模块和可序列化数据是否有清晰边界。
+11. 认证、授权、Cookie、日志和缓存是否会把不该暴露的数据送到客户端。
+12. 页面或组件的缓存失效是否与写操作、权限变化和数据更新事件一致。
+13. 如果使用 AI 生成或修改接口代码，是否仍然通过 Schema、测试、真实请求和安全审查验证。
 
-稳定的数据契约让协议、类型、业务和界面状态彼此对齐。前端由此可以把网络中的不确定输入，转换成可验证、可恢复、可演进的产品行为。具体的缓存生命周期，可以继续阅读[数据获取](/guide/frameworks/data-fetching)和[服务器状态与客户端状态](/guide/frameworks/server-client-state)。
+稳定的数据契约让协议、类型、业务和界面状态彼此对齐。前端由此可以把网络中的不确定输入，转换成可验证、可恢复、可演进的产品行为。现代框架把更多服务端能力带到前端工程中，也意味着缓存、权限、序列化和安全补丁属于前端需要理解的责任边界。具体的缓存生命周期，可以继续阅读[数据获取](/guide/frameworks/data-fetching)和[服务器状态与客户端状态](/guide/frameworks/server-client-state)。
+
+## **IV.11.9 服务端 DTO 到客户端状态的边界**
+
+服务端返回的数据进入组件前，应完成序列化、运行时验证和内部类型转换。下面用零依赖示例展示这条边界：
+
+```ts
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+};
+
+function parseProduct(value: unknown): Product {
+  if (!value || typeof value !== "object") throw new Error("Invalid product");
+  const record = value as Record<string, unknown>;
+
+  if (
+    typeof record.id !== "string" ||
+    typeof record.name !== "string" ||
+    typeof record.price !== "number"
+  ) {
+    throw new Error("Invalid product fields");
+  }
+
+  return { id: record.id, name: record.name, price: record.price };
+}
+
+export async function loadProducts(signal?: AbortSignal) {
+  const response = await fetch("/api/products", { signal });
+  if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+
+  const payload: unknown = await response.json();
+  if (!Array.isArray(payload)) throw new Error("Invalid product list");
+  return payload.map(parseProduct);
+}
+```
+
+类型声明帮助编辑器理解数据；运行时解析负责面对真实网络输入。数据经过验证后再进入 UI、缓存或状态管理层，错误状态也就拥有稳定的处理入口。

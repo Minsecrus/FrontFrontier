@@ -111,3 +111,39 @@ PWA（Progressive Web Apps）代表着移动端 Web 体验的未来方向，它�
 
 PWA 模糊了 Web 与原生应用的界限，推动 Web 体验向”应用化”演进。PWA 提供了可安装性、离线能力、推送通知等原生应用特性，这些特性让 Web 应用能够提供与原生应用相媲美的用户体验，例如快速启动、离线可用和系统级通知。这打破了 Web 应用”必须在线”和”功能受限”的传统印象，极大地提升了 Web 的竞争力，也预示着 Web 技术栈正在向更强大的”应用化”方向发展。专业级前端工程师需要掌握 PWA 的核心技术，并理解 PWA 在用户留存、业务触达和跨平台部署方面的战略价值。PWA 不仅是技术实现，更是产品战略的一部分，它要求开发者有能力将 Web 应用提升到原生应用体验水平。
 
+## **VI.1.3 Manifest、注册与更新验证**
+
+最小安装能力由 Manifest、页面链接和 Service Worker 注册共同组成：
+
+```html
+<!-- index.html -->
+<link rel="manifest" href="/manifest.webmanifest" />
+<meta name="theme-color" content="#172033" />
+```
+
+```json
+{
+  "name": "离线阅读器",
+  "short_name": "阅读器",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#172033",
+  "background_color": "#ffffff",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
+```
+
+```js
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js").catch((error) => {
+      console.error("Service Worker 注册失败", error);
+    });
+  });
+}
+```
+
+验证时使用 DevTools Application 面板检查 Manifest、图标和 Service Worker 状态；切换 Offline 后刷新导航页，更新缓存版本后确认旧缓存只清理本应用命名空间。

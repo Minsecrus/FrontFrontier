@@ -6,7 +6,9 @@ title: "II. 基础 Web 技术：核心支柱 / II.6 TypeScript：为 JavaScript 
 
 在掌握了 JavaScript 的核心概念之后，任何尝试构建大型应用的开发者都会遇到根本性的挑战：JavaScript 的动态性是一把双刃剑。它在小型项目中赋予我们灵活性和速度，但在需要长期维护的大型多人协作系统中，这种灵活性往往演变成脆弱性、不可预测性和难以追踪的运行时错误。为了应对这一挑战，[**TypeScript**](https://www.typescriptlang.org/) 应运而生，并以不可阻挡之势成为现代前端开发的行业基石。
 
-TypeScript 的核心思想，并非创造一种新语言来取代 JavaScript，而是作为 JavaScript 的**严格超集 (Superset)**，引入**静态类型系统**。它在编译阶段对代码进行严格的类型检查，将大量潜在的、本要在运行时才会暴露的错误（如属性拼写错误、错误的函数传参、null 值引用等）在开发阶段就彻底消灭。最终，它依然会编译成纯粹、标准的 JavaScript，在任何环境中运行。
+TypeScript 的核心思想是作为 JavaScript 的**严格超集 (Superset)**，在 JavaScript 生态中引入**静态类型系统**。它在编译阶段对代码进行严格的类型检查，将大量潜在的、本要在运行时才会暴露的错误（如属性拼写错误、错误的函数传参、null 值引用等）在开发阶段就尽早暴露。最终，它编译成标准 JavaScript，在目标运行环境中执行。
+
+> **截至 2026 年的工具链变化**：TypeScript 7 正在把编译器和语言服务迁移到 Go 原生实现。官方在多个开源项目样本中观察到显著的编译速度提升，这些数据适合作为方向性参考。TypeScript 7 的 API 和嵌入式语言工具链仍在过渡，Vue、Svelte、Astro、Angular、MDX 等工作流升级时需要同时检查编辑器、插件、框架集成和构建服务。
 
 这种“先检查，后运行”的范式转变，是前端开发从“手工作坊”模式迈向“现代工业化”生产的关键一步。
 
@@ -135,7 +137,7 @@ function getLabel(state: UserState): string {
 
 ## **II.6.4 TypeScript 的延伸：与 JSDoc 的协同艺术**
 
-然而，在现实的工程世界中，我们并非总能从一张白纸开始。我们面对的是庞大的历史代码库、需要快速验证的独立脚本，或是那些无法立即引入编译流程的边缘项目。这是否意味着 TypeScript 在这些场景下就无能为力了？
+现实工程通常包含庞大的历史代码库、需要快速验证的独立脚本，以及暂时采用轻量编译流程的边缘项目。TypeScript 仍然可以通过 JSDoc、`checkJs` 和渐进迁移服务这些场景。
 
 恰恰相反。TypeScript 真正强大之处在于，它的核心理念——**静态类型检查**——已经超越了 `.ts` 文件的边界，以一种优雅的方式渗透到了整个 JavaScript 生态。这个关键的连接者，就是 [**JSDoc**](https://www.jsdoc.com.cn/)。
 
@@ -199,9 +201,22 @@ findUser([{ id: "1", name: "Ada" }], 1);
 
 这时，JSDoc 再次成为 TypeScript 的重要补充。它有两类常见用途：一类是 TypeScript 语言服务在 JavaScript 文件中识别的类型标签，例如 `@param`、`@returns`、`@typedef`、`@template`；另一类是 TypeDoc、JSDoc 等文档工具读取的说明性标签，例如 `@example`、`@deprecated`、`@throws`。前者参与类型检查和智能提示，后者服务于 API 文档的呈现。TypeDoc 这样的工具生成 API 文档时，会结合 TypeScript 类型和注释内容，生成一份既有机器精度又有人性化解读的文档。
 
-## **II.6.5 结论：一种思维，两种工具**
+## **II.6.5 TypeScript 7 与原生语言服务**
 
-最终，我们需要理解：TypeScript 和 JSDoc 并非竞争关系，而是一种**核心理念下的两种实践工具**。
+[TypeScript 7 的官方说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)把它定位为从 JavaScript 实现到 Go 原生实现的迁移。对前端工程的直接影响主要在编译、类型检查、语言服务和大型项目反馈速度；TypeScript 类型系统的基本使用方式保持稳定。
+
+迁移时至少要检查：
+
+- `strict`、`module`、`target`、`moduleResolution` 等 `tsconfig` 默认值是否改变了项目行为；
+- 构建工具、编辑器和框架插件是否已经支持新的语言服务 API；
+- Vue、Svelte、Astro、Angular、MDX 等嵌入式语言是否仍需要旧语言服务兼容层；
+- CI、生成代码、类型声明发布和本地编辑器是否使用了同一套 TypeScript 版本。
+
+因此，TypeScript 7 应被理解为一次重要的基础设施迁移。新项目可以关注它的默认配置和工具支持，存量项目则应以可重复构建、编辑器体验和生成代码结果为准，再决定升级节奏。
+
+## **II.6.6 结论：一种思维，两种工具**
+
+TypeScript 和 JSDoc 体现同一核心理念，分别服务于完整工程、历史代码、轻量脚本和文档化类型检查等场景。
 
 - **TypeScript** 是构建新项目的**主力引擎**，提供最全面、最强大的类型系统和工程能力。
 - **JSDoc** 则是功能强大的**通用适配器**，它将 TypeScript 的类型安全理念延伸到每个 JavaScript 存在的角落，无论是历史代码、轻量脚本还是文档编写。
@@ -210,3 +225,28 @@ findUser([{ id: "1", name: "Ada" }], 1);
 
 总而言之，TypeScript 已经成为中大型前端工程中的主流选择。它代表了一种更重视契约、可维护性和协作成本的工程思维。对于希望构建高质量、可维护、可扩展 Web 应用的团队而言，掌握 TypeScript 及其与 JavaScript 生态的边界，是非常值得投入的能力。
 
+## **II.6.7 TypeScript 7 迁移的最小检查单**
+
+迁移应先固定版本、配置和结果，再逐步替换工具链。下面是一份适合放进仓库的最小配置与命令：
+
+```json
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["src", "scripts"]
+}
+```
+
+```powershell
+pnpm exec tsc --version
+pnpm exec tsc -p tsconfig.json --pretty false
+pnpm exec vite build
+```
+
+升级前后应保存三类证据：类型检查耗时、编辑器对嵌入式语言（Vue/Svelte/MDX）的诊断结果、构建产物与声明文件的差异。项目可以先在 CI 中增加一个独立迁移任务，让新语言服务与当前构建并行验证；验证通过后再切换默认版本。

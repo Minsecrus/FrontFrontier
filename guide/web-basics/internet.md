@@ -78,6 +78,8 @@ DNS 的工作流程大致如下：
 - **Widely available**：该特性距离首次形成互通已过去较长时间，通常可以更放心地作为通用能力使用。
 - **Interop**：浏览器厂商围绕一组重点特性共同推进互通性，让“理论支持”更接近“实际可用”。
 
+截至 2026 年，Baseline 2026 已经把更多容器样式查询、View Transitions、`contrast-color()` 等能力纳入可查询的兼容性语境。它提供兼容性决策信号；项目仍需结合目标浏览器、设备性能、辅助技术和降级路径验证。
+
 这意味着今天讨论浏览器兼容性时，应同时关注：
 
 - 它是否进入 Baseline
@@ -87,3 +89,30 @@ DNS 的工作流程大致如下：
 
 例如，像 **Container Queries**、**`:has()`**、**CSS Nesting** 这样的能力，更适合用 Baseline 的语言去讨论，用“可用性等级”替代“新特性，一般别用”的老经验。  
 这是现代前端采纳 Web 新能力时更成熟的判断方式。
+
+## **II.1.1 用一条请求观察 HTTP 证据**
+
+阅读 HTTP 时，先从一次真实请求开始。下面的命令适合在 Windows PowerShell 中执行；`curl.exe` 用来调用系统的 curl 程序，避免与 PowerShell 的别名混淆。
+
+```powershell
+curl.exe -I https://example.com
+curl.exe -v https://example.com -o NUL
+```
+
+重点观察这些输出：
+
+| 证据 | 说明 | 前端决策 |
+| :--- | :--- | :--- |
+| `HTTP/2 200` 或 `HTTP/1.1 304` | 状态码和协议版本 | 判断请求是否成功、是否命中协商缓存 |
+| `content-type` | 响应内容类型 | 检查 HTML、JSON、图片是否匹配预期 |
+| `cache-control`、`etag` | 缓存与版本校验 | 设计静态资源和接口的缓存策略 |
+| `set-cookie` | 服务端下发的 Cookie | 检查 `Secure`、`HttpOnly`、`SameSite` 等属性 |
+| `content-encoding` | 响应压缩方式 | 观察 Brotli 或 gzip 是否生效 |
+
+再打开浏览器 DevTools 的 Network 面板，刷新页面并对照同一个请求。记录请求方法、请求头、响应头、Timing 分段和 Initiator，就能把“页面加载很慢”拆成 DNS、连接、等待响应、下载和主线程处理等可验证的问题。
+
+练习时可以按下面的顺序完成：
+
+1. 对一个静态 HTML 请求执行 `curl.exe -I`，记录状态码、类型和缓存头。
+2. 在 DevTools 中关闭缓存并刷新，比较首次请求和再次请求的 Timing。
+3. 修改一个静态资源版本号，观察缓存命中、重新验证和下载行为的差异。

@@ -77,6 +77,38 @@ Storybook 表面上是组件浏览器，真正的威力却在于：它是连接�
 Storybook 独特的“故事”结构，使其成为自动化 UI 测试的理想平台，将测试前置到开发的最初阶段。
 
 - **视觉回归测试 (Visual Regression Testing)**：这是 Storybook 最具杀伤力的应用之一。[Chromatic](https://www.chromatic.com/)、[Percy](https://percy.io/) 这类自动化工具可以与 Storybook 无缝集成。这些工具为每个故事拍摄 UI 快照，作为“视觉基线”。代码变更后，工具自动生成新快照，与基线做像素级对比，精准捕获任何意料之外的视觉变化。
-- **交互、可访问性与组件测试**：Storybook 不只是“展示组件”，而是更明确地朝**组件测试工作台**演进。基于 `play` 函数、Testing Library、a11y 检查，以及 Storybook 9 里更强调的测试体验，你可以直接把交互测试、可访问性测试和覆盖率检查放进 stories 驱动的工作流中。
+- **交互、可访问性与组件测试**：Storybook 正在朝**组件测试工作台**演进，同时保留组件展示能力。基于 `play` 函数、Testing Library、a11y 检查，以及 Storybook 9 里更强调的测试体验，你可以直接把交互测试、可访问性测试和覆盖率检查放进 stories 驱动的工作流中。
 
 总而言之，Storybook 远不止是组件展示工具。它承载着先进的开发方法论，以“隔离”和“可视化”为核心思想，重塑了现代 UI 的开发、测试和协作流程。对任何致力于构建高质量、可维护、可扩展前端应用或设计系统的团队而言，掌握并实践以 **Storybook** 为核心的组件驱动开发，已成为提升工程能力和交付质量的关键一环。
+
+## **4. 将交互与可访问性写进 Story**
+
+`play` 函数适合描述用户如何使用组件，`a11y` 参数适合把自动化审计放到同一条反馈路径：
+
+```tsx
+import type { Meta, StoryObj } from "@storybook/react";
+import { expect, userEvent, within } from "storybook/test";
+import { SearchBox } from "./SearchBox";
+
+const meta = {
+  component: SearchBox,
+  parameters: {
+    a11y: { test: "error" },
+  },
+} satisfies Meta<typeof SearchBox>;
+
+export default meta;
+type Story = StoryObj<typeof meta>;
+
+export const EnterQuery: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("searchbox");
+
+    await userEvent.type(input, "web performance");
+    await expect(input).toHaveValue("web performance");
+  },
+};
+```
+
+组件状态应覆盖默认、加载、空结果、错误、禁用、长文本和窄容器。CI 中可以执行 Storybook 构建、组件测试与视觉回归，让组件状态成为稳定的质量资产。

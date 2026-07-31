@@ -29,3 +29,32 @@ title: "V. 高级主题和专业开发最佳实践 / V.9 国际化 (internationa
 
 此表帮助学习者根据所选框架和具体的本地化需求选择合适的 i18n 库，并强调了全面的国际化远不止简单的字符串替换。
 
+## **V.9.1 用 Intl 和消息目录处理真实显示**
+
+国际化代码应把消息、日期、数字和货币格式化拆开管理：
+
+```ts
+const messages = {
+  zh-CN: { welcome: "欢迎，{name}" },
+  en-US: { welcome: "Welcome, {name}" },
+} as const;
+
+type Locale = keyof typeof messages;
+
+export function formatOrder(locale: Locale, name: string, amount: number, date: Date) {
+  const message = messages[locale].welcome.replace("{name}", name);
+  const money = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: locale === "zh-CN" ? "CNY" : "USD",
+  }).format(amount);
+  const when = new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(date);
+
+  return `${message}：${money}，${when}`;
+}
+```
+
+验证时至少覆盖长文本、复数、RTL 布局、日期时区、货币小数位和回退语言。消息目录的 key 应保持稳定，翻译缺失时记录诊断信息并显示可理解的回退内容。
+

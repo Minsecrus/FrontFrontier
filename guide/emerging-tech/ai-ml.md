@@ -1,8 +1,8 @@
 ---
-title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器内机器学习"
+title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 ---
 
-# VI.8 前端 AI/ML 集成：浏览器内机器学习
+# VI.8 前端 AI/ML 与 Agent 界面
 
 **目的**：理解 AI 功能可以在哪里运行、模型由谁管理，以及怎样在隐私、延迟、兼容性和成本之间做取舍。
 
@@ -26,7 +26,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 集成：浏览器�
 
 ### **1. 原始数据能否离开设备**
 
-摄像头画面、录音、医疗信息和未发布文档可能需要尽量留在设备端。但“本地运行”不自动等于隐私安全：应用仍可能上传日志、缓存输入或加载第三方脚本。应画出真实数据流，明确哪些数据被读取、保存和传输。
+摄像头画面、录音、医疗信息和未发布文档可能需要尽量留在设备端。本地运行仍需要配合日志、缓存、第三方脚本和网络请求审查，团队应画出真实数据流，明确哪些数据被读取、保存和传输。
 
 ### **2. 用户能等多久**
 
@@ -119,3 +119,83 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 - **可观测性**：能否区分下载失败、后端不支持、模型错误和服务端超时，同时避免把敏感输入写进日志？
 
 前端 AI/ML 的核心能力，是划清运行与数据边界，并为不同设备设计可检测、可降级、可评估的路径。
+
+## **VI.8.7 面向 Agent 的 Web 界面：新兴方向**
+
+传统前端把用户当作主要交互主体；新的 Agent 场景还要求网页向模型暴露可理解、可调用、可确认的能力。这里至少要区分三类工作：
+
+| 方向 | 解决的问题 | 当前成熟度 |
+| :--- | :--- | :--- |
+| [MCP Tools](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) | 让 Agent 发现并调用带有名称、描述和输入 Schema 的工具 | 已形成公开协议规范和生态，但权限与实现质量仍需自行治理 |
+| [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/) | 让工具结果在对话中呈现交互式组件，并保留文本和 JSON 数据能力 | MCP 的官方扩展，适合关注 Agent 内交互的团队 |
+| [A2UI](https://github.com/google/A2UI) | 用声明式组件树描述 Agent 要呈现的表单和界面，由客户端从受控目录渲染 | Public Preview，组件协议仍在演进 |
+| [WebMCP](https://webmachinelearning.github.io/webmcp/) | 让网页把自身的 JavaScript 能力暴露为 Agent 可调用的工具 | Community Group Draft，规范状态仍在演进，适合实验性项目 |
+
+这类系统应让模型提交受约束的数据和意图，再由客户端使用经过审核的组件目录渲染。前端需要继续负责：
+
+- 工具名称、描述、输入 Schema 和错误状态；
+- 用户身份、来源权限、确认步骤和可撤销操作；
+- Prompt injection、越权调用、误导性描述和隐私泄露防护；
+- 表单、焦点、键盘操作、错误提示和屏幕阅读器体验；
+- 当 Agent 不可用、模型输出不可信或工具调用失败时的普通 Web 回退。
+
+因此，Agent-facing UI 目前适合放在新兴技术和实验项目中学习。MCP Apps、A2UI 或 WebMCP 属于可选探索方向，权限、可访问性和审计要求继续保持在与普通 Web UI 相同或更高的标准。
+
+## **VI.8.8 本地能力与服务端回退的适配层**
+
+前端可以把模型能力包在一个可替换的适配层里：浏览器具备本地能力时优先使用本地执行，能力缺失、下载失败或设备资源不足时转到服务端。下面的 `localSummarize` 由具体浏览器 API 或 WebGPU/Wasm 实现提供。
+
+```ts
+type Summarize = (input: string, signal?: AbortSignal) => Promise<string>;
+
+export async function summarize(
+  input: string,
+  options: { localSummarize?: Summarize; signal?: AbortSignal } = {},
+) {
+  if (options.localSummarize) {
+    try {
+      return await options.localSummarize(input, options.signal);
+    } catch (error) {
+      console.warn("本地模型失败，切换服务端", error);
+    }
+  }
+
+  const response = await fetch("/api/summarize", {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({ input }),
+    signal: options.signal,
+  });
+
+  if (!response.ok) throw new Error(`Summarize failed: ${response.status}`);
+  const result: unknown = await response.json();
+  if (!result || typeof result !== "object" || !("text" in result)) {
+    throw new Error("Invalid summarize response");
+  }
+  return String(result.text);
+}
+```
+
+适配层应同时返回加载、取消、超时、权限和内容安全状态。客户端只保存公开配置，模型密钥、敏感数据处理和最终权限判断留在服务端。
+
+## **VI.8.9 受约束的工具 Schema**
+
+面向 Agent 的工具先定义输入 Schema，再由客户端执行权限检查和确认：
+
+```json
+{
+  "name": "search_products",
+  "description": "按关键词搜索当前用户有权查看的商品",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "query": { "type": "string", "minLength": 1, "maxLength": 80 },
+      "limit": { "type": "integer", "minimum": 1, "maximum": 20 }
+    },
+    "required": ["query"]
+  },
+  "requiresConfirmation": false
+}
+```
+
+读取类工具可以在权限过滤后直接执行；写入、付款、删除和外部消息类工具应显示影响范围、请求用户确认，并提供撤销或回滚路径。

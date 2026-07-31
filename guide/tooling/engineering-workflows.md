@@ -76,3 +76,48 @@ Polyrepo 的核心价值在于**隔离**，而 Monorepo 的核心价值在于**�
 
 在实践中，[Plop](https://plopjs.com/) 是一个简单的 CLI 工具，用于快速生成项目文件。开发者可以定义自己的“plopfiles”（模板和提示），根据输入生成各种文件（如新组件、新模块、测试文件等）。[Hygen](https://www.hygen.io/) 是另一个强大的代码生成器，也基于模板和 CLI 交互。它提供了灵活的模板语法和更高级的功能，如条件生成、文件覆盖策略等。这些工具通过标准化确保团队成员创建的代码结构和风格保持一致，遵循预定义的最佳实践。它们减少了重复劳动，自动创建样板代码，让开发者专注于核心业务逻辑。同时，通过固化文件结构和模板规则，降低了错误率，并加速新项目或新功能的初始化，显著提升了开发效率和一致性。
 
+## **III.8.4 一个小型 Monorepo 的任务编排**
+
+下面用 pnpm Workspace 加 Turborepo 展示最小的依赖图。`web` 依赖 `ui`，因此 `turbo run build --filter=web` 会先构建 `ui`，同时复用已有缓存。
+
+```text
+apps/
+└─ web/
+   └─ package.json
+packages/
+└─ ui/
+   └─ package.json
+package.json
+pnpm-workspace.yaml
+turbo.json
+```
+
+```yaml
+# pnpm-workspace.yaml
+packages:
+  - "apps/*"
+  - "packages/*"
+```
+
+```json
+{
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"]
+    }
+  }
+}
+```
+
+```powershell
+pnpm install
+pnpm turbo run build --filter=web
+pnpm turbo run test --filter=...[origin/main]
+```
+
+实践时应检查三件事：任务依赖是否与真实构建关系一致，`outputs` 是否覆盖了任务产物，CI 是否能复用安全的缓存。仓库规模较小时可以只使用 pnpm Workspace；任务图、增量执行和远程缓存成为瓶颈后再引入编排工具。

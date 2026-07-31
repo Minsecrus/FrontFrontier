@@ -7,7 +7,7 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 **目的**：将源码转换为可部署产物，在开发期提供快速反馈循环，在生产环境提供更小、更快、更稳定的输出。
 
 - [**Webpack**](https://webpack.js.org/)：经典而成熟的模块打包器。生态极其完整，插件与 Loader 丰富，仍广泛用于大型存量项目和高度定制化工程。
-- [**Vite**](https://vite.dev/)：现代前端开发的主流选择之一。开发期依赖原生 ESM 和极快的 HMR；新的主线版本已经切换到 [Rolldown](https://vite.dev/guide/rolldown) 作为统一的 Rust 打包后端，并继续尽量保持与 Rollup 插件生态的兼容。使用新版 Vite 时需留意 Node.js 版本要求。
+- [**Vite**](https://vite.dev/)：现代前端开发的主流选择之一。Vite 8 已将 [Rolldown](https://vite.dev/guide/rolldown) 作为统一的 Rust 打包后端，并配合 Oxc 组成更完整的原生工具链，同时继续尽量保持与 Rollup 插件生态的兼容。Vite 8 要求 Node.js 20.19+ 或 22.12+；从旧版本升级时应阅读[迁移指南](https://vite.dev/guide/migration.html)，并同步检查插件、运行时和构建配置。
 - [**Rspack / Rsbuild**](https://rspack.dev/)：基于 Rust 的高性能打包器及其上层构建工具，在兼容 Webpack 生态的同时追求更快的构建速度。对中大型应用和企业级工程尤具吸引力。
 - [**esbuild**](https://esbuild.github.io/)：用 [Go](https://go.dev/) 编写的超高速编译/打包工具，常作为构建链中的基础能力使用，例如预打包、转换、压缩，或充当其他工具的底层引擎。
 - [**Rollup**](https://rollupjs.org/)：偏向库构建的打包器，擅长 tree-shaking 和生成干净的 ESM/CJS 输出。很多工具会把它作为生产构建阶段的核心部件。
@@ -22,6 +22,17 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 - 编译与转换层：esbuild、SWC、Oxc
 
 因此，讨论构建工具时应区分“开发体验”“应用打包”“库打包”“编译层”这几个不同职责。
+
+## **构建工具的新共性：原生实现与迁移能力并重**
+
+Vite/Rolldown/Oxc、Rspack、Turbopack、SWC 和 esbuild 都说明了一个方向：前端工具链越来越多地使用 Rust 或 Go 重写性能敏感部分。原生实现主要改善性能基础，工程选型还需要回答以下问题：
+
+- 现有插件、Loader、Transform 和自定义脚本是否兼容；
+- ESM、CommonJS、浏览器目标和 Node.js 运行时是否仍然匹配；
+- 构建速度提升是否换来了更难排查的配置或调试问题；
+- 应用构建、库构建和开发服务器是否应该使用同一套工具。
+
+选择工具时，应把冷启动、增量构建、最终产物、生态兼容和迁移成本一起测量。官方基准或单个开源项目的速度数字适合作为线索，最终决策应以自己的项目基准为依据。
 
 ## **表格：领先构建工具/打包器比较**
 
@@ -41,3 +52,64 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 - 你是在新建项目还是迁移老项目
 - 你是否依赖现有 Webpack 生态
 - 你更在意开发时反馈速度，还是迁移成本和生态成熟度
+
+## **III.5.1 一个最小 Vite 工程的构建闭环**
+
+用一个小项目理解“源码、开发服务器、生产产物”三者的关系：
+
+```text
+vite-demo/
+├─ index.html
+├─ package.json
+├─ vite.config.ts
+└─ src/
+   └─ main.ts
+```
+
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "latest"
+  }
+}
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from "vite";
+
+export default defineConfig({
+  build: {
+    sourcemap: true,
+    reportCompressedSize: true,
+  },
+});
+```
+
+```ts
+// src/main.ts
+const root = document.querySelector<HTMLDivElement>("#app");
+
+if (!root) throw new Error("Missing #app");
+
+root.innerHTML = `
+  <main>
+    <h1>构建闭环</h1>
+    <p>开发期由 Vite 提供模块服务，生产期生成可部署资源。</p>
+  </main>
+`;
+```
+
+```powershell
+pnpm install
+pnpm dev
+pnpm build
+pnpm preview
+```
+
+观察 `dev` 与 `build` 的差异：开发期请求源码模块并提供快速 HMR；生产期完成转换、分块、压缩、hash 命名和 sourcemap 生成。学习工具链时，可以把构建前后的 `dist` 目录、Network 瀑布和终端日志一起记录下来。

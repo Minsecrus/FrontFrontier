@@ -104,7 +104,7 @@ Set-Cookie: __Host-session=...; Path=/; Secure; HttpOnly; SameSite=Lax
 Set-Cookie: __Host-widget=...; Path=/; Secure; SameSite=None; Partitioned
 ```
 
-Cookie 安全不只是前端配置问题。前端需要理解属性含义、调试发送范围、处理登录态体验；服务端需要负责签发、校验、轮换、撤销和权限判断。
+Cookie 安全涉及前端配置与服务端责任。前端需要理解属性含义、调试发送范围、处理登录态体验；服务端需要负责签发、校验、轮换、撤销和权限判断。
 
 ## **V.5.3 Fetch Metadata 与资源隔离**
 
@@ -159,4 +159,3 @@ COOP + COEP 可以让页面进入 cross-origin isolated 状态，某些高能力
 | **客户端数据验证不足**                                                                                    | 恶意用户绕过客户端验证发送无效数据         | 始终在服务器端验证数据，客户端验证仅用于提升 UX                                                                           |
 
 这个表格提供了常见前端漏洞及其解决方案的实用指南，帮助学习者理解具体威胁及如何实施对策，对构建安全可靠的 Web 应用程序至关重要。
-

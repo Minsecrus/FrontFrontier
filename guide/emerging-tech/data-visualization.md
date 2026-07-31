@@ -58,3 +58,37 @@ Web 数据可视化关注如何在浏览器中把数据转换成图表、地图�
 - **应用场景**：位置服务、智慧城市、物流追踪、环境监测、灾害预警、房地产分析等。
 
 数据可视化专题的深化，展现了前端职能从”界面展示”向”数据洞察”的延伸。大数据可视化与实时数据可视化不仅要求前端工程师掌握渲染技术，还需要理解数据处理、性能优化和实时通信的复杂性。这反映出前端在业务决策和用户价值创造中正扮演着越来越重要的角色。
+
+## **VI.5.5 用 Worker 预处理大批量数据**
+
+当聚合、排序或采样占用主线程时，可以把计算移到 Worker，并把结果以明确消息契约返回：
+
+```ts
+// chart.worker.ts
+self.onmessage = (event: MessageEvent<Float32Array>) => {
+  const values = event.data;
+  let min = Infinity;
+  let max = -Infinity;
+  let sum = 0;
+
+  for (const value of values) {
+    min = Math.min(min, value);
+    max = Math.max(max, value);
+    sum += value;
+  }
+
+  self.postMessage({ min, max, average: values.length ? sum / values.length : 0 });
+};
+```
+
+```ts
+const worker = new Worker(new URL("./chart.worker.ts", import.meta.url), {
+  type: "module",
+});
+
+const values = new Float32Array([12, 18, 9, 27]);
+worker.onmessage = ({ data }) => console.log("统计结果", data);
+worker.postMessage(values, [values.buffer]);
+```
+
+传输数据前应衡量复制成本、内存峰值和序列化开销。Worker 负责计算，主线程负责交互和渲染，图表仍应提供数据表、摘要和键盘可达的替代阅读路径。

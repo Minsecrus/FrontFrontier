@@ -86,7 +86,69 @@ CSS Modules 的权衡在于，相比 CSS-in-JS，它基于 props 或状态实现
 
 现代前端工程化对 CSS 架构选择产生了深远影响。传统 CSS 存在全局污染、命名冲突等问题，导致维护困难。原子化 CSS、CSS-in-JS 和 CSS Modules 等现代 CSS 架构，通过不同机制（构建时生成、运行时注入、类名哈希）直接解决了这些问题，实现了样式隔离和模块化。这种演进超越了单纯的技术选型，体现出前端工程化从“写好 CSS”到“管理好 CSS”的范式转变：CSS 从独立的“样式层”提升为与组件、模块、构建流程紧密结合的“工程资产”。选择 CSS 架构时，需要综合考虑项目规模、团队协作模式、性能目标以及与整个前端工程体系（如组件库、设计系统、打包工具）的兼容性。例如，大型设计系统可能倾向用原子化 CSS 提供基础工具集，同时用 CSS-in-JS 或 CSS Modules 封装具体组件，以平衡性能、灵活性和维护性。这揭示了前端开发从“艺术”走向“工程”的必然趋势。
 
-此外，性能优化已从“事后补救”转变为“设计之初”的考量。原子化 CSS 的按需生成和自动内容检测、CSS-in-JS 的静态提取能力，以及 CSS Modules 的构建时处理，都注重最终产物 CSS 的体积优化。这些优化手段并非仅仅是文件压缩，而是借助“按需生成”和“作用域隔离”机制，从根本上减少了浏览器需要解析和渲染的 CSS 量。这表明现代前端性能优化已从过去项目完成后的“事后补救”（如手动优化 CSS、压缩图片），转变为在“设计和架构之初”就考虑性能。选择能自动优化 CSS 输出的架构，是构建高性能前端应用的关键一步。这种“性能内建”的思维是专业级前端工程师必备的素养，直接影响用户体验和业务指标。
+此外，性能优化已从“事后补救”转变为“设计之初”的考量。原子化 CSS 的按需生成和自动内容检测、CSS-in-JS 的静态提取能力，以及 CSS Modules 的构建时处理，都注重最终产物 CSS 的体积优化。这些优化手段通过“按需生成”和“作用域隔离”机制，减少浏览器需要解析和渲染的 CSS 量。现代前端性能优化因此进入设计和架构阶段，选择能自动优化 CSS 输出的架构，是构建高性能前端应用的关键一步。这种“性能内建”的思维是专业级前端工程师必备的素养，直接影响用户体验和业务指标。
 
 最后，开发者体验（DX）在技术选型中的优先级显著提升。原子化 CSS 强调“无需离开 HTML”，CSS-in-JS 强调“JS 中写 CSS”，CSS Modules 强调“原生 CSS 语法”，这些都从不同角度优化了开发者的编码流程。关注 DX 不仅是为了让开发者“写得爽”，更是为了提高团队整体生产力。减少上下文切换、降低命名负担、提供更直观的动态样式能力，都直接降低了开发障碍和心智负担。在日益复杂的前端生态中，优秀的技术方案不仅要解决技术问题，还要提供卓越的开发者体验。这反映出企业在人才竞争和项目交付压力下，越来越重视通过优化开发工具和流程吸引和留住优秀开发者，并加速产品上市。因此，在评估技术方案时，除了性能、可维护性等硬指标，开发者体验也成为重要的决策因素。
+
+## **II.4.8 原生 CSS 的小型实践：Token、层叠层与容器查询**
+
+下面的例子把设计 token、层叠顺序和组件局部响应式放在同一个文件中。组件宽度变化时，卡片自己决定布局；页面只负责提供容器。
+
+```html
+<section class="profile" aria-labelledby="profile-title">
+  <h2 id="profile-title">团队成员</h2>
+  <article class="profile-card">
+    <img src="avatar.webp" alt="林夏的头像" width="96" height="96" />
+    <div>
+      <h3>林夏</h3>
+      <p>负责设计系统与前端基础设施。</p>
+    </div>
+  </article>
+</section>
+```
+
+```css
+@layer reset, tokens, components;
+
+@layer tokens {
+  :root {
+    --color-surface: #ffffff;
+    --color-text: #172033;
+    --color-muted: #5e6b85;
+    --space-3: 0.75rem;
+    --radius-card: 1rem;
+  }
+}
+
+@layer components {
+  .profile {
+    container: profile / inline-size;
+    color: var(--color-text);
+  }
+
+  .profile-card {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: var(--space-3);
+    align-items: center;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-radius: var(--radius-card);
+  }
+
+  .profile-card p {
+    color: var(--color-muted);
+  }
+
+  @supports (container-type: inline-size) {
+    @container profile (max-width: 24rem) {
+      .profile-card {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+}
+```
+
+练习时可以切换容器宽度，观察卡片布局变化，再用 DevTools 的 Computed 面板确认 token 和 `@layer` 的生效顺序。真实项目还应给 token 建立命名规则，并把组件状态、主题和高对比度模式纳入同一套验证清单。
 

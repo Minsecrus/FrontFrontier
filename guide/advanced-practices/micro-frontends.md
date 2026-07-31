@@ -51,3 +51,30 @@ title: "V. 高级主题和专业开发最佳实践 / V.14 微前端架构"
 微前端真正要解决的是**组织扩张导致的协作瓶颈**。  
 当团队规模、发布节奏、历史包袱和技术异构程度还处于可控范围内时，模块化单体、Monorepo、设计系统和更清晰的边界划分，通常能以更低成本解决问题。
 
+## **V.14.4 用事件契约连接微应用**
+
+微应用之间应通过版本化、可序列化的事件传递业务意图，并为监听器提供清理路径：
+
+```ts
+type CartUpdatedDetail = {
+  version: 1;
+  itemCount: number;
+  source: "catalog" | "cart";
+};
+
+export function publishCartUpdated(detail: CartUpdatedDetail) {
+  window.dispatchEvent(new CustomEvent<CartUpdatedDetail>("cart:updated", { detail }));
+}
+
+export function subscribeCartUpdated(handler: (detail: CartUpdatedDetail) => void) {
+  const listener = (event: Event) => {
+    handler((event as CustomEvent<CartUpdatedDetail>).detail);
+  };
+
+  window.addEventListener("cart:updated", listener);
+  return () => window.removeEventListener("cart:updated", listener);
+}
+```
+
+契约应定义事件名称、版本、字段、来源、错误处理和兼容周期。共享状态、依赖版本和跨应用导航也应记录在同一份平台文档中。
+

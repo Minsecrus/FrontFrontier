@@ -154,3 +154,24 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 - **多端部署**：Quasar 这类应用框架值得进入候选，但要同时评估平台插件、发布流程和团队经验。
 
 合适的组件库能让团队用较少例外完成真实界面，并且在两三年后仍然改得动、测得了、升得上去。
+
+## **IV.3.4 把组件库边界写进业务代码**
+
+组件库负责视觉和交互基础，业务组件负责语义、数据和状态组合。下面的结构让升级组件库时，业务 API 保持稳定：
+
+```tsx
+type ProductActionProps = {
+  disabled?: boolean;
+  onAdd: () => void;
+};
+
+export function ProductAction({ disabled = false, onAdd }: ProductActionProps) {
+  return (
+    <button type="button" disabled={disabled} onClick={onAdd}>
+      加入购物车
+    </button>
+  );
+}
+```
+
+实践时为这个业务组件补充 loading、错误、禁用、键盘操作和埋点状态，再比较底层 UI 库提供的 Button、Tooltip、Form 与团队设计 token 的映射关系。

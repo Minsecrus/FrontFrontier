@@ -38,3 +38,28 @@ Tauri 以 Rust 驱动后端、采用原生 WebView，在资源效率与安全性
 
 这个表格清晰地比较了两个领先的桌面框架，强调架构选择对性能、资源效率与安全性的影响——这些正是桌面应用程序的关键因素。
 
+## **VI.3.3 用适配器隔离平台能力**
+
+跨平台 UI 可以共享业务流程，把通知、文件选择和窗口控制等平台能力收敛到适配器：
+
+```ts
+export interface PlatformBridge {
+  notify(title: string, body: string): Promise<void>;
+  openExternal(url: string): Promise<void>;
+}
+
+export const browserBridge: PlatformBridge = {
+  async notify(title, body) {
+    if (Notification.permission === "default") {
+      await Notification.requestPermission();
+    }
+    if (Notification.permission === "granted") new Notification(title, { body });
+  },
+  async openExternal(url) {
+    window.open(url, "_blank", "noopener,noreferrer");
+  },
+};
+```
+
+平台适配器应拥有权限、失败和降级语义；业务模块依赖接口，Electron、Tauri、WebView 或原生桥接层分别提供实现。测试业务流程时可以注入内存适配器，减少对真实平台的依赖。
+

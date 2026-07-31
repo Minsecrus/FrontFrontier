@@ -62,4 +62,32 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 | 客户端存储 | 在 Application 中查看 Cookie、LocalStorage、SessionStorage、IndexedDB 和 Cache Storage |
 | 性能体验 | 在 Performance 中录制页面加载或交互，观察长任务、布局、绘制和主线程占用 |
 
-把这些观察变成习惯后，学习 HTML、CSS 和 JavaScript 就不只是阅读语法，而是在理解浏览器如何把代码变成真实界面。
+把这些观察变成习惯后，学习 HTML、CSS 和 JavaScript 会同时进入语法、浏览器运行机制和真实界面行为。
+
+## **III.3.1 用 Performance API 给交互打标**
+
+DevTools 适合观察单次运行；代码打标可以让同一段交互在实验室和真实用户监控中拥有稳定名称。
+
+```js
+async function submitSearch(query) {
+  performance.mark("search:start");
+
+  try {
+    const response = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    if (!response.ok) throw new Error(`Search failed: ${response.status}`);
+    return await response.json();
+  } finally {
+    performance.mark("search:end");
+    performance.measure("search:request", "search:start", "search:end");
+  }
+}
+
+console.table(
+  performance.getEntriesByName("search:request").map(({ duration, name }) => ({
+    name,
+    duration: `${duration.toFixed(1)} ms`,
+  })),
+);
+```
+
+练习时先在 Network 面板观察请求瀑布，再在 Performance 面板过滤 `search:request`。如果页面交互仍然卡顿，继续检查请求完成后的 JSON 解析、DOM 更新和长任务，形成“时间线证据 -> 假设 -> 修复 -> 再测量”的闭环。

@@ -42,3 +42,30 @@ Touch.identifier 属性可唯一标识单个触摸点，便于在整个交互过
 网络优化包括：HTTP/2 或 HTTP/3，利用多路复用、头部压缩等特性，减少网络请求开销。CDN (Content Delivery Network)，将静态资源分发到离用户最近的服务器，减少延迟。缓存策略，合理设置 HTTP 缓存头，利用 Service Worker 实现离线缓存和更精细的缓存控制。减少 HTTP 请求，合并 CSS/JS 文件（尽管 HTTP/2 降低了其重要性，但仍有意义），使用 CSS Sprites 或 SVG 图标。
 
 渲染优化包括：关键渲染路径优化，优先加载和渲染首屏内容，延迟加载非关键资源。通过批量读写 DOM 属性控制布局抖动 (Layout Thrashing)。GPU 加速，合理使用 CSS transform 和 opacity 等属性，利用 GPU 渲染动画。虚拟列表/无限滚动，长列表只渲染视口内的元素，减少 DOM 数量。
+
+## **V.13.4 移动端交互的最小约束**
+
+移动端基础体验可以从视口、触控目标和安全区域三项约束开始：
+
+```html
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+/>
+<button class="toolbar-button" type="button">打开菜单</button>
+```
+
+```css
+.toolbar-button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  padding: 0.75rem;
+  touch-action: manipulation;
+}
+
+.bottom-bar {
+  padding-block-end: max(1rem, env(safe-area-inset-bottom));
+}
+```
+
+长列表和手势组件应使用 Pointer Events，并在滚动、拖动、点击之间定义明确的 `touch-action`。测试时覆盖窄屏、横屏、系统字体放大、刘海安全区和慢速网络。

@@ -37,3 +37,54 @@ SEO 的关键在于让搜索引擎和各种抓取器稳定、及时地获得页�
 - 每个关键落地页、详情页、分类页、文章页都应能被独立发现和理解。
 
 现代前端里的 SEO，本质上是**渲染策略、信息架构、元信息治理、状态码控制和性能优化**的综合工程问题。
+
+## **V.4.1 一个可抓取页面的最小输出**
+
+页面模板应在首个 HTML 响应中提供标题、描述、规范链接、社交分享信息和页面语义。结构化数据使用与页面可见内容一致的字段。
+
+```html
+<head>
+  <title>前端性能实践 | Front Frontier</title>
+  <meta
+    name="description"
+    content="记录前端性能、可访问性和交付实践。"
+  />
+  <link rel="canonical" href="https://example.com/guides/performance" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="前端性能实践" />
+  <meta property="og:url" content="https://example.com/guides/performance" />
+</head>
+<body>
+  <main>
+    <article>
+      <h1>前端性能实践</h1>
+      <p>页面正文从语义化标题开始。</p>
+    </article>
+  </main>
+</body>
+```
+
+```html
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "前端性能实践",
+  "url": "https://example.com/guides/performance"
+}
+</script>
+```
+
+```text
+# robots.txt
+User-agent: *
+Allow: /
+Sitemap: https://example.com/sitemap.xml
+
+# sitemap.xml
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://example.com/guides/performance</loc></url>
+</urlset>
+```
+
+验证时检查：查看源代码是否直接包含核心元信息，搜索引擎测试工具能否解析 JSON-LD，规范 URL 是否稳定，`robots.txt` 与 `sitemap.xml` 是否返回正确状态码。

@@ -54,3 +54,32 @@ Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进�
 
 数据可视化、科学内容渲染和 Web GIS 已经从 Web 图形中拆出，详见 [Web 数据可视化](/guide/emerging-tech/data-visualization)。
 
+## **VI.4.4 先用 SVG 表达语义，再检测 GPU 能力**
+
+图形功能可以从可访问、可缩放的 SVG 开始；需要大规模绘制或计算时，再检测 WebGPU 并提供 Canvas/SVG 回退。
+
+```html
+<svg viewBox="0 0 240 80" role="img" aria-labelledby="chart-title">
+  <title id="chart-title">本周访问量趋势</title>
+  <polyline
+    points="8,64 48,50 88,56 128,30 168,38 208,16"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="4"
+  />
+</svg>
+```
+
+```js
+export async function chooseRenderer(canvas) {
+  const adapter = await navigator.gpu?.requestAdapter();
+  if (!adapter) {
+    return { kind: "canvas-2d", context: canvas.getContext("2d") };
+  }
+
+  const device = await adapter.requestDevice();
+  return { kind: "webgpu", device, context: canvas.getContext("webgpu") };
+}
+```
+
+回退路径应保持数据、操作和替代文本可用；渲染器只负责表现层。性能实验可以固定数据量，分别记录 SVG 节点数、Canvas 绘制时间、GPU 初始化时间和低端设备帧率。

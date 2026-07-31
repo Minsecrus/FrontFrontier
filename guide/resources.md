@@ -33,6 +33,8 @@ _这些是所有前端开发的基石，遇到问题时的第一检索源。_
   - **用途**：按特性查询 Web 平台能力、Baseline 状态与浏览器进展。
 - **[Can I Use](https://caniuse.com/)**
   - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`, Container Queries）。
+- **[WCAG 2.2](https://www.w3.org/TR/WCAG22/)** / **[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)**
+  - **用途**：查询可访问性成功标准、组件模式和辅助技术交互要求。
 - **[Patterns.dev](https://www.patterns.dev/)**
   - **用途**：免费且深度的电子书，讲解现代 Web 应用的设计模式、渲染模式和性能优化模式。
   - **重点**：适合系统理解 CSR、SSR、SSG、Streaming、Islands Architecture、Resumability 等现代渲染架构，以及这些模式背后的性能取舍。
@@ -101,6 +103,8 @@ _提升开发效率与代码质量的利器。_
 - **构建与编译**
   - **[AST Explorer](https://astexplorer.net/)**: 在线查看代码的抽象语法树 (AST)，学习写 Babel/ESLint/Vite 插件的神器。
   - **[Bundlephobia](https://bundlephobia.com/)**: 检查 npm 包的体积大小和下载时间。
+  - **[Vite 8 发布说明](https://vite.dev/blog/announcing-vite8)**: 了解 Rolldown、Oxc、Node.js 版本要求和迁移注意事项。
+  - **[TypeScript 7 发布说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)**: 了解原生 Go 编译器、语言服务和存量项目迁移边界。
 - **调试与正则**
   - **[Regex101](https://regex101.com/)**: 可视化调试正则表达式，带解释功能。
   - **[JSON Crack](https://jsoncrack.com/)**: 将复杂的 JSON 数据可视化为思维导图，调试接口数据必备。
@@ -111,14 +115,26 @@ _提升开发效率与代码质量的利器。_
 
 - **辅助编程 (AI Agents & IDEs)**
   - **[v0.dev](https://v0.dev/)**: Vercel 出品，用自然语言生成 React/Tailwind 界面代码。
-  - **[Cursor](https://cursor.sh/)**: 目前最流行的 AI 原生 IDE，支持全库索引、多文件编辑及模型自定义切换。
+  - **[Cursor](https://cursor.sh/)**: 代表性的 AI 原生 IDE，支持全库索引、多文件编辑及模型自定义切换；具体能力和市场位置应以当前产品文档为准。
   - **[Codex](https://openai.com/codex)**: OpenAI 发布的**独立智能体应用**。支持多 Agent 并行开发、Git Worktree 隔离工作区以及全自动的任务执行与测试。
   - **[Claude Code](https://code.claude.com/docs/en/overview)**: Anthropic 推出的 **Agentic CLI** 工具。擅长处理复杂的架构重构、深层 Bug 修复，并支持“Agent Teams”模式，让多个子 Agent 协作审查和开发代码。
 - **AI 集成 (Integration & SDKs)**
   - **[LangChain JS](https://js.langchain.com/)**: 在前端/Node.js 应用中集成 LLM 的标准库。
   - **[Vercel SDK](https://sdk.vercel.ai/)**: 快速构建流式 (Streaming) AI 聊天界面的工具库。
-  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**: Anthropic 发起的标准化协议，允许 AI 智能体跨工具、跨数据源安全地访问本地和远程环境。
+  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**: 用于让 Agent 发现和调用 prompts、resources、tools 的公开协议生态；实际安全性取决于权限、实现、审批和审计设计。
+  - **[MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)**: 了解工具如何返回可直接显示在对话中的交互式 UI。
+  - **[Google A2UI](https://github.com/google/A2UI)**: Agent-to-User Interface 的声明式 UI 方案，目前为 Public Preview。
+  - **[WebMCP Draft](https://webmachinelearning.github.io/webmcp/)**: 了解网页向 Agent 暴露工具的实验性规范；当前处于 Community Group Draft 阶段。
   - **[Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai)**: 浏览器内建 AI API 的官方入口，跟进 Prompt、Summarizer、Translator 等前端原生 AI 能力。
+
+### **按日期阅读趋势资料**
+
+岗位和工具调查很容易过时，阅读时应记录发布日期、地域、样本和指标定义：
+
+- [Stack Overflow 2025 AI Survey](https://survey.stackoverflow.co/2025/ai)：观察开发者对 AI 准确性、Agent、信任和安全的态度。
+- [DORA 2025 Report](https://dora.dev/research/2025/dora-report/)：理解 AI 与组织工程能力、交付质量之间的关系。
+- [LinkedIn Talent 2026](https://news.linkedin.com/en-us/2026/LinkedIn-Research-Talent-2026)：观察招聘流程和求职竞争的变化。
+- [BLS Web Developers and Digital Designers](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm)：作为美国宽口径职业展望阅读；其他市场需要配合本地数据。
 
 ## **6. 实战与练习平台 (Practice)**
 

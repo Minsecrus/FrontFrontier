@@ -6,9 +6,9 @@ title: "VI. 新兴技术和专业领域 / VI.2 WebAssembly (WASM)：释放 Web �
 
 长久以来，JavaScript 几乎是 Web 世界唯一的原生编程语言，承载了浏览器中几乎所有的逻辑与交互。尽管现代 JavaScript 引擎（如 [V8](https://v8.dev/)）通过即时编译（JIT）等技术大幅提升了性能，但在执行计算密集型任务（如 3D 图形渲染、视频编解码、复杂科学计算）时，由于动态语言的本质，它与原生语言（如 C++、Rust）之间仍存在难以逾越的性能鸿沟。为了打破这一天花板，**WebAssembly ([WASM](https://webassembly.org/))** 应运而生。
 
-WebAssembly 是面向 Web 浏览器的一种全新的二进制指令格式，可移植且体积紧凑。它并非一门意图取代 JavaScript 的手写编程语言，而是强大的**编译目标 (Compilation Target)**。这意味着开发者可以使用 C、C++、Rust、Go 等高性能静态类型语言编写代码，然后将其编译成 WASM 模块。浏览器可以高效地加载、解析并执行这一模块，运行速度可接近原生应用的水平。
+WebAssembly 是面向 Web 浏览器的一种全新的二进制指令格式，可移植且体积紧凑。它是强大的**编译目标 (Compilation Target)**，开发者可以使用 C、C++、Rust、Go 等高性能静态类型语言编写代码，然后将其编译成 WASM 模块。浏览器可以高效地加载、解析并执行这一模块，运行速度可接近原生应用的水平。
 
-从本质上讲，WebAssembly 为 Web 平台引入了第二种语言，它与 JavaScript 并非竞争关系，而是**互补共生**的关系。JavaScript 依然是控制 Web 页面交互、操作 DOM、调用 Web API 的”总指挥”，而 WASM 则像一个专注于高性能计算的”外挂引擎”，由 JS 负责调度。
+从本质上讲，WebAssembly 为 Web 平台引入了第二种语言，与 JavaScript 形成**互补共生**的关系。JavaScript 负责控制 Web 页面交互、操作 DOM、调用 Web API；WASM 则像一个专注于高性能计算的”外挂引擎”，由 JS 负责调度。
 
 ## **VI.2.1 WASM 的核心价值与革命性影响**
 
@@ -32,3 +32,24 @@ WebAssembly 的应用场景远不止于游戏和科学计算，它正在渗透�
 
 WebAssembly 的出现，标志着 Web 平台正在从以“文档和应用”为中心的平台，向能够承载任何类型计算任务的**通用计算平台**演进。它极大地扩展了 Web 应用的能力边界，模糊了桌面应用与 Web 应用之间的性能差距。对于前端开发者而言，虽然不一定需要亲自编写 C++ 或 Rust，但理解 WASM 的原理和价值，并学会在合适的场景下利用它来解决性能瓶颈，将成为一项日益重要的核心竞争力。
 
+## **VI.2.3 从 JavaScript 加载 WASM 模块**
+
+`instantiateStreaming` 要求服务器返回 `application/wasm`。部署环境暂时无法设置正确 MIME 时，可以先下载为 `ArrayBuffer` 再实例化，同时记录这条回退路径的性能影响。
+
+```js
+export async function loadMathModule() {
+  const response = await fetch("/math.wasm");
+  if (!response.ok) throw new Error(`WASM request failed: ${response.status}`);
+
+  const result = WebAssembly.instantiateStreaming
+    ? await WebAssembly.instantiateStreaming(response, {})
+    : await WebAssembly.instantiate(await response.arrayBuffer(), {});
+
+  return result.instance.exports;
+}
+
+const math = await loadMathModule();
+console.log(math.add(2, 3));
+```
+
+WASM 适合有明确计算瓶颈、可测量输入输出和稳定模块边界的任务。加载体积、JS/WASM 之间的数据复制、初始化时间和内存占用都应纳入基准测试。

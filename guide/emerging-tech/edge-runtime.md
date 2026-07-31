@@ -29,3 +29,35 @@ title: "VI. 新兴技术和专业领域 / VI.9 边缘计算：Cloudflare Workers
 
 这个表格帮助学习者理解边缘计算的格局——边缘计算是高性能全球应用程序的关键部署策略。它突出了不同提供商如何借助分布式基础设施最小化延迟、增强可扩展性。
 
+## **VI.9.1 一个 Web 标准风格的边缘处理器**
+
+边缘入口适合做轻量请求编排。下面采用 Cloudflare Workers 风格的 `fetch` 处理器，展示鉴权、缓存头和 Web 标准 API 的组合：
+
+```ts
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+
+    if (url.pathname === "/health") {
+      return new Response(JSON.stringify({ ok: true }), {
+        headers: { "content-type": "application/json" },
+      });
+    }
+
+    if (url.pathname !== "/api/region") {
+      return new Response("Not Found", { status: 404 });
+    }
+
+    const country = request.headers.get("cf-ipcountry") ?? "unknown";
+    return new Response(JSON.stringify({ country }), {
+      headers: {
+        "content-type": "application/json",
+        "cache-control": "public, max-age=60",
+      },
+    });
+  },
+};
+```
+
+部署前应列出运行时允许的 Web API、CPU/内存/请求时长限制、区域一致性要求和回源方式。Node.js 专属模块、长时间计算和大文件处理应沿用适合它们的运行环境。
+

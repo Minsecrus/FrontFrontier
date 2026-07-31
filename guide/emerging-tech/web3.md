@@ -71,3 +71,24 @@ Web3 应用的用户体验面临独特的挑战，尤其是在钱包连接、私
 
 前端安全在 Web3 中扮演着核心角色。相较于传统 Web2 应用，Web3 前端的漏洞（如钓鱼攻击、恶意合约交互、不当的密钥管理）可能导致用户资产的不可逆损失。这意味着前端开发者必须超越传统的 Web2 安全考量，采用更强大的安全实践，例如保护端点、轮换密钥、严格验证用户输入。前端已经成为用户与区块链资产交互的直接接口，因此安全性直接关系到用户的资金安全。
 
+## **VI.7.6 先从只读链上查询开始**
+
+读取公开链上数据可以先建立稳定的网络、格式化和错误处理路径，再进入钱包连接与签名流程：
+
+```ts
+import { createPublicClient, formatEther, http } from "viem";
+import { mainnet } from "viem/chains";
+
+const client = createPublicClient({
+  chain: mainnet,
+  transport: http(import.meta.env.VITE_RPC_URL),
+});
+
+export async function loadBalance(address: `0x${string}`) {
+  const balance = await client.getBalance({ address });
+  return formatEther(balance);
+}
+```
+
+生产界面应显示当前网络、地址校验结果、RPC 错误和数据时间；涉及签名或交易时，先向用户说明合约、链、金额、手续费和不可逆影响，再进入钱包确认。
+

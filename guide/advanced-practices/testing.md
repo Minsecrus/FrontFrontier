@@ -40,7 +40,7 @@ test("submits an email address", async () => {
 });
 ```
 
-这个测试没有查询 `.input-primary` 或组件内部状态，而是按用户能感知的 label、button name 和反馈文本来断言。Testing Library 的启发是：测试行为和可访问名称，而不是实现细节。
+这个测试按用户能感知的 label、button name 和反馈文本来断言，避免把断言绑定到 `.input-primary` 等实现细节。Testing Library 的启发是：测试行为和可访问名称。
 
 :::
 
@@ -61,7 +61,7 @@ test("user can sign in", async ({ page }) => {
 });
 ```
 
-Playwright 适合覆盖跨页面、真实浏览器、真实路由和网络边界。它验证的是完整用户流程，而不是单个组件是否调用了某个函数。
+Playwright 适合覆盖跨页面、真实浏览器、真实路由和网络边界。它验证完整用户流程，并观察页面最终呈现和网络行为。
 
 :::
 
@@ -75,4 +75,3 @@ Playwright 适合覆盖跨页面、真实浏览器、真实路由和网络边界
 | [**Playwright**](https://playwright.dev/) | E2E             | 极速       | Chrome, [Firefox](https://www.mozilla.org/en-US/firefox/new/), [Safari](https://www.apple.com/safari/), [Edge](https://www.microsoft.com/en-us/edge) | JS/TS, Python, C#, Java                                   | 强大，并行                              | 强大，需高级技能     | 正在增长      | 复杂集成场景，跨浏览器/设备测试，并行执行                |
 
 这个表格有助于学习者理解不同测试工具各自擅长什么。它还能帮助你做出有依据的选择，构建一个覆盖应用程序质量各方面的健壮测试策略，从单个组件到完整用户流程和视觉完整性。
-

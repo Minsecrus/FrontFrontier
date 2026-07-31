@@ -48,3 +48,30 @@ title: "V. 高级主题和专业开发最佳实践 / V.12 前端架构模式：�
 
 架构设计最容易犯的错误，是把大型公司的解决方案提前套到小型项目上。  
 好的前端架构，应该让团队更快、更稳地交付，并为未来增长保留清晰的演进空间。从单体到微前端的变化，通常来自组织和交付模型的变化。
+
+## **V.12.1 用目录和依赖方向表达架构**
+
+一个功能型前端可以先采用下面的目录边界：
+
+```text
+src/
+├─ app/        # 路由、Provider、全局样式
+├─ pages/      # 页面组合与路由入口
+├─ features/   # 面向用户能力的业务模块
+├─ entities/   # 领域对象与数据模型
+├─ shared/     # 通用 UI、工具、类型和基础设施
+└─ main.tsx
+```
+
+依赖方向可以写成一条可审查的规则：`pages -> features -> entities -> shared`。`shared` 不依赖业务层，`entities` 不读取页面路由，跨层调用通过公开 API 和类型契约完成。
+
+```ts
+// features/search/index.ts
+export { SearchBox } from "./ui/SearchBox";
+export { searchProducts } from "./model/searchProducts";
+
+// pages/catalog/CatalogPage.tsx
+import { SearchBox, searchProducts } from "@/features/search";
+```
+
+实践时可以把目录规则加入 ESLint import boundary、Code Owners 和 PR 检查。架构的有效性由依赖图、变更路径和新成员能否快速定位代码共同验证。

@@ -26,7 +26,7 @@ git push
   -> monitor errors and performance
 ```
 
-这条链路把“代码能在我机器上跑”推进到“代码能被自动、可重复地交付”。前端 CI 的关键不是步骤越多越好，而是把格式、类型、测试、构建和部署这些容易出错的环节固定下来。
+这条链路把“代码能在我机器上跑”推进到“代码能被自动、可重复地交付”。前端 CI 的关键在于把格式、类型、测试、构建和部署这些容易出错的环节固定下来，并让步骤与项目风险匹配。
 
 :::
 
@@ -49,4 +49,37 @@ git push
 - **版本控制与缓存失效**：对于 JS/CSS 文件，通常在文件名中加入内容哈希（如 bundle.123abc.js），文件内容变化时，文件名也随之变化，强制浏览器加载新文件，实现缓存失效。对于图片等资源，可以采用类似策略或定期更新 URL。
 
 前端部署与 DevOps 的实践，体现了从”代码编写”到”代码交付”的完整生命周期管理。CI/CD 流水线、容器化和静态资源优化，共同构建了一套高效、可靠的前端交付体系。这不仅仅是技术工具的简单堆砌，更是对软件工程”持续交付”理念的贯彻。它要求前端工程师不仅关注代码本身，还要理解构建、测试、部署、运维的全链路流程——通过自动化减少人为错误，通过标准化提升团队效率，通过监控确保线上质量。这种从局部优化到全局流程优化的思维转变，使前端工程师得以更好地融入 DevOps 文化，成为全栈交付能力的重要一环。
+
+## **V.15.5 一个前端 CI 门禁**
+
+GitHub Actions 可以把安装、类型检查、测试和构建固定成每次变更都会执行的证据链：
+
+```yaml
+name: frontend-checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test -- --run
+      - run: pnpm build
+```
+
+项目可以在构建成功后追加 Lighthouse CI、Playwright、依赖审计和部署预览。每个门禁都应关联一个用户风险：Lint 保护一致性，类型检查保护契约，测试保护行为，构建保护产物，浏览器测试保护真实路径。
 

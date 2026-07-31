@@ -42,3 +42,41 @@ title: "IV. 前端框架和库：构建现代 UI / IV.5 数据可视化组件库
 数据驱动型应用或仪表盘通常采用**通用组件库 + 专业图表库**的混合模式。例如，使用 Chakra UI 构建基础界面，同时集成 Tremor 或 Highcharts 来处理复杂的数据可视化部分。这种组合既能享受通用库的高效，又能利用专用库在专业领域的强大功能。
 
 选择图表库时，应优先判断数据规模、交互复杂度、图表类型、框架绑定程度、主题定制能力和商业授权。若想学习底层可视化原理，应继续阅读 [Web 数据可视化](/guide/emerging-tech/data-visualization)，把关注点从组件 API 转向渲染模型、数据处理和性能策略。
+
+## **IV.5.4 一个带空状态的图表组件**
+
+以 Recharts 为例，业务组件先处理数据状态，再把可视化配置交给图表库：
+
+```tsx
+import {
+  CartesianGrid,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+type Point = { day: string; visits: number };
+
+export function VisitChart({ data }: { data: Point[] }) {
+  if (!data.length) return <p role="status">暂无访问数据</p>;
+
+  return (
+    <div aria-label="访问量趋势" style={{ width: "100%", height: 280 }}>
+      <ResponsiveContainer>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="day" />
+          <YAxis allowDecimals={false} />
+          <Tooltip />
+          <Line dataKey="visits" name="访问量" stroke="#2563eb" />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+}
+```
+
+数据量达到万级后，应评估 Canvas、WebGL、采样、窗口化和 Worker 预处理，并保留表格或摘要作为可访问回退。

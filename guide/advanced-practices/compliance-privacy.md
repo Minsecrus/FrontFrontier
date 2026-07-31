@@ -36,3 +36,39 @@ Cookie 是 Web 应用中广泛使用的技术，但也常常用于用户追踪�
 
 法律、合规与隐私的考量，将前端开发从纯粹的技术实现延伸到法律和伦理层面。随着全球数据隐私法规的收紧，前端工程师需要将隐私保护和合规性内置到产品设计和开发流程中。这反映了现代软件开发对“责任”和“信任”的更高要求。专业级前端工程师需要理解这些法规的核心原则，并掌握如何在技术层面实现用户同意管理、数据最小化和安全实践，构建出功能强大、合法合规、赢得用户信任的 Web 产品。
 
+## **V.16.1 用数据流和同意状态表达隐私边界**
+
+```mermaid
+flowchart LR
+  U[用户] --> CMP[同意管理界面]
+  CMP -->|必要| APP[应用功能]
+  CMP -->|同意分析| ANA[分析脚本]
+  CMP -->|同意营销| ADS[营销脚本]
+  APP --> API[服务端 API]
+  API --> STORE[受控数据存储]
+```
+
+前端可以把同意结果收敛成明确状态，再决定是否加载第三方脚本：
+
+```ts
+type Consent = {
+  necessary: true;
+  analytics: boolean;
+  marketing: boolean;
+};
+
+export function applyConsent(consent: Consent) {
+  if (consent.analytics) loadScript("/analytics.js");
+  if (consent.marketing) loadScript("/marketing.js");
+}
+
+function loadScript(src: string) {
+  const script = document.createElement("script");
+  script.src = src;
+  script.async = true;
+  document.head.append(script);
+}
+```
+
+加载前应核对数据用途、供应商、保存周期、撤回行为和所在市场的法律要求。日志、LocalStorage、IndexedDB、Cookie 和第三方 SDK 都应进入数据清单。
+

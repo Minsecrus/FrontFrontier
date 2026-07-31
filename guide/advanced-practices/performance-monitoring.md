@@ -73,3 +73,45 @@ Bugsnag 则提供更精简的体验、智能错误分组、开箱即用的洞察
 
 性能优化和错误管理是用户留存与业务增长的直接驱动力。RUM 直接衡量用户等待时间、页面渲染和交互，错误监控捕获线上 bug。页面加载慢、交互卡顿或频繁报错，都会直接导致用户流失和负面体验。通过 RUM 和错误监控，团队可以快速定位这些“摩擦点”，并有针对性地优化。打包分析则从源头控制应用体积，提升加载速度。这揭示了技术性能与业务成果之间的直接因果关系。高性能、低错误的应用能够提供更流畅的用户体验，从而提升用户留存率、转化率和品牌声誉。专业级前端工程师需要将性能和稳定性视为核心竞争力，与业务指标紧密挂钩，从技术层面为业务增长提供强力支撑。
 
+## **V.2.5 用 PerformanceObserver 采集核心指标**
+
+浏览器指标采集应与页面版本、路由和采样策略一起发送。示例展示采集和脱敏边界，具体上报地址由项目的监控平台提供。
+
+```js
+const metrics = [];
+
+function observe(name, type, value) {
+  metrics.push({ name, value, type, route: location.pathname });
+}
+
+new PerformanceObserver((list) => {
+  const entry = list.getEntries().at(-1);
+  if (entry) observe("lcp", entry.entryType, entry.startTime);
+}).observe({ type: "largest-contentful-paint", buffered: true });
+
+new PerformanceObserver((list) => {
+  for (const entry of list.getEntries()) {
+    if (!entry.hadRecentInput) observe("cls", entry.entryType, entry.value);
+  }
+}).observe({ type: "layout-shift", buffered: true });
+
+new PerformanceObserver((list) => {
+  for (const entry of list.getEntries()) {
+    observe("long-task", entry.entryType, entry.duration);
+  }
+}).observe({ type: "longtask", buffered: true });
+
+addEventListener("pagehide", () => {
+  if (!metrics.length) return;
+  navigator.sendBeacon(
+    "/rum",
+    JSON.stringify({
+      metrics,
+      version: document.documentElement.dataset.version,
+    }),
+  );
+});
+```
+
+生产实现还应加入 INP、采样率、连接类型、设备类别、request ID 和错误事件关联，并过滤 URL 参数、表单输入和用户内容。指标需要按路由、版本和设备分组，再与业务路径一起解释。
+

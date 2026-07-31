@@ -32,7 +32,7 @@ Web API 向直接设备集成的扩展，标志着 Web 与原生应用之间的�
 - **用例**：该 API 让 Web 应用程序能够与附近的低功耗蓝牙（BLE）设备（蓝牙 4.0 或更高版本）交互，例如心率监测器、智能灯泡、零售亭和玩具。
 - **功能**：开发者可以请求蓝牙设备（`navigator.bluetooth.requestDevice`），连接到设备的通用属性配置文件（GATT）服务器，读写蓝牙特性，接收 GATT 通知，以及断开连接。它还支持读写蓝牙描述符，描述符提供有关特性值的附加信息。
 - **安全与隐私**：Web Bluetooth API 要求在安全上下文（HTTPS）中运行。出于安全考虑，`requestDevice()` 方法必须由用户手势（例如点击）触发。该 API 在设计上限制了对某些难以安全实现的蓝牙功能的访问，以最大限度减少恶意网站可利用的设备攻击面。
-- **浏览器支持与成熟度**：Web Bluetooth API 可用性有限，被视为实验性技术，并非所有主流浏览器都支持。例如，Chrome、Edge 和 Opera（桌面和 Android）提供部分支持，Firefox 和 Safari 则不支持。尽管如此，该标准正在成熟，工具集和 API 不断涌现，Chrome 53 已通过 Origin Trial（源试用）支持蓝牙功能。
+- **浏览器支持与成熟度**：Web Bluetooth API 可用性有限，目前属于实验性技术。Chrome、Edge 和 Opera（桌面和 Android）提供部分支持，Firefox 和 Safari 的支持情况不同。该标准仍在演进，工具集和 API 不断涌现，Chrome 53 已通过 Origin Trial（源试用）支持蓝牙功能。
 - **Electron 环境**：在 Electron 中，开发者可以通过 webContents 上的 `select-bluetooth-device` 事件选择蓝牙设备，并通过 ses.`setDevicePermissionHandler` 提供默认权限，实现更灵活的设备管理。
 
 ## **VI.10.2 WebUSB API**
@@ -58,3 +58,27 @@ WebUSB API 提供了一种方式，将非标准通用串行总线（USB）兼容
 所有这些 API 都强调**安全与用户授权的核心地位**。它们普遍要求在安全上下文（HTTPS）中运行，并强制通过用户手势才能访问设备。这种设计理念旨在最大程度地防止恶意网站未经授权访问用户硬件，并确保用户对涉及敏感硬件的交互拥有明确的控制权。这体现了 Web 平台在扩展能力的同时，对用户隐私和安全的高度重视。
 
 值得一提的是，**Electron 环境为设备集成提供了增强的控制能力**。与标准浏览器环境相比，Electron 提供了额外的 API，允许开发者更细粒度地控制设备选择和权限处理。这意味着开发者可以构建自定义的用户界面来引导用户进行设备交互，某些情况下甚至可以自动选择设备，从而提供超越标准浏览器功能的更无缝或定制化的用户体验。这种灵活性使 Electron 成为开发需要深度设备集成的前端桌面应用的理想选择。
+
+## **VI.10.4 Web Bluetooth 的授权与断开处理**
+
+设备选择必须由用户手势触发，连接状态和异常状态也应显式反馈：
+
+```js
+export async function connectBluetooth() {
+  if (!navigator.bluetooth) throw new Error("当前浏览器不支持 Web Bluetooth");
+
+  const device = await navigator.bluetooth.requestDevice({
+    filters: [{ services: ["battery_service"] }],
+  });
+
+  device.addEventListener("gattserverdisconnected", () => {
+    console.info("设备已断开");
+  });
+
+  const server = await device.gatt?.connect();
+  if (!server) throw new Error("无法连接 GATT 服务");
+  return { device, server };
+}
+```
+
+上线前需要提供 HTTPS、权限拒绝、设备断开、重新连接、浏览器不支持和撤销授权的用户路径。设备名称、服务 UUID 和传感器数据也应按最小必要原则处理。

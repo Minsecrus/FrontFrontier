@@ -4,7 +4,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.2 Web Components：原生�
 
 # IV.2 Web Components：原生、跨框架的组件化未来
 
-在探讨 React、Vue、Svelte 等框架如何实现组件化的同时，我们必须关注 Web 标准自身提供的原生组件化解决方案——[**Web Components**](https://www.webcomponents.org/)。它并非框架，而是一套由 W3C 标准化、浏览器原生支持的技术集合，旨在让开发者创建可复用、封装良好的自定义 HTML 元素。这些元素可以在任何 Web 页面中使用，并能与所有现代 JavaScript 框架无缝协作。
+在探讨 React、Vue、Svelte 等框架如何实现组件化的同时，我们必须关注 Web 标准自身提供的原生组件化解决方案——[**Web Components**](https://www.webcomponents.org/)。它是一套由 W3C 标准化、浏览器原生支持的技术集合，旨在让开发者创建可复用、封装良好的自定义 HTML 元素。这些元素可以在任何 Web 页面中使用，并能与所有现代 JavaScript 框架无缝协作。
 
 Web Components 主要由三项核心技术构成：
 
