@@ -183,6 +183,10 @@ export default defineConfig({
                   text: "设备集成 API",
                   link: "/guide/emerging-tech/device-apis",
                 },
+                {
+                  text: "本地优先架构与实时协同",
+                  link: "/guide/emerging-tech/local-first",
+                },
               ],
             },
             {

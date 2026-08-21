@@ -85,3 +85,30 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 7. **留痕沟通**：把问题评论到具体节点，必要时链接到 issue、PR 或 Storybook story。
 
 设计协作依靠一条稳定的翻译链：**设计说明意图与约束，工具帮助读取和传递，代码再将其落实为可维护、可测试的产品行为。**
+
+## **III.10.6 设计系统工程化：Design Tokens 标准与自动化编译管线**
+
+设计系统在工程落地的关键在于将设计常量（颜色、字号、间距、阴影）转化为单一事实来源（Single Source of Truth）的自动化代码管线：
+
+1. **[W3C DTCG (Design Tokens Community Group)](https://design-tokens.github.io/community-group/format/) 国际规范**：
+   - 采用标准 JSON 格式定义设计 Token，彻底消除 Figma Variables 与代码硬编码之间的语义鸿沟：
+   ```json
+   {
+     "color": {
+       "brand": {
+         "primary": {
+           "$value": "#2563eb",
+           "$type": "color",
+           "$description": "主品牌色，用于关键操作按钮与高亮"
+         }
+       }
+     }
+   }
+   ```
+2. **自动化 Token 编译与分发管线 ([Style Dictionary](https://styledictionary.com/))**：
+   - 统一由 CI 监听 Token 仓库变更，通过 Style Dictionary 自动化编译输出为多端产物：
+     - **Web 产物**：CSS 自定义属性 (`:root { --color-brand-primary: #2563eb; }`)、Tailwind CSS 主题配置文件、TypeScript 强类型常量对象；
+     - **移动端产物**：iOS Swift 结构体 / Android XML 资源。
+3. **现代感知色彩对比度算法：APCA (Advanced Perceptual Contrast Algorithm)**：
+   - 传统 WCAG 2.1 对比度公式（如 4.5:1）存在物理光学缺陷，无法准确反映人眼在暗黑模式、极细字号下的真实空间感知。
+   - 现代设计系统正在逐步拥抱 **APCA** 算法，基于空间频率、背景极性与动态字阶精准计算可读性得分（$L^c$ 亮度对比度），实现真正的科学无障碍调色板。

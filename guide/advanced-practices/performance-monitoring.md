@@ -115,3 +115,12 @@ addEventListener("pagehide", () => {
 
 生产实现还应加入 INP、采样率、连接类型、设备类别、request ID 和错误事件关联，并过滤 URL 参数、表单输入和用户内容。指标需要按路由、版本和设备分组，再与业务路径一起解释。
 
+## **V.2.6 前端全链路可观测性 (OpenTelemetry) 与会话回放 (Session Replay)**
+
+现代前端监控已经从孤立的“捕获异常堆栈”升级为端到端分布式可观测体系：
+
+1. **[OpenTelemetry (OTel)](https://opentelemetry.io/) 前端分布式链路追踪**：
+   - 前端是微服务调用链路的发起点。通过在前端 `fetch` / `XHR` 请求拦截器中自动注入 W3C Trace Context（`traceparent` 请求头），将用户的每次交互动作与后端 API 网关、微服务以及数据库查询链路串联（端到端单一 Trace ID），使前后端排障体验完全打通。
+2. **基于 [rrweb](https://www.rrweb.io/) 的会话回放 (Session Replay) 与数据脱敏**：
+   - 记录初次全量 DOM 快照，并通过 `MutationObserver` 序列化后续所有细粒度 DOM 变更与鼠标轨迹，实现线上疑难 Bug 的“现场视频级”真实重放。
+   - **严格物理脱敏**：必须在浏览器端序列化前，物理级遮蔽密码、手机号、银行卡及带有 `data-privacy="mask"` / `.mask-pii` 标记的敏感文本，严防用户隐私进入分析系统。

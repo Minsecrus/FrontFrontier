@@ -26,16 +26,26 @@ title: "IV. 前端框架和库：构建现代 UI / IV.8 状态管理解决方案
 状态管理库的演进趋势很明确：更少样板代码、更好的 TypeScript 支持、更清晰的心智模型。  
 因此，新项目通常优先在 **Redux Toolkit / Zustand / Jotai / Pinia** 之间选择。
 
+## **IV.8.1 范式演进：Signals 细粒度响应式与 React 19 Actions**
+
+现代前端状态管理正在发生两大深层范式转移：
+
+1. **Signals 细粒度响应式 (Fine-grained Reactivity)**：
+   - 以 [Solid.js](https://www.solidjs.com/)、[Preact Signals](https://preactjs.com/guide/v10/signals/)、[Vue 3.5+](https://vuejs.org/)（响应式内存占用减半重构）、Angular Signals 以及 Svelte 5 (Runes) 为代表。
+   - **核心优势**：跳过了传统虚拟 DOM 树的“自顶向下全量子树 Diff”，通过自动追踪 getter 建立精确的依赖图，直接将值的变化通知到绑定它的具体 DOM 节点，达成近乎零运行时开销的高频更新。
+2. **React 19 异步表单与 Actions 原语**：
+   - 现代 React 引入了 `useActionState`、`useOptimistic` 与 `useFormStatus`，将过去分散在自定义状态库中的“表单提交 -> loading 标记 -> 乐观更新 -> 失败回滚”流程收敛为统一的标准框架级状态流。
+
 ## **表格：主要状态管理库比较**
 
-| 库名称                                             | 框架兼容性                  | 设计哲学（示例）       | 学习曲线 | 样板代码 | [TypeScript](https://www.typescriptlang.org/) 支持 | 推荐度               | 理想用例（示例）                             |
-| :------------------------------------------------- | :-------------------------- | :--------------------- | :------- | :------- | :------------------------------------------------- | :------------------- | :------------------------------------------- |
-| [**Redux Toolkit**](https://redux-toolkit.js.org/) | [React](https://react.dev/) | 集中式存储，可预测状态 | 中等偏高 | 中等     | 良好                                               | 高                   | 大型复杂应用，需要强约束、可预测状态流       |
-| [**Zustand**](https://zustand-demo.pmnd.rs/)       | [React](https://react.dev/) | 极简，单一存储         | 较低     | 极少     | 良好                                               | 很高                 | 中小型应用，重视简单、灵活和性能             |
-| [**Jotai**](https://jotai.org/)                    | [React](https://react.dev/) | 原子，自下而上         | 较平缓   | 极少     | 良好                                               | 高                   | 细粒度状态控制、组合性强的 React 项目        |
-| [**Pinia**](https://pinia.vuejs.org/)              | [Vue](https://vuejs.org/)   | 模块化，无 Mutations   | 较低     | 极少     | 优秀                                               | 很高                 | Vue 3 新项目，注重简单性和类型支持           |
-| [**Vuex**](https://vuex.vuejs.org/)                | [Vue](https://vuejs.org/)   | 集中式存储，严格结构   | 中等     | 较多     | 较弱                                               | 仅存量项目推荐       | 遗留 Vue 2/早期 Vue 3 项目，需要维护既有代码 |
-| [**Recoil（已归档）**](https://recoiljs.org/)      | [React](https://react.dev/) | 原子，派生状态         | 中等     | 中等     | 良好                                               | 不建议新项目继续采用 | 仅在维护历史项目时需要理解                   |
+| 库名称 | 框架兼容性 | 设计哲学（示例） | 学习曲线 | 样板代码 | TypeScript 支持 | 推荐度 | 理想用例（示例） |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| [**Redux Toolkit**](https://redux-toolkit.js.org/) | [React](https://react.dev/) | 集中式存储，可预测状态 | 中等偏高 | 中等 | 良好 | 高 | 大型复杂应用，需要强约束、可预测状态流 |
+| [**Zustand**](https://zustand-demo.pmnd.rs/) | [React](https://react.dev/) | 极简，单一存储 | 较低 | 极少 | 良好 | 很高 | 中小型应用，重视简单、灵活和性能 |
+| [**Jotai**](https://jotai.org/) | [React](https://react.dev/) | 原子，自下而上 | 较平缓 | 极少 | 良好 | 高 | 细粒度状态控制、组合性强的 React 项目 |
+| [**Pinia**](https://pinia.vuejs.org/) | [Vue](https://vuejs.org/) | 模块化，无 Mutations | 较低 | 极少 | 优秀 | 很高 | Vue 3 新项目，注重简单性和类型支持 |
+| [**Vuex**](https://vuex.vuejs.org/) | [Vue](https://vuejs.org/) | 集中式存储，严格结构 | 中等 | 较多 | 较弱 | 仅存量项目推荐 | 遗留 Vue 2/早期 Vue 3 项目，需要维护既有代码 |
+| [**Recoil（已归档）**](https://recoiljs.org/) | [React](https://react.dev/) | 原子，派生状态 | 中等 | 中等 | 良好 | 不建议新项目继续采用 | 仅在维护历史项目时需要理解 |
 
 一条很实用的默认建议是：
 
@@ -99,4 +109,3 @@ function CartSummary() {
 启发式判断是：能从现有状态确定性算出的值，优先用 selector 或普通计算得出；计算成本经实测确实过高时，再引入记忆化。保持单一事实来源，可以减少副本所需的同步路径。
 
 :::
-

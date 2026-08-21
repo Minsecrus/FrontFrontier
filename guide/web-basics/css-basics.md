@@ -144,8 +144,14 @@ CSS 调试的核心是回答三个问题：规则有没有匹配？匹配后有�
 - **视图过渡 (View Transitions API)**：
   - 提供了一种原生机制来创建平滑的 DOM 状态切换动画。无论是单页应用 (SPA) 的路由跳转，还是多页应用 (MPA) 的页面加载，浏览器都能自动截取新旧状态的画面并生成过渡效果（如元素形变、淡入淡出），无需复杂的 JS 动画库。
 
-它们越来越多地进入 **Baseline / Interop** 语境，正在成为现代 CSS 与平台级交互设计的现实选项。  
-学习这些能力时，重点在于判断它们何时能在生产项目里作为正式能力使用。
+- **原生弹层与进入离开动画 (Popover API & `@starting-style`)**：
+  - **[Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)**（Baseline）：通过 HTML `popover` 属性与 `popovertarget` 按钮原生实现气泡卡片、抽屉与下拉菜单。浏览器原生托管在顶层图层（Top Layer），自带按 Esc 关闭、轻击外部区域（Light Dismiss）以及无障碍焦点回退能力，彻底告别 `z-index: 9999` 大战。
+  - **`@starting-style` 与离散属性过渡**（Baseline）：完美解决了长久以来“元素从 `display: none` 变为 `block` 时无法触发 CSS transition 进场动画”的难题，允许定义元素挂载时的初始样式帧。
+
+- **CSS 锚点定位与强类型变量 (Anchor Positioning & `@property`)**：
+  - **[CSS Anchor Positioning API](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning)**：通过 `anchor-name` 与 `position-anchor`，在纯 CSS 层面将浮动元素（Tooltip、下拉浮层）声明式锚定到页面任意参照物上，配合 `position-try-fallbacks` 自动处理边缘碰撞翻转，无需引入 JavaScript 坐标计算库。
+  - **强类型 CSS 变量注册 (`@property`)**（Baseline）：允许显式声明 CSS 自定义属性的语法类型（如 `<color>`、`<percentage>`、`<length>`）、继承行为与初始值，使原本无法渐变的 CSS 变量（如渐变色角度、颜色插值）能够直接支持丝滑的 CSS Transition 与 Keyframe 动画。
+  - **主题配色函数 `light-dark()`**（Baseline）：直接根据当前 `color-scheme` 声明双模配色（如 `color: light-dark(#1a1a1a, #ffffff)`），极大简化主题系统。
 
 - **滚动驱动动画 (Scroll-driven Animations)**：
   - 允许将动画进度直接绑定到**滚动容器的滚动位置**，而非时间线。

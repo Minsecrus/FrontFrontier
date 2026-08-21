@@ -7,7 +7,9 @@ title: "V. 高级主题和专业开发最佳实践 / V.3 Web 可访问性 (A11y)
 **目的**：确保所有用户，包括残障人士，都能有效访问和使用 Web 内容。
 
 - **WCAG 2.2**：当前正文应以 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 为主要参照。它补充了焦点不被遮挡、焦点外观、拖拽替代、目标尺寸、重复输入和可访问身份验证等成功标准。
-- **标准与市场范围**：[ISO/IEC 40500:2025](https://www.w3.org/press-releases/2025/wcag22-iso-pas/) 已批准采用 WCAG 2.2 的对应版本；[欧盟无障碍法（EAA）](https://commission.europa.eu/news-and-media/news/eu-becomes-more-accessible-all-2025-07-31_en) 已适用于多个产品和服务领域。具体义务取决于产品、服务、市场和组织角色，本文不提供法律意见。
+- **全球法律合规刚性红线**：
+  - **[欧洲无障碍法案 (EAA - Directive 2019/882)](https://commission.europa.eu/news-and-media/news/eu-becomes-more-accessible-all-2025-07-31_en)**：自 **2025 年 6 月 28 日起已在全欧盟范围内强制执行**。所有面向欧盟消费者提供服务的商业 Web 应用（电商、银行、旅游、媒体、SaaS 等）必须严格符合 **EN 301 549 / WCAG 2.1 AA 级**标准，不合规者面临巨额民事罚款与市场准入禁令。可访问性已从传统的“道德关怀”上升为企业必须满足的**法定合规底线**。
+  - **[ISO/IEC 40500:2025](https://www.w3.org/press-releases/2025/wcag22-iso-pas/)** 已批准采用 WCAG 2.2 的对应国际标准版本；美国（ADA Title II/III 司法裁判）与中国（《无障碍环境建设法》）均在强化对数字界面的适老化与无障碍合规审查。
 - **下一代标准**：[WCAG 3.0](https://www.w3.org/TR/wcag-3.0/) 仍处于 Working Draft 阶段，当前项目以 WCAG 2.2 为主要合规参照，WCAG 3.0 适合作为观察材料。
 - **关键原则**：确保所有功能都可通过键盘操作，焦点可见且有意义，内容可被辅助技术理解。
 - **屏幕阅读器**：将数字文本朗读出来的软件（例如，[NVDA](https://www.nvaccess.org/)、[JAWS](https://www.freedomscientific.com/products/software/jaws/)、[VoiceOver](https://www.apple.com/voiceover/info/guide/_1121.html)），对视障用户至关重要。常见问题包括链接缺少描述、图像缺少 alt 文本和标题结构不佳。

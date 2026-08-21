@@ -38,6 +38,76 @@ SEO 的关键在于让搜索引擎和各种抓取器稳定、及时地获得页�
 
 现代前端里的 SEO，本质上是**渲染策略、信息架构、元信息治理、状态码控制和性能优化**的综合工程问题。
 
+::: details 启发式示例：纯 CSR 抓取盲区 vs 语义化 SSR 与 JSON-LD 结构化数据
+
+**反模式：纯 CSR 导致爬虫与社交卡片抓到空白壳子**
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>我的应用</title> <!-- 缺乏针对当前具体页面的描述和社交元信息 -->
+</head>
+<body>
+  <div id="root"></div>
+  <script src="/bundle.js"></script>
+</body>
+</html>
+```
+
+**推荐实践：服务端输出的完整语义 HTML + Open Graph + JSON-LD**
+```html
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>深入浅出浏览器渲染管线 | Front Frontier</title>
+  <meta name="description" content="详细解析现代浏览器从网络请求到像素绘制的 8 个关键阶段，提供实战优化指南。">
+  
+  <!-- 规范链接防重复权重稀释 -->
+  <link rel="canonical" href="https://frontfrontier.dev/guide/web-basics/browser-runtime">
+
+  <!-- Open Graph 社交卡片元信息 -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="深入浅出浏览器渲染管线">
+  <meta property="og:description" content="详细解析现代浏览器从网络请求到像素绘制的 8 个关键阶段。">
+  <meta property="og:image" content="https://frontfrontier.dev/assets/cover-runtime.png">
+  <meta property="og:url" content="https://frontfrontier.dev/guide/web-basics/browser-runtime">
+
+  <!-- JSON-LD 结构化数据 -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "深入浅出浏览器渲染管线",
+    "image": "https://frontfrontier.dev/assets/cover-runtime.png",
+    "author": {
+      "@type": "Person",
+      "name": "Minsecrus"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Front Frontier"
+    },
+    "datePublished": "2026-08-20"
+  }
+  </script>
+</head>
+<body>
+  <main>
+    <article>
+      <h1>深入浅出浏览器渲染管线</h1>
+      <p>浏览器把网络响应变成可交互画面，需要网络、解析器、样式计算等多阶段协作...</p>
+    </article>
+  </main>
+</body>
+</html>
+```
+
+在这个结构中，即使禁用所有客户端 JavaScript，搜索引擎爬虫与社交媒体分享机器人依然能瞬间解析出完整的文章正文、作者信息、发布时间、高清封面以及富文本摘要，达成极佳的可索引性与分享体验。
+
+:::
+
 ## **V.4.1 一个可抓取页面的最小输出**
 
 页面模板应在首个 HTML 响应中提供标题、描述、规范链接、社交分享信息和页面语义。结构化数据使用与页面可见内容一致的字段。

@@ -164,7 +164,8 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 
 - **localStorage**：简单键值存储，容量有限，同步 API，适合少量偏好设置，不适合频繁写入或敏感数据。
 - **sessionStorage**：生命周期跟随标签页会话，适合临时状态。
-- **IndexedDB**：浏览器内置数据库，适合较大规模结构化数据、离线草稿和缓存。
+- **IndexedDB**：浏览器内置异步结构化数据库，适合较大规模对象存储、离线草稿和索引。
+- **[Origin Private File System (OPFS)](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：现代浏览器专有私有文件系统，通过 Web Worker 中的 **`SyncAccessHandle`** 提供近乎原生的纳秒级高速同步读写，是浏览器端运行 SQLite、音视频离线缓存和重度工程化客户端的核心基础设施。
 - **Cache Storage**：常与 Service Worker 配合，用于缓存请求和响应，是离线能力的重要基础。
 
 客户端存储适合保存偏好设置、离线草稿和缓存数据。访问令牌、个人敏感信息和长期凭证应结合 HttpOnly Cookie、服务端会话、安全策略和业务风险综合设计。
@@ -175,7 +176,8 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 | :--- | :--- | :--- | :--- |
 | localStorage | 主题、语言、轻量偏好 | 持久保存，用户或代码清理 | DevTools Application |
 | sessionStorage | 当前标签页临时状态 | 标签页会话结束后清理 | DevTools Application |
-| IndexedDB | 离线草稿、大列表、本地索引 | 持久保存，容量更大 | DevTools Application |
+| IndexedDB | 离线草稿、复杂对象列表、本地索引 | 持久保存，容量更大 | DevTools Application |
+| [**OPFS**](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) | 原生高速二进制文件、SQLite 数据库文件 | 域名隔离持久存储，性能极致 | DevTools Application / OPFS Explorer |
 | Cache Storage | 请求与响应缓存 | 由 Service Worker 或代码管理 | DevTools Application |
 | Cookie | 会话标识、服务端协作状态 | 由过期时间和服务端策略决定 | DevTools Application / Network |
 
@@ -197,7 +199,28 @@ ES 模块的广泛采用，标志着从旧式、低效模块模式（[CommonJS](
 
 理解模块系统后，再学习 Vite、Rollup、Webpack、代码分割和动态导入，就不会只停留在配置层面。
 
-## **II.5.9 一个最小浏览器应用闭环**
+## **II.5.9 现代 ECMAScript 演进与标准新特性**
+
+JavaScript 标准（ECMAScript）每年持续迭代。以下新特性已广泛进入现代浏览器 Baseline 并成为高质量代码编写的标准工具：
+
+- **原生 Set 集合运算方法**（ES2024 / Baseline）：无需引入 lodash 等第三方工具库，原生支持集合的数学运算：
+  - `setA.union(setB)`：求并集；
+  - `setA.intersection(setB)`：求交集；
+  - `setA.difference(setB)`：求差集（存在于 A 但不存在于 B）；
+  - `setA.symmetricDifference(setB)`：求对称差集；
+  - `setA.isSubsetOf(setB)` / `setA.isSupersetOf(setB)`：判断子集/超集关系。
+- **`Promise.withResolvers()`**（ES2024 / Baseline）：直接解构返回 `{ promise, resolve, reject }`，彻底终结了为了在外部控制 Promise 状态而声明外部变量的样板代码：
+  ```ts
+  const { promise, resolve, reject } = Promise.withResolvers<string>();
+  ```
+- **数据分组：`Object.groupBy()` 与 `Map.groupBy()`**（ES2024 / Baseline）：按照回调函数的返回值将可迭代对象分组为普通对象或 Map 实例：
+  ```ts
+  const grouped = Object.groupBy(products, (item) => item.category);
+  ```
+- **异步迭代收集：`Array.fromAsync()`**：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 转换为普通数组。
+- **下一代时间日期标准：[Temporal API](https://tc39.es/proposal-temporal/docs/)**：旨在彻底替代设计缺陷众多的历史 `Date` 对象，提供不可变的日期时间对象、对纳秒级精度的支持、完整的时区计算与日历系统支持。
+
+## **II.5.10 一个最小浏览器应用闭环**
 
 学习 JavaScript 基础时，可以用一个小练习串起本章内容：做一个“可搜索、可收藏、可离线保留草稿”的列表页面。
 

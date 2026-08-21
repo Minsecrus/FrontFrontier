@@ -86,6 +86,7 @@ _本文约 8 万字，预计阅读时间 350~400 分钟。_
 - [AI/ML](/guide/emerging-tech/ai-ml)
 - [Edge Runtime 与边缘平台](/guide/emerging-tech/edge-runtime)
 - [设备集成 API](/guide/emerging-tech/device-apis)
+- [本地优先架构与实时协同](/guide/emerging-tech/local-first)
 
 ### 第七章 持续学习和职业发展
 
