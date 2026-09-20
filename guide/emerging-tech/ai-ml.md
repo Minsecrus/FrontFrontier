@@ -122,16 +122,16 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 ## **VI.8.7 面向 Agent 的 Web 界面：新兴方向**
 
-传统前端把用户当作主要交互主体；新的 Agent 场景还要求网页向模型暴露可理解、可调用、可确认的能力。这里至少要区分三类工作：
+传统前端把用户当作主要交互主体；新的 Agent 场景还要求网页向模型暴露可理解、可调用、可确认的能力。这里至少要区分四类工作：
 
 | 方向 | 解决的问题 | 当前成熟度 |
 | :--- | :--- | :--- |
 | [MCP Tools](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) | 让 Agent 发现并调用带有名称、描述和输入 Schema 的工具 | 已形成公开协议规范和生态，但权限与实现质量仍需自行治理 |
 | [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/) | 让工具结果在对话中呈现交互式组件，并保留文本和 JSON 数据能力 | MCP 的官方扩展，适合关注 Agent 内交互的团队 |
 | [A2UI](https://github.com/google/A2UI) | 用声明式组件树描述 Agent 要呈现的表单和界面，由客户端从受控目录渲染 | Public Preview，组件协议仍在演进 |
-| [WebMCP](https://webmachinelearning.github.io/webmcp/) | 让网页把自身的 JavaScript 能力暴露为 Agent 可调用的工具 | Community Group Draft，规范状态仍在演进，适合实验性项目 |
+| [WebMCP](https://webmachinelearning.github.io/webmcp/) | 让网页通过 JavaScript 或 HTML 表单声明 Agent 可调用的工具，复用页面的业务逻辑与状态 | 社区组草案，浏览器实现处于试验阶段，适合渐进增强与实验项目 |
 
-这类系统应让模型提交受约束的数据和意图，再由客户端使用经过审核的组件目录渲染。前端需要继续负责：
+这些方向涉及工具调用与界面呈现等不同层次，前端需要根据接入方式继续负责：
 
 - 工具名称、描述、输入 Schema 和错误状态；
 - 用户身份、来源权限、确认步骤和可撤销操作；
@@ -140,6 +140,32 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 - 当 Agent 不可用、模型输出不可信或工具调用失败时的普通 Web 回退。
 
 因此，Agent-facing UI 目前适合放在新兴技术和实验项目中学习。MCP Apps、A2UI 或 WebMCP 属于可选探索方向，权限、可访问性和审计要求继续保持在与普通 Web UI 相同或更高的标准。
+
+### **WebMCP：把网页操作声明为工具**
+
+[WebMCP](https://developer.chrome.com/docs/ai/webmcp) 让网站为搜索、筛选、填写表单等操作提供明确的名称、用途和输入约束，供 Agent 发现并调用。工具在网页上下文中执行，可以复用已有业务逻辑，让用户与 Agent 共享页面状态。它关注的是网站如何被 Agent 使用，与前面讨论的模型运行位置是两个独立问题。
+
+当前设计提供两种接入方式：
+
+- **[命令式 API](https://developer.chrome.com/docs/ai/webmcp/imperative-api)**：用 JavaScript 注册工具，描述输入 Schema 和执行函数，适合需要读取应用状态、组合已有服务的操作。
+- **[声明式 API](https://developer.chrome.com/docs/ai/webmcp/declarative-api)**：在 HTML 表单上补充工具名称与用途等标注，由浏览器把表单字段转成工具参数，适合已有表单流程。字段标签、输入约束与提交反馈仍需要认真设计。
+
+可以用商品搜索理解它的工作方式。以下是应用设计示例，具体 API 以当前实现为准：
+
+1. 商品列表页提供 `search_products` 工具，明确关键词、返回条数及其约束。
+2. Agent 根据用户意图提供参数；应用校验参数，并调用与普通搜索框共用的搜索逻辑，服务端按当前用户权限过滤结果。
+3. 搜索完成后，页面更新列表，同时向 Agent 返回必要的商品信息。用户可以看到结果，并继续手动筛选或选择商品。
+4. 没有结果、登录过期或请求失败时，返回可区分的状态与下一步提示，并保留用户已有输入，方便继续操作。
+
+这个例子的工程重点在于让工具调用与界面操作保持一致。参照官方的[工具设计实践](https://developer.chrome.com/docs/ai/webmcp/build-tools)，接入时应明确三件事：
+
+- **操作何时有效**：工具要对应清晰的用户任务，并随页面生命周期管理可用范围。切换路由、退出登录或前置状态失效后，应撤销不再适用的工具，并在执行时重新检查条件。
+- **谁有权完成操作**：工具描述、Schema 和前端确认界面都不能替代服务端鉴权。付款、删除等操作应明确展示对象与影响，经过用户确认后再执行；重复调用还要由业务逻辑处理幂等性。
+- **结果怎样交还给用户**：页面与工具返回值应反映同一次执行结果；错误应说明能否重试、是否需要补充输入或恢复登录，避免让 Agent 根据含糊的成功提示继续操作。
+
+验证时，除了检查工具函数本身，还要评估 Agent 能否选对工具、提取正确参数，并在不同页面状态和失败场景中恢复。[WebMCP 的评估指南](https://developer.chrome.com/docs/ai/webmcp/evals) 将这类带有概率性的任务结果纳入 Evals；可以固定一组用户目标，重复运行并记录完成率、错误调用和恢复情况。
+
+[WebMCP 规范](https://webmachinelearning.github.io/webmcp/)仍是社区组草案，尚未成为 W3C 标准，浏览器实现也在试验中。接入应以能力检测为前提，保留完整的普通网页操作路径；工具接口应只暴露完成任务所需的数据和动作。
 
 ## **VI.8.8 本地能力与服务端回退的适配层**
 

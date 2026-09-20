@@ -4,40 +4,37 @@ title: "附录 A：前端学习资料汇总"
 
 # 附录 A：前端学习资料汇总
 
+按正在解决的问题选择资料：先用正文建立概念，再查官方文档确认 API 和配置，最后用练习或项目验证。阅读工具文档时应选择与项目依赖相符的版本。
+
 ## **0. 学习路线图 (The Map)**
 
 _出发前的指南针，迷茫时的导航仪。_
 
 - **[roadmap.sh](https://roadmap.sh/)**
-  - **地位**：前端开发者职业生涯的**地图**。
-  - **如何使用**：
-    - **查漏补缺**：打开 [Frontend Roadmap](https://roadmap.sh/Frontend)，对照本文，勾选你已经掌握的技能点。
-    - **深度追踪**：它不仅有前端（Frontend），还有**全栈（Full Stack）**、**React**、**Vue** 甚至 **AI Engineer** 的专属路线图。
-    - **团队标准**：许多大厂和开源团队直接以它为依据，制定内部晋升和招聘标准。
+  - **用途**：通过 [Frontend Roadmap](https://roadmap.sh/frontend) 了解技能之间的关系，也可按 React、Vue 或全栈方向继续查阅。
+  - **何时阅读**：开始学习或阶段复盘时，对照本文标记已掌握的知识，再根据项目需要安排后续主题。
 - **[The Odin Project](https://www.theodinproject.com/)**
-  - **地位**：完全免费的项目驱动型全栈学习路线，尤其适合从“看懂教程”过渡到“独立完成项目”。
-  - **特点**：强调本地开发环境、Git、命令行、文档阅读和真实项目练习，从基础页面一路推进到复杂 Web 应用。
-  - **如何使用**：把它当作实践主线；每学完本文一个主题，就回到 Odin 的项目里用代码验证，把概念落实到真实项目中。
+  - **用途**：免费的项目驱动型全栈课程，覆盖本地开发环境、Git、命令行和 Web 应用练习。
+  - **何时阅读**：已经看懂基础教程、但还不能独立完成项目时，选择对应练习，把正文概念落实到代码中。
 
-## **1. 权威百科与标准 (The Holy Grail)**
+## **1. Web 文档、兼容性与标准 (Web References)**
 
 _这些是所有前端开发的基石，遇到问题时的第一检索源。_
 
 - **[MDN Web Docs](https://developer.mozilla.org/zh-CN/)**
-  - **地位**：Web 开发者的圣经。HTML/CSS/JS 的标准文档，无可替代。
+  - **用途**：查询 HTML、CSS、JavaScript 和 Web API 的用法、示例及兼容性；需要确认规范细节时，继续查看条目中的规范链接。
 - **[web.dev](https://web.dev/)**
-  - **地位**：Google 出品的最佳实践指南。涵盖性能 (Core Web Vitals)、PWA、无障碍等深度内容。
+  - **用途**：学习性能、Core Web Vitals、PWA 和无障碍的实现方法，适合在发现具体体验问题后按主题阅读。
 - **[Web Platform Baseline](https://web.dev/baseline/)**
-  - **用途**：判断一个 Web 平台特性是否已进入现代项目可放心采用的兼容性区间。
+  - **用途**：了解 Web 特性在主要浏览器中的支持状态；决定是否采用时，还要核对项目的目标浏览器和用户分布。
 - **[Web Platform Dashboard / WebStatus](https://webstatus.dev/)**
   - **用途**：按特性查询 Web 平台能力、Baseline 状态与浏览器进展。
 - **[Can I Use](https://caniuse.com/)**
   - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`, Container Queries）。
 - **[WCAG 2.2](https://www.w3.org/TR/WCAG22/)** / **[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)**
-  - **用途**：查询可访问性成功标准、组件模式和辅助技术交互要求。
+  - **用途**：用 WCAG 查询可访问性成功标准，用 APG 参考组件语义、键盘交互和实现示例，适合在组件设计与验收时查阅。
 - **[Patterns.dev](https://www.patterns.dev/)**
-  - **用途**：免费且深度的电子书，讲解现代 Web 应用的设计模式、渲染模式和性能优化模式。
-  - **重点**：适合系统理解 CSR、SSR、SSG、Streaming、Islands Architecture、Resumability 等现代渲染架构，以及这些模式背后的性能取舍。
+  - **用途**：学习 Web 应用的设计模式、渲染模式和性能取舍，适合比较 CSR、SSR、SSG、Streaming、Islands 等方案时阅读。
 
 ## **2. 核心技术栈深度学习 (Deep Dives)**
 
@@ -45,33 +42,27 @@ _不仅是官方文档，更是进阶教程。_
 
 - **JavaScript**
   - **[JavaScript.info](https://javascript.info/)**
-    - **地位**：公认现代最好的 JavaScript 在线教程。
-    - **特点**：内容极新，不仅讲语法，还深入讲解 DOM、事件循环、网络请求、原型链、执行上下文和垃圾回收等核心机制。是从“会写代码”到“理解原理”的最佳桥梁。
-    - **中文站**：[现代 JavaScript 教程](https://zh.javascript.info/) 翻译完整，适合作为系统精读材料。
+    - **用途**：按顺序学习语言基础、对象、异步、DOM 与网络请求；适合从零学习，也适合针对薄弱主题精读。
+    - **中文站**：[现代 JavaScript 教程](https://zh.javascript.info/)。
   - **[You Don't Know JS Yet (GitHub)](https://github.com/getify/You-Dont-Know-JS)**
-    - **地位**：Kyle Simpson 的神作。
-    - **用途**：如果你想彻底搞懂 **作用域 (Scope)**、**闭包 (Closures)**、**原型链 (Prototypes)** 和 **异步 (Async)**，这是必读的。这是初级与高级工程师的分水岭。
-
+    - **用途**：深入理解作用域、闭包、对象与类型机制，适合已经会使用语法、需要解释代码行为时阅读。
   - **[Just JavaScript](https://justjavascript.com/)**
-    - **地位**：Dan Abramov (React 核心成员) 出品。
-    - **用途**：重建你对“值与引用”的心智模型。非常适合“感觉懂了但经常写出 Bug”的开发者。
-
+    - **用途**：通过值、变量、对象与引用建立 JavaScript 心智模型，适合梳理对象共享和相等性判断中的困惑。
 - **TypeScript**
-  - **[Total TypeScript](https://www.totaltypescript.com/)**: Matt Pocock 出品的教程，公认目前最好的 TS 进阶资源（从泛型到类型体操）。
-  - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**: 官方手册，必读。
+  - **[Total TypeScript](https://www.totaltypescript.com/)**：通过练习学习泛型、类型推断和应用类型设计，适合掌握基础语法后进阶。
+  - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**：官方手册，适合系统学习类型系统，也可在遇到类型收窄、泛型或模块问题时查阅。
 - **React 生态**
-  - **[React.dev](https://react.dev/)**: 重写后的官方文档，交互式教学非常好。
-  - **[Josh W Comeau's Blog](https://www.joshwcomeau.com/)**: 讲解 React 原理和 CSS 交互最透彻的博客之一。
+  - **[React.dev](https://react.dev/)**：通过官方教程和练习学习组件、状态与 Effect，适合入门和检查常见使用误区。
+  - **[Josh W Comeau's Blog](https://www.joshwcomeau.com/)**：通过交互式示例讲解 CSS 和 React，适合需要观察布局或渲染行为时阅读。
 - **Vue 生态**
-  - **[Vue.js 官方文档](https://vuejs.org/)**: 以清晰著称，包含 Options API 和 Composition API 的对比。
-  - **[Anthony Fu (antfu)](https://antfu.me/)**: Vue/Vite 核心团队成员的博客，了解开源工具链的前沿思想。
+  - **[Vue.js 官方文档](https://vuejs.org/)**：学习响应式、组件与组合式 API，并按项目写法查阅 Options API 或 Composition API。
+  - **[Anthony Fu (antfu)](https://antfu.me/)**：阅读开源工具的设计过程与工程经验，适合了解工具链实现中的取舍。
 - **现代全栈课程**
   - **[Full Stack Open](https://fullstackopen.com/)**
-    - **地位**：赫尔辛基大学出品的现代 Web 应用公开课，偏工业级全栈进阶。
-    - **特点**：覆盖 React、Node.js、TypeScript、GraphQL、测试、CI/CD、Docker 等现代工程主题，并通过提交练习推动学习闭环。
-    - **如何使用**：适合你在掌握 HTML/CSS/JavaScript 基础后，系统补齐现代 SPA、后端接口、测试和部署能力。
+    - **用途**：通过 React、Node.js、TypeScript、GraphQL、测试、CI/CD 和容器相关练习，学习 Web 应用的完整开发过程。
+    - **何时阅读**：掌握 HTML、CSS、JavaScript 基础后，系统补齐 SPA、后端接口、测试和部署能力。
 - **中文知识库**
-  - **[千古前端图文教程](https://github.com/qianguyihao/Web)**: 国内开源社区口碑极好的前端知识库，覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题。它的优势是颗粒度细、解释通俗，适合作为查漏补缺和随手检索的“技术字典”。
+  - **[千古前端图文教程](https://github.com/qianguyihao/Web)**：覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题，适合作为中文补充材料，按知识点查漏补缺。
 
 ## **3. 样式与 UI 设计 (CSS & Design)**
 
@@ -81,11 +72,11 @@ _从“写出 CSS”到“写出好用的 UI”。_
   - **[Modern CSS](https://moderncss.dev/)**: 专注于现代 CSS 解决方案的教程。
   - **[SmolCSS](https://smolcss.dev/)**: 极简的现代 CSS 布局片段。
 - **图标库**
-  - **[Lucide](https://lucide.dev/)**: 近几年最流行的图标库，风格统一，轻量。
-  - **[React Icons](https://react-icons.github.io/react-icons/)**: 聚合了所有主流图标库的 NPM 包。
+  - **[Lucide](https://lucide.dev/)**：风格统一的图标集合，适合按同一视觉语言为界面选择图标。
+  - **[React Icons](https://react-icons.github.io/react-icons/)**：以 React 组件形式提供多套图标集合，适合在项目中按需选择和引用。
 - **无头组件 (Headless UI)**
   - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**: 提供逻辑和无障碍能力，不带样式的组件库底座。
-  - **[shadcn/ui](https://ui.shadcn.com/)**: 复制粘贴式的组件库，当下最火的 UI 构建模式。
+  - **[shadcn/ui](https://ui.shadcn.com/)**：将组件源码引入项目后自行维护，适合需要调整组件实现、统一样式和保留代码控制权的场景。
 - **UI/UX 设计基础**
   - **[Refactoring UI](https://www.refactoringui.com/)**: 面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
   - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**: UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
@@ -101,31 +92,44 @@ _从“写出 CSS”到“写出好用的 UI”。_
 _提升开发效率与代码质量的利器。_
 
 - **构建与编译**
-  - **[AST Explorer](https://astexplorer.net/)**: 在线查看代码的抽象语法树 (AST)，学习写 Babel/ESLint/Vite 插件的神器。
-  - **[Bundlephobia](https://bundlephobia.com/)**: 检查 npm 包的体积大小和下载时间。
-  - **[Vite 8 发布说明](https://vite.dev/blog/announcing-vite8)**: 了解 Rolldown、Oxc、Node.js 版本要求和迁移注意事项。
-  - **[TypeScript 7 发布说明](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)**: 了解原生 Go 编译器、语言服务和存量项目迁移边界。
-- **调试与正则**
-  - **[Regex101](https://regex101.com/)**: 可视化调试正则表达式，带解释功能。
-  - **[JSON Crack](https://jsoncrack.com/)**: 将复杂的 JSON 数据可视化为思维导图，调试接口数据必备。
+  - **[AST Explorer](https://astexplorer.net/)**：查看代码的抽象语法树，适合编写代码转换或静态检查规则前观察节点结构。
+  - **[Bundlephobia](https://bundlephobia.com/)**：估算 npm 包的打包体积，适合初步比较依赖；项目中的实际成本仍需用构建产物分析确认。
+  - **[Vite 官方指南](https://vite.dev/guide/)**：查询开发服务器、静态资源、环境变量与生产构建，适合搭建工程或排查构建配置时阅读。
+  - **[TypeScript TSConfig Reference](https://www.typescriptlang.org/tsconfig/)**：查询编译选项的含义与影响，适合调整严格检查、模块解析和输出配置时查阅。
+- **测试与组件开发**
+  - **[Vitest](https://vitest.dev/guide/)**：学习测试组织、断言、Mock 和覆盖率配置，适合为业务逻辑与模块补充单元测试时阅读。
+  - **[Testing Library](https://testing-library.com/docs/guiding-principles/)**：学习从用户可观察的行为查询和操作界面，适合为表单、按钮等组件编写交互测试时阅读。
+  - **[Playwright](https://playwright.dev/docs/intro)**：学习在浏览器中验证关键流程，并通过自动等待和 Trace 排查失败，适合端到端测试与回归验证。
+  - **[Storybook](https://storybook.js.org/docs)**：将组件状态组织为独立的 Story，适合组件开发、设计评审及交互测试时查阅。
+- **调试与性能分析**
+  - **[Chrome DevTools 官方文档](https://developer.chrome.com/docs/devtools/)**：按 Elements、Console、Network、Performance 等面板学习排障，适合定位样式、请求或运行时性能问题。
+  - **[Regex101](https://regex101.com/)**：用样例验证正则表达式并查看解释；调试 JavaScript 正则时选择对应的引擎模式。
+  - **[JSON Crack](https://jsoncrack.com/)**：将嵌套 JSON 可视化，适合梳理接口数据结构和对象之间的关系。
+- **安全实践**
+  - **[OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)**：按 XSS、CSRF、CSP 等主题查询防护方法，适合处理不可信内容、设计认证交互或开展安全检查时阅读。
 
 ## **5. AI 驱动开发 (AI-Native)**
 
-> 注：AI 工具发展迅速，本节内容可能很快就会过时。
+阅读这组资料时，先明确是改进开发流程，还是把 AI 能力集成到产品中。具体配置与 API 应以所用工具的官方文档为准。
 
-- **辅助编程 (AI Agents & IDEs)**
-  - **[v0.dev](https://v0.dev/)**: Vercel 出品，用自然语言生成 React/Tailwind 界面代码。
-  - **[Cursor](https://cursor.sh/)**: 代表性的 AI 原生 IDE，支持全库索引、多文件编辑及模型自定义切换；具体能力和市场位置应以当前产品文档为准。
-  - **[Codex](https://openai.com/codex)**: OpenAI 发布的**独立智能体应用**。支持多 Agent 并行开发、Git Worktree 隔离工作区以及全自动的任务执行与测试。
-  - **[Claude Code](https://code.claude.com/docs/en/overview)**: Anthropic 推出的 **Agentic CLI** 工具。擅长处理复杂的架构重构、深层 Bug 修复，并支持“Agent Teams”模式，让多个子 Agent 协作审查和开发代码。
+- **界面生成与编辑器**
+  - **[v0](https://v0.dev/)**：通过描述和视觉输入探索界面实现，适合原型阶段比较布局，再结合项目组件与设计约束调整。
+  - **[Cursor 文档](https://cursor.com/docs)**：查阅代码库上下文、项目规则和 Agent 的使用方法，适合在编辑器中组织代码修改与检查流程。
+- **终端 Agent**
+  - **[Codex CLI 文档](https://learn.chatgpt.com/docs/codex/cli)**：查阅在本地仓库中阅读代码、修改文件、执行命令与配置工作流的方法，适合建立终端中的开发和验证流程。
+  - **[Claude Code 文档](https://code.claude.com/docs/en/overview)**：查阅终端开发、项目上下文、Skills 与 MCP 的使用方法，适合把项目约定和外部工具接入开发流程。
+- **前端 AI 工作流**
+  - **[Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)**：了解如何向 Agent 提供布局、变量与组件等设计上下文，适合把设计稿约束带入界面实现时查阅。
+  - **[Playwright MCP](https://github.com/microsoft/playwright-mcp)**：让 Agent 通过工具读取页面状态、操作浏览器并收集反馈，适合开发过程中复现交互与检查运行结果；需要长期回归的路径应另写为可重复运行的测试。
+  - **[Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance)**：参考将 Web 平台实践与兼容性知识组织为 Agent Skills 的方式，适合为团队整理可复用执行指引时阅读。
 - **AI 集成 (Integration & SDKs)**
-  - **[LangChain JS](https://js.langchain.com/)**: 在前端/Node.js 应用中集成 LLM 的标准库。
-  - **[Vercel SDK](https://sdk.vercel.ai/)**: 快速构建流式 (Streaming) AI 聊天界面的工具库。
-  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**: 用于让 Agent 发现和调用 prompts、resources、tools 的公开协议生态；实际安全性取决于权限、实现、审批和审计设计。
-  - **[MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)**: 了解工具如何返回可直接显示在对话中的交互式 UI。
-  - **[Google A2UI](https://github.com/google/A2UI)**: Agent-to-User Interface 的声明式 UI 方案，目前为 Public Preview。
-  - **[WebMCP Draft](https://webmachinelearning.github.io/webmcp/)**: 了解网页向 Agent 暴露工具的实验性规范；当前处于 Community Group Draft 阶段。
-  - **[Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai)**: 浏览器内建 AI API 的官方入口，跟进 Prompt、Summarizer、Translator 等前端原生 AI 能力。
+  - **[LangChain JS](https://docs.langchain.com/oss/javascript/langchain/overview)**：学习模型调用、工具集成与 Agent 编排，适合需要组织多步骤 AI 处理流程时查阅。
+  - **[AI SDK UI](https://ai-sdk.dev/docs/reference/ai-sdk-ui)**：查询聊天、流式消息和结构化结果相关的 UI 接口，适合把模型输出接入应用界面时阅读。
+  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**：了解资源、提示模板与工具等协议能力，适合设计 Agent 与外部系统的连接方式时阅读。
+  - **[MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)**：了解工具如何提供可在支持该扩展的宿主中显示的交互式 UI。
+  - **[Google A2UI](https://github.com/google/A2UI)**：了解 Agent 声明界面结构、由客户端渲染组件的实现思路。
+  - **[WebMCP Draft](https://webmachinelearning.github.io/webmcp/)**：了解网页向 Agent 暴露工具的实验性草案，适合研究网页操作接口；落地前需核对草案与浏览器实现状态。
+  - **[Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai)**：查询浏览器内建 AI API 的使用方式、运行条件与能力检测，适合评估端侧 AI 功能时阅读。
 
 ### **按日期阅读趋势资料**
 
@@ -152,5 +156,5 @@ _眼过千遍不如手过一遍。_
 _保持技术敏感度。_
 
 - **[Bytes](https://bytes.dev/)**: 幽默风趣的 JavaScript 每周简报。
-- **[This Week In React](https://thisweekinreact.com/)**: React 生态最好的周刊。
-- **[Best of JS](https://bestofjs.org/)**: 实时查看 GitHub 上最热门的前端项目趋势。
+- **[This Week In React](https://thisweekinreact.com/)**：汇集 React 生态文章与项目动态，适合每周挑选与工作相关的主题阅读。
+- **[Best of JS](https://bestofjs.org/)**：按项目和关注度变化发现 JavaScript 生态工具，适合寻找待调研的候选项目；采用前仍需检查文档、维护情况和项目适配性。
