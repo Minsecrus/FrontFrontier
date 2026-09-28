@@ -2,7 +2,7 @@
 title: "V. 高级主题和专业开发最佳实践 / V.1 性能优化：提供快速用户体验"
 ---
 
-# V.1 性能优化：提供快速用户体验
+# V.1 性能优化：提供快速用户体验 (*)
 
 **目的**：系统性优化 Web 应用以提供快速、流畅的用户体验。
 
@@ -110,10 +110,10 @@ export async function processLargeDatasetResponsive(items: string[]) {
 
 ## **表格：Core Web Vitals 优化技术**
 
-| Core Web Vital | 解决的问题 | 关键技术（示例） | 工具（示例） |
-| :--- | :--- | :--- | :--- |
-| [**LCP**](https://web.dev/lcp/) | 感知加载速度慢 | 关键图片 `fetchpriority="high"`，优化图像 (AVIF/WebP)，关键 CSS，预加载，Speculation Rules API 预渲染，103 Early Hints | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、PageSpeed Insights、DevTools Network |
-| [**INP**](https://web.dev/inp/) | 交互响应慢 | 拆分主线程长任务（`scheduler.yield()`），优化事件回调，避免同步密集计算，Web Worker | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、DevTools Performance、`web-vitals` 库 |
-| [**CLS**](https://web.dev/cls/) | 视觉稳定性差 | 为图像/视频设置尺寸与 `aspect-ratio`，为广告/动态内容保留骨架占位，优化字体传输与 `size-adjust` | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、DevTools Rendering |
+| Core Web Vital                  | 解决的问题     | 关键技术（示例）                                                                                                       | 工具（示例）                                                                                                |
+| :------------------------------ | :------------- | :--------------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- |
+| [**LCP**](https://web.dev/lcp/) | 感知加载速度慢 | 关键图片 `fetchpriority="high"`，优化图像 (AVIF/WebP)，关键 CSS，预加载，Speculation Rules API 预渲染，103 Early Hints | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、PageSpeed Insights、DevTools Network  |
+| [**INP**](https://web.dev/inp/) | 交互响应慢     | 拆分主线程长任务（`scheduler.yield()`），优化事件回调，避免同步密集计算，Web Worker                                    | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、DevTools Performance、`web-vitals` 库 |
+| [**CLS**](https://web.dev/cls/) | 视觉稳定性差   | 为图像/视频设置尺寸与 `aspect-ratio`，为广告/动态内容保留骨架占位，优化字体传输与 `size-adjust`                        | [Lighthouse](https://developer.chrome.com/docs/lighthouse/overview/)、DevTools Rendering                    |
 
 上表列出了与可衡量性能指标直接相关的可操作策略，帮助开发者理解如何改善 Web 性能、特定技术为何有效，将技术实现与用户体验、SEO 联系起来。

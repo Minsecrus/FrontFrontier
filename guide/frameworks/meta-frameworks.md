@@ -42,15 +42,15 @@ React 生态已经形成了更丰富的路线选择。
 
 ## **表格：领先元框架比较**
 
-| 框架名称                                                                   | 底层 UI 框架                  | 主要渲染策略         | 数据/服务端模型                     | 典型定位                                | 理想用例（示例）                 |
-| :------------------------------------------------------------------------- | :---------------------------- | :------------------- | :---------------------------------- | :-------------------------------------- | :----------------------------- |
+| 框架名称                                                                   | 底层 UI 框架                  | 主要渲染策略         | 数据/服务端模型                                  | 典型定位                                | 理想用例（示例）               |
+| :------------------------------------------------------------------------- | :---------------------------- | :------------------- | :----------------------------------------------- | :-------------------------------------- | :----------------------------- |
 | [**Next.js**](https://nextjs.org/)                                         | [React](https://react.dev/)   | SSR, SSG, ISR, 混合  | RSC、Route Handlers、Cache Components、Turbopack | React 全栈主流路线之一                  | 全栈应用、内容站、商业化产品   |
-| [**React Router Framework Mode**](https://reactrouter.com/start/framework) | [React](https://react.dev/)   | SSR、预渲染、混合    | Route modules、`loader`、`action`   | Web 标准与渐进增强取向的 React 主线之一 | 数据驱动应用、路由复杂项目     |
-| [**TanStack Start**](https://tanstack.com/start/latest)                    | [React](https://react.dev/)   | SSR, Streaming, 混合 | Server Functions、类型安全路由      | 强类型工程化路线                        | 中大型全栈应用、复杂协作型项目 |
-| [**Nuxt**](https://nuxt.com/)                                              | [Vue](https://vuejs.org/)     | SSR, SSG, SPA, 混合  | 约定式文件路由、自动导入、Nitro     | Vue 生态默认主力                        | Vue 全栈应用、企业项目         |
-| [**SvelteKit**](https://svelte.dev/docs/kit)                               | [Svelte](https://svelte.dev/) | SSR 默认, SSG, 混合  | `load`、`actions`、adapter          | Svelte 生态默认主力                     | 高性能应用、内容站、交互式工具 |
-| [**Astro**](https://astro.build/)                                          | 框架无关                      | SSG 为主, Islands    | 内容优先、按岛加载交互              | 内容站和低 JS 负载强项                  | 博客、文档站、营销站、媒体站   |
-| [**Qwik**](https://qwik.builder.io/)                                       | 框架无关                      | 可恢复性, SSG/SSR    | 惰性恢复、细粒度加载                | 创新性能路线                            | 对启动性能极端敏感的实验性项目 |
+| [**React Router Framework Mode**](https://reactrouter.com/start/framework) | [React](https://react.dev/)   | SSR、预渲染、混合    | Route modules、`loader`、`action`                | Web 标准与渐进增强取向的 React 主线之一 | 数据驱动应用、路由复杂项目     |
+| [**TanStack Start**](https://tanstack.com/start/latest)                    | [React](https://react.dev/)   | SSR, Streaming, 混合 | Server Functions、类型安全路由                   | 强类型工程化路线                        | 中大型全栈应用、复杂协作型项目 |
+| [**Nuxt**](https://nuxt.com/)                                              | [Vue](https://vuejs.org/)     | SSR, SSG, SPA, 混合  | 约定式文件路由、自动导入、Nitro                  | Vue 生态默认主力                        | Vue 全栈应用、企业项目         |
+| [**SvelteKit**](https://svelte.dev/docs/kit)                               | [Svelte](https://svelte.dev/) | SSR 默认, SSG, 混合  | `load`、`actions`、adapter                       | Svelte 生态默认主力                     | 高性能应用、内容站、交互式工具 |
+| [**Astro**](https://astro.build/)                                          | 框架无关                      | SSG 为主, Islands    | 内容优先、按岛加载交互                           | 内容站和低 JS 负载强项                  | 博客、文档站、营销站、媒体站   |
+| [**Qwik**](https://qwik.builder.io/)                                       | 框架无关                      | 可恢复性, SSG/SSR    | 惰性恢复、细粒度加载                             | 创新性能路线                            | 对启动性能极端敏感的实验性项目 |
 
 对学习者而言，更重要的问题包括：
 

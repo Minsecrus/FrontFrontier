@@ -2,7 +2,7 @@
 title: "III. 基本开发环境和工具 / III.6 代码质量和一致性：Linter (ESLint / Biome) 和 Formatter (Prettier)"
 ---
 
-# III.6 代码质量和一致性：Linter (ESLint / Biome) 和 Formatter (Prettier)
+# III.6 代码质量和一致性：Linter (ESLint / Biome) 和 Formatter (Prettier) (*)
 
 - **Linter ([ESLint](https://eslint.org/))**：运行一组规则来发现潜在代码缺陷、强制执行架构与最佳实践、维护 JavaScript/TypeScript 代码库质量。ESLint 9+ 全面推行了 **Flat Config (`eslint.config.js`)**，采用模块化数组配置体系彻底替代了过时的 `.eslintrc.*` 级联继承模型。
 - **Formatter ([Prettier](https://prettier.io/))**：预设风格的代码格式化工具，通过解析 AST 重新打印代码，确保全团队输出完全统一的代码排版，避免在 Code Review 中就空格与换行产生争论。

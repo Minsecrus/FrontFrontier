@@ -36,14 +36,14 @@ title: "VII. 持续学习和职业发展"
 
 招聘流程本身也在使用更多 AI 工具，因此简历和作品集需要更容易被结构化理解，并以真实证据支撑关键词表达。具体岗位、地区和企业的要求仍应以实际 JD、面试流程和团队业务为准。
 
-## **代码规范**
+## **代码规范** (*)
 
 代码规范是团队协作的基石，它确保代码风格和结构的一致性，提高可读性和可维护性。
 
 - [**Conventional Commits**](https://www.conventionalcommits.org/)：一种轻量级的提交消息约定，为提交历史提供明确的结构化信息，便于自动化工具处理（如生成更新日志、自动版本发布）。例如：feat: add user login functionality; fix: correct typo in button text。
 - **代码风格指南**：团队应制定并遵循统一的代码风格指南（如 Airbnb JavaScript Style Guide、Google Style Guide），涵盖命名约定、缩进、括号使用、注释规范等。通过 Prettier、ESLint 等工具自动检查和格式化，强制执行这些规范。
 
-## **文档文化**
+## **文档文化** (*)
 
 良好的文档是团队知识共享和项目长期维护的关键。
 

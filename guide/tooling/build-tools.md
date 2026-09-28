@@ -2,7 +2,7 @@
 title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器与编译器"
 ---
 
-# III.5 现代构建工具、打包器与编译器
+# III.5 现代构建工具、打包器与编译器 (*)
 
 **目的**：将源码转换为可部署产物，在开发期提供快速反馈循环，在生产环境提供更小、更快、更稳定的输出。
 
@@ -36,15 +36,15 @@ Vite/Rolldown/Oxc、Rspack、Turbopack、SWC 和 esbuild 都说明了一个方�
 
 ## **表格：领先构建工具/打包器比较**
 
-| 工具名称 | 核心技术 | 主要用例 | 关键特性（示例） | 当前定位 |
-| :--- | :--- | :--- | :--- | :--- |
-| [**Webpack**](https://webpack.js.org/) | JavaScript | 存量应用、深度定制工程 | Loader、Plugin、Module Federation | 稳定、生态最深 |
-| [**Vite**](https://vite.dev/) | 原生 ESM + Rolldown/Oxc 工具链 | 现代应用开发入口 | 快速 HMR、统一打包后端、插件兼容层 | 新项目常用首选之一 |
-| [**Rspack / Rsbuild**](https://rspack.dev/) | Rust | 中大型应用、企业工程 | 高性能、Webpack 兼容、迁移成本相对可控 | 近年增长很快 |
-| [**esbuild**](https://esbuild.github.io/) | Go | 转换、压缩、预打包 | 极快、嵌入式能力强 | 常作为底层引擎 |
-| [**Rollup**](https://rollupjs.org/) | JavaScript | 库构建、产物优化 | Tree-shaking、ESM 优先 | 仍是库生态核心之一 |
-| [**Turbopack**](https://turbo.build/pack) | Rust | Next.js 开发/构建 | 增量计算、按需工作、默认集成度提升 | Next.js 专用路线 |
-| [**SWC**](https://swc.rs/) | Rust | 编译、转换、压缩 | 快速 TS/JS 转换、JSX 支持 | 编译层工具 |
+| 工具名称                                    | 核心技术                       | 主要用例               | 关键特性（示例）                       | 当前定位           |
+| :------------------------------------------ | :----------------------------- | :--------------------- | :------------------------------------- | :----------------- |
+| [**Webpack**](https://webpack.js.org/)      | JavaScript                     | 存量应用、深度定制工程 | Loader、Plugin、Module Federation      | 稳定、生态最深     |
+| [**Vite**](https://vite.dev/)               | 原生 ESM + Rolldown/Oxc 工具链 | 现代应用开发入口       | 快速 HMR、统一打包后端、插件兼容层     | 新项目常用首选之一 |
+| [**Rspack / Rsbuild**](https://rspack.dev/) | Rust                           | 中大型应用、企业工程   | 高性能、Webpack 兼容、迁移成本相对可控 | 近年增长很快       |
+| [**esbuild**](https://esbuild.github.io/)   | Go                             | 转换、压缩、预打包     | 极快、嵌入式能力强                     | 常作为底层引擎     |
+| [**Rollup**](https://rollupjs.org/)         | JavaScript                     | 库构建、产物优化       | Tree-shaking、ESM 优先                 | 仍是库生态核心之一 |
+| [**Turbopack**](https://turbo.build/pack)   | Rust                           | Next.js 开发/构建      | 增量计算、按需工作、默认集成度提升     | Next.js 专用路线   |
+| [**SWC**](https://swc.rs/)                  | Rust                           | 编译、转换、压缩       | 快速 TS/JS 转换、JSX 支持              | 编译层工具         |
 
 选择这些工具时，最实用的判断标准包括：
 
@@ -58,6 +58,7 @@ Vite/Rolldown/Oxc、Rspack、Turbopack、SWC 和 esbuild 都说明了一个方�
 在大型组件库或工具库中，滥用“桶文件（Barrel Files，即 `index.ts` 汇聚导出所有模块）”是导致生产打包体积膨胀和开发期编译变慢的常见元凶。
 
 **容易引发体积膨胀的反模式：**
+
 ```ts
 // packages/components/index.ts (桶文件集中导出了 100+ 个大型组件)
 export * from "./Button";
@@ -73,6 +74,7 @@ import { Button } from "@/components";
 若 `package.json` 未标记 `sideEffects`，或构建器判定模块存在全局副作用，用户即使只用了 `Button`，整个图表与编辑器代码也会被全部打包进页面！
 
 **推荐实践：声明 `sideEffects: false` 与精准路径导出**
+
 ```json
 // packages/components/package.json
 {
@@ -163,6 +165,7 @@ pnpm preview
 
 1. **`package.json` 现代条件导出 (Conditional Exports)**：
    - 传统 `main` 字段已被标准的 `exports` 替代，支持按运行环境和模块格式精细分发：
+
    ```json
    {
      "name": "@my-org/core-sdk",
@@ -181,6 +184,7 @@ pnpm preview
      }
    }
    ```
+
 2. **防范双模块陷阱 (Dual Package Hazard)**：
    - 当一个库同时分发 ESM 和 CJS 产物时，如果上层应用的不同依赖分别通过 `import` 和 `require` 引入了该库，Node.js 会在内存中加载两份独立的模块实例，导致内部单例（Singleton）或全局状态断裂失效。现代最佳实践是采用纯 ESM 优先，或通过轻量 CJS Wrapper 转发共享状态。
 3. **产物合规性校验工具**：

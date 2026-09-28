@@ -2,7 +2,7 @@
 title: "V. 高级主题和专业开发最佳实践 / V.9 国际化 (internationalization, i18n) 和本地化 (localization, l10n)：全球化应用程序"
 ---
 
-# V.9 国际化 (internationalization, i18n) 和本地化 (localization, l10n)：全球化应用程序
+# V.9 国际化 (internationalization, i18n) 和本地化 (localization, l10n)：全球化应用程序 (*)
 
 **目的**：设计并构建具备全球多语言适配能力的应用，使其能够根据用户的语言、文化习俗、阅读方向和区域约定无缝切换。
 

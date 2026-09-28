@@ -2,7 +2,7 @@
 title: "V. 高级主题和专业开发最佳实践 / V.2 线上性能监控与分析 (Performance Monitoring)"
 ---
 
-# V.2 线上性能监控与分析 (Performance Monitoring)
+# V.2 线上性能监控与分析 (Performance Monitoring) (*)
 
 线上性能监控是确保前端应用提供优质用户体验的关键环节。它超越了开发环境的测试，直接从真实用户视角捕获和分析性能数据，帮助团队及时发现并解决问题，持续优化产品。
 

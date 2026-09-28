@@ -1232,41 +1232,41 @@ export function lazy(loader) {
 
 **VNode 上：**
 
-| 字段         | 含义                                                                  |
-| ------------ | --------------------------------------------------------------------- |
-| `_children`  | 子 vnode 数组（使其成为树节点）                                       |
-| `_parent`    | 父 vnode（向上遍历）                                                  |
-| `_dom`       | 本 vnode 拥有的第一个真实 DOM 节点                                    |
-| `_component` | 背后的组件实例（函数/类组件）                                         |
-| `_depth`     | 树深度；为重渲染队列排序                                              |
-| `_original`  | 版本戳；新旧相等 ⇒ 子树可跳过                                         |
-| `_index`     | 兄弟中的位置（配对期间兼作暂存）                                      |
-| `_flags`     | 位字段：`INSERT_VNODE`、`MATCHED`、`MODE_HYDRATE`、`MODE_SUSPENDED`   |
-| `_mask`      | `useId` 的 id 命名空间，自根部传播而下                                |
+| 字段         | 含义                                                                |
+| ------------ | ------------------------------------------------------------------- |
+| `_children`  | 子 vnode 数组（使其成为树节点）                                     |
+| `_parent`    | 父 vnode（向上遍历）                                                |
+| `_dom`       | 本 vnode 拥有的第一个真实 DOM 节点                                  |
+| `_component` | 背后的组件实例（函数/类组件）                                       |
+| `_depth`     | 树深度；为重渲染队列排序                                            |
+| `_original`  | 版本戳；新旧相等 ⇒ 子树可跳过                                       |
+| `_index`     | 兄弟中的位置（配对期间兼作暂存）                                    |
+| `_flags`     | 位字段：`INSERT_VNODE`、`MATCHED`、`MODE_HYDRATE`、`MODE_SUSPENDED` |
+| `_mask`      | `useId` 的 id 命名空间，自根部传播而下                              |
 
 **组件实例上：**
 
-| 字段               | 含义                                                                  |
-| ------------------ | --------------------------------------------------------------------- |
-| `_vnode`           | 当前由此实例支撑的 vnode                                              |
-| `_parentDom`       | 本组件渲染进去的 DOM 容器                                             |
-| `_globalContext`   | 本组件可见的、合并后的旧式 context                                    |
-| `_nextState`       | 提交前由 `setState` 累积的待定 state                                  |
-| `_bits`            | 位字段：`DIRTY`、`FORCE`、`PENDING_ERROR`、`PROCESSING_EXCEPTION`     |
-| `_renderCallbacks` | 提交时执行的回调（含布局 effect）                                     |
-| `_stateCallbacks`  | 提交时执行的 `setState` 回调                                          |
-| `__hooks`          | `{ _list, _pendingEffects }`——本组件的 hook state                     |
+| 字段               | 含义                                                              |
+| ------------------ | ----------------------------------------------------------------- |
+| `_vnode`           | 当前由此实例支撑的 vnode                                          |
+| `_parentDom`       | 本组件渲染进去的 DOM 容器                                         |
+| `_globalContext`   | 本组件可见的、合并后的旧式 context                                |
+| `_nextState`       | 提交前由 `setState` 累积的待定 state                              |
+| `_bits`            | 位字段：`DIRTY`、`FORCE`、`PENDING_ERROR`、`PROCESSING_EXCEPTION` |
+| `_renderCallbacks` | 提交时执行的回调（含布局 effect）                                 |
+| `_stateCallbacks`  | 提交时执行的 `setState` 回调                                      |
+| `__hooks`          | `{ _list, _pendingEffects }`——本组件的 hook state                 |
 
 **hook 槽位上（`__hooks._list[i]`）：**
 
-| 字段           | 含义                                                                  |
-| -------------- | --------------------------------------------------------------------- |
-| `_value`       | hook 存储的值（如 `[state, dispatch]`、memo 的结果）                  |
-| `_nextValue`   | state hook 在下次渲染前的待定值                                       |
-| `_args`        | 上一次的依赖数组（供 memo/effect 检测变化）                           |
-| `_pendingArgs` | 等待提交的依赖数组                                                    |
-| `_cleanup`     | effect 返回的函数，重跑/卸载前执行                                    |
-| `_component`   | 所属组件（state hook 用）                                             |
+| 字段           | 含义                                                 |
+| -------------- | ---------------------------------------------------- |
+| `_value`       | hook 存储的值（如 `[state, dispatch]`、memo 的结果） |
+| `_nextValue`   | state hook 在下次渲染前的待定值                      |
+| `_args`        | 上一次的依赖数组（供 memo/effect 检测变化）          |
+| `_pendingArgs` | 等待提交的依赖数组                                   |
+| `_cleanup`     | effect 返回的函数，重跑/卸载前执行                   |
+| `_component`   | 所属组件（state hook 用）                            |
 
 ### 建议的阅读与调试路线
 

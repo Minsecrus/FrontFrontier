@@ -59,4 +59,3 @@ function UserProfile({ userId }: { userId: string }) {
 判断边界可以很朴素：一次性请求用 `fetch` 很自然；多个组件读取、缓存、刷新和重试同一份远端数据时，就进入 TanStack Query 这类服务器状态工具的领域。
 
 :::
-

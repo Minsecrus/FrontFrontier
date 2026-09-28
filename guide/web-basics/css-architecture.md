@@ -69,7 +69,7 @@ CSS Modules 的权衡在于，相比 CSS-in-JS，它基于 props 或状态实现
 
 在构建设计系统和组件库时，选择合适的 CSS 架构至关重要。这些架构能帮助团队统一风格、提高复用性、提升协作效率，也便于维护和扩展。例如，原子化 CSS 可以作为设计系统底层的基础工具集，提供高度可组合的原子类；CSS-in-JS 或 CSS Modules 则可以用于构建独立、封装性强的组件，确保样式隔离。许多大型设计系统会采用混合策略，根据具体需求选择最合适的方案。
 
-现代 CSS 自身也在快速补齐能力——过去只能依靠框架或预处理器解决的问题，如今原生 CSS 也能应对。容器查询、`:has()`、CSS Nesting、`@scope`、Popover、View Transitions、`content-visibility` 等能力让“原生 CSS + 少量构建增强”变得更有竞争力。采用这些能力时，应该先看它们的 Baseline 状态，再结合目标用户的浏览器分布决定是否需要降级方案。
+**现代 CSS 自身也在快速补齐能力——过去只能依靠框架或预处理器解决的问题，如今原生 CSS 也能应对**。容器查询、`:has()`、CSS Nesting、`@scope`、Popover、View Transitions、`content-visibility` 等能力让“原生 CSS + 少量构建增强”变得更有竞争力。采用这些能力时，应该先看它们的 Baseline 状态，再结合目标用户的浏览器分布决定是否需要降级方案。
 
 ## **II.4.7 表：现代 CSS 架构对比 (Utility-First CSS vs. CSS-in-JS vs. CSS Modules)**
 
@@ -151,4 +151,3 @@ CSS Modules 的权衡在于，相比 CSS-in-JS，它基于 props 或状态实现
 ```
 
 练习时可以切换容器宽度，观察卡片布局变化，再用 DevTools 的 Computed 面板确认 token 和 `@layer` 的生效顺序。真实项目还应给 token 建立命名规则，并把组件状态、主题和高对比度模式纳入同一套验证清单。
-
