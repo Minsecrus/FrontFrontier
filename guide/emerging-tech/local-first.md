@@ -37,7 +37,7 @@ title: "VI. 新兴技术和专业领域 / VI.11 本地优先架构与实时协�
 - **协同光标 (Multiplayer Cursors)**：展示其他协作者的实时鼠标移动轨迹与选择高亮。
 - **在线状态 (Presence)**：展示当前正在查看/编辑该文档的用户头像列表与激活焦点。
 
-## **表格：Local-First vs 传统 REST SPA vs 纯 WebSocket 状态机**
+**表格：Local-First vs 传统 REST SPA vs 纯 WebSocket 状态机**
 
 | 评估维度             | Local-First 架构 (CRDT + 本地 DB)      | 传统 REST / GraphQL SPA             | 中心化 WebSocket 实时状态机      |
 | :------------------- | :------------------------------------- | :---------------------------------- | :------------------------------- |
