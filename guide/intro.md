@@ -23,7 +23,7 @@ title: "I. 前端开发简介"
 1. 先打牢**计算机基础**（浏览器原理、HTTP/3、DNS、Cookie、CORS、基本数据结构与算法）。
 2. 扎实掌握**前端三剑客**——HTML（语义化与可访问性）、CSS（现代布局 + 设计系统）、JavaScript（运行时原理 + 现代标准），这是后续所有内容不可或缺的根基。
 3. 学习现代框架与**元框架、下一代渲染架构**（React + RSC、Next.js App Router、SolidStart、Qwik Resumability、SvelteKit 等）。
-4. 最后深入高级主题：WebGPU、WASM 编译链、边缘计算、Privacy Sandbox 与合规、可访问性（a11y）、国际化（i18n）、测试策略（Vitest + Playwright + Testing Library）、监控与错误追踪（Sentry、Highlight.io）、AI 驱动开发等。
+4. 最后深入高级主题：WebGPU、WASM 编译链、边缘计算、[第三方 Cookie 限制](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies)（CHIPS、FedCM、Storage Access API）与隐私合规、可访问性（a11y）、国际化（i18n）、测试策略（Vitest + Playwright + Testing Library）、监控与错误追踪（Sentry、[OpenTelemetry](https://opentelemetry.io/docs/languages/js/)）、AI 驱动开发等。Google 已于 2025 年宣布[退役 Topics、Protected Audience 等大部分 Privacy Sandbox 技术](https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies)，学习时不必再投入这些 API。
 
 无论何时，**多读官方文档、多写项目、多看顶级开源库源码**，仍是前端能力提升的不二法门。
 
@@ -42,7 +42,7 @@ title: "I. 前端开发简介"
 - 基础 Web 技术：**MDN** 永远是最权威的宝典；
 - 框架与工具：优先看**官方教程与文档**（Next.js Docs、Solid Docs、Qwik Docs 等）；  
 - 理解原理：直接读 **Vite、esbuild、Million.js、Preact、TanStack、Zustand** 等明星开源库源码；  
-- 学习 AI 驱动开发：**Cursor、v0.dev、Claude Projects、Lovart** 的官方示例与提示词工程案例是最佳起点；
+- 学习 AI 驱动开发：**Cursor、v0.app、Claude Projects、Lovable** 的官方示例与提示词工程案例是最佳起点；
 - 社区与系统课程：Frontend Masters、egghead.io、ByteDance FE 培训营、freeCodeCamp 等；
 
 除此之外，一些知名开发者（尤其中外顶尖工程师）的博客仍能带来启发，更适合作为官方资料之外的经验补充。

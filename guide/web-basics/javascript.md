@@ -22,7 +22,7 @@ JavaScript (JS) 是一种轻量级、解释型编程语言，为网站添加“�
 - **解构、展开与 rest 参数**：常用于读取对象/数组中的局部数据、复制浅层结构，以及定义参数数量可变的函数。
 - **可选链与空值合并**：`?.` 和 `??` 能让嵌套数据读取更清晰，适合处理接口响应中可能缺失的字段。
 
-JavaScript 围绕 ES6+ 特性（如 let/const、箭头函数和增强的数据结构 Map、Set）的演进，反映出编程模式向更可预测、更函数式、更高性能方向的转变。这减少了常见错误（例如 var 提升问题、this 绑定混淆），并支撑起更复杂的应用逻辑，直接影响代码质量和可伸缩性。从 arguments 到 rest 参数的转变，则是 API 清晰度上一个小而重要的改进。
+JavaScript 围绕 ES6+ 特性（如 let/const、箭头函数和增强的数据结构 Map、Set）的演进，减少了 var 提升、this 绑定混淆等常见错误；用 rest 参数代替 arguments，也让函数签名更清晰。
 
 ## **II.5.2 异步 JavaScript：Promises、async/await、事件循环（宏任务/微任务）**
 
@@ -31,7 +31,7 @@ JavaScript 围绕 ES6+ 特性（如 let/const、箭头函数和增强的数据�
 - **事件循环**：JavaScript 的单线程并发模型，使用作业队列处理异步操作。
 - **宏任务/微任务**：事件循环中用于调度异步操作的两类队列，微任务优先级更高。
 
-掌握异步 JavaScript（Promises、`async`/`await`、事件循环）对于构建响应式前端应用至关重要。缺乏深入理解，开发者可能会创建”卡顿”的 UI 或陷入”回调地狱”，直接影响用户体验和代码可维护性。宏任务与微任务的区别，解释了复杂异步流中微妙的时序差异。
+掌握异步 JavaScript（Promises、`async`/`await`、事件循环）对于构建响应式前端应用至关重要。缺乏深入理解，开发者可能会创建“卡顿”的 UI 或陷入“回调地狱”，直接影响用户体验和代码可维护性。宏任务与微任务的区别，解释了复杂异步流中微妙的时序差异。
 
 ::: details 启发式示例：先猜事件循环的输出顺序
 
@@ -135,7 +135,7 @@ DOM 更新会触发布局、样式计算和绘制。频繁读取布局尺寸并�
 - 登录态、Cookie、CSRF token 和跨域配置。
 - 搜索、筛选、分页等高频请求的取消、节流和竞态控制。
 
-这些细节在框架中仍然存在。TanStack Query、SWR、Axios 等工具封装了缓存、重试、请求去重和错误状态，底层仍是 HTTP、Promise、JSON 与浏览器网络模型。
+这些细节在框架中仍然存在。TanStack Query、SWR 等数据获取库封装了缓存、重试、请求去重和错误状态；Axios 等 HTTP 客户端则主要封装拦截器、JSON 转换和非 2xx 状态的统一报错，缓存与去重仍需自己处理或交给前者。底层仍是 HTTP、Promise、JSON 与浏览器网络模型。
 
 ## **II.5.6 错误处理与调试**
 
@@ -165,7 +165,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 - **localStorage**：简单键值存储，容量有限，同步 API，适合少量偏好设置，不适合频繁写入或敏感数据。
 - **sessionStorage**：生命周期跟随标签页会话，适合临时状态。
 - **IndexedDB**：浏览器内置异步结构化数据库，适合较大规模对象存储、离线草稿和索引。
-- **[Origin Private File System (OPFS)](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：现代浏览器专有私有文件系统，通过 Web Worker 中的 **`SyncAccessHandle`** 提供近乎原生的纳秒级高速同步读写，是浏览器端运行 SQLite、音视频离线缓存和重度工程化客户端的核心基础设施。
+- **[Origin Private File System (OPFS)](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：File System API 中按源（origin）隔离的私有文件系统，已进入 Baseline。在专用 Worker 中可通过 `createSyncAccessHandle()` 获得 **`FileSystemSyncAccessHandle`**，对文件做同步、原地读写，适合频繁的小块读写，是浏览器端运行 SQLite（如 SQLite Wasm 的 OPFS 后端）和存放大型二进制文件的常用基础设施。
 - **Cache Storage**：常与 Service Worker 配合，用于缓存请求和响应，是离线能力的重要基础。
 
 客户端存储适合保存偏好设置、离线草稿和缓存数据。访问令牌、个人敏感信息和长期凭证应结合 HttpOnly Cookie、服务端会话、安全策略和业务风险综合设计。
@@ -177,7 +177,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 | localStorage | 主题、语言、轻量偏好 | 持久保存，用户或代码清理 | DevTools Application |
 | sessionStorage | 当前标签页临时状态 | 标签页会话结束后清理 | DevTools Application |
 | IndexedDB | 离线草稿、复杂对象列表、本地索引 | 持久保存，容量更大 | DevTools Application |
-| [**OPFS**](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) | 原生高速二进制文件、SQLite 数据库文件 | 域名隔离持久存储，性能极致 | DevTools Application / OPFS Explorer |
+| [**OPFS**](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) | 大型二进制文件、SQLite 数据库文件 | 持久保存，按源隔离，与 IndexedDB 共用存储配额 | DevTools Application / OPFS Explorer |
 | Cache Storage | 请求与响应缓存 | 由 Service Worker 或代码管理 | DevTools Application |
 | Cookie | 会话标识、服务端协作状态 | 由过期时间和服务端策略决定 | DevTools Application / Network |
 
@@ -187,7 +187,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 
 ES 模块（`import`/`export`）以标准化的方式将 JavaScript 代码组织成可重用模块，提高可维护性，防止全局命名空间污染。
 
-ES 模块的广泛采用，标志着从旧式、低效模块模式（[CommonJS](http://www.commonjs.org/)、[AMD](https://www.amd.com/)）的关键转变。这直接让打包工具的 tree-shaking 等功能成为可能，并改进了代码组织，从而减小包体积、提高性能。
+ES 模块的广泛采用，标志着从旧式、低效模块模式（[CommonJS](http://www.commonjs.org/)、[AMD](https://github.com/amdjs/amdjs-api/wiki/AMD)）的关键转变。这直接让打包工具的 tree-shaking 等功能成为可能，并改进了代码组织，从而减小包体积、提高性能。
 
 在浏览器中，`<script type="module">` 会启用模块语义：模块有自己的作用域，默认按严格模式执行，并支持静态 `import`。现代构建工具会基于 ES 模块分析依赖图、拆分代码、移除未使用导出，并为生产环境生成更合适的资源结构。
 
@@ -201,9 +201,9 @@ ES 模块的广泛采用，标志着从旧式、低效模块模式（[CommonJS](
 
 ## **II.5.9 现代 ECMAScript 演进与标准新特性**
 
-JavaScript 标准（ECMAScript）每年持续迭代。以下新特性已广泛进入现代浏览器 Baseline 并成为高质量代码编写的标准工具：
+JavaScript 标准（ECMAScript）每年持续迭代。以下前四项已进入现代浏览器 Baseline，可以作为日常代码的标准工具；Temporal 已完成标准化，但浏览器支持仍在补齐：
 
-- **原生 Set 集合运算方法**（ES2024 / Baseline）：无需引入 lodash 等第三方工具库，原生支持集合的数学运算：
+- **原生 Set 集合运算方法**（ES2025 / Baseline）：无需引入 lodash 等第三方工具库，原生支持集合的数学运算：
   - `setA.union(setB)`：求并集；
   - `setA.intersection(setB)`：求交集；
   - `setA.difference(setB)`：求差集（存在于 A 但不存在于 B）；
@@ -217,8 +217,8 @@ JavaScript 标准（ECMAScript）每年持续迭代。以下新特性已广泛�
   ```ts
   const grouped = Object.groupBy(products, (item) => item.category);
   ```
-- **异步迭代收集：`Array.fromAsync()`**：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 转换为普通数组。
-- **下一代时间日期标准：[Temporal API](https://tc39.es/proposal-temporal/docs/)**：旨在彻底替代设计缺陷众多的历史 `Date` 对象，提供不可变的日期时间对象、对纳秒级精度的支持、完整的时区计算与日历系统支持。
+- **异步迭代收集：`Array.fromAsync()`**（ES2026 / Baseline）：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 等异步可迭代对象转换为普通数组。
+- **下一代时间日期标准：[Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal)**（已于 2026 年进入 TC39 Stage 4，预计纳入 ES2027）：旨在彻底替代设计缺陷众多的历史 `Date` 对象，提供不可变的日期时间对象、对纳秒级精度的支持、完整的时区计算与日历系统支持。截至 2026 年 10 月，Chrome 与 Firefox 已支持，Safari 尚未支持，因此还不是 Baseline；生产环境使用前应先检测 `typeof Temporal !== "undefined"`，或引入 polyfill。
 
 ## **II.5.10 一个最小浏览器应用闭环**
 

@@ -13,7 +13,7 @@ title: "III. 基本开发环境和工具 / III.4 包管理器：npm、Yarn 和 p
 
 从 npm 到 Yarn、pnpm 和 Bun 的演变，反映了行业对效率（速度、磁盘空间）、可靠性（严格的依赖检查，防止“幽灵依赖”）和供应链安全的持续追求。这直接影响构建时间、CI/CD 性能和大型项目的稳定性。
 
-现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，让同一仓库总能生成一致的锁文件。
+现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，让同一仓库总能生成一致的锁文件。注意：Node.js 25 起安装包不再附带 Corepack，需要先通过 `npm install -g corepack` 单独安装（见 [Corepack 仓库](https://github.com/nodejs/corepack)）；Node.js 16.9 至 24 的版本仍内置 Corepack。
 
 ::: details 启发式示例：packageManager + Corepack
 
@@ -30,6 +30,8 @@ title: "III. 基本开发环境和工具 / III.4 包管理器：npm、Yarn 和 p
 ```
 
 ```sh
+# Node.js 25+ 需先单独安装 Corepack；Node.js 16.9 至 24 可跳过这一行
+npm install -g corepack
 corepack enable
 corepack prepare pnpm@9.15.9 --activate
 pnpm install --frozen-lockfile
@@ -48,5 +50,3 @@ pnpm install --frozen-lockfile
 | **独特功能** | 默认包管理器、审计、可信发布           | Plug'n'Play、约束、工作区               | 内容寻址存储、工作区、防止幽灵依赖       | 安装、运行、测试、打包能力集成             |
 | **性能**     | 稳定，生态兼容性强                     | 快速安装，高效利用资源                  | 高速安装，大幅减少磁盘占用               | 安装和脚本执行速度突出                     |
 | **适用场景** | 默认选择、开源包发布、兼容性优先       | 强约束单体仓库 (monorepo)、成熟团队规范 | 大型单体仓库、严格依赖、磁盘空间敏感项目 | 新项目试验、一体化 DX、对 Bun 兼容性有把握 |
-
-这个表格对于厘清包管理器在现代前端工作流中的作用至关重要。它帮助学习者理解速度、灵活性和生态系统成熟度之间的权衡，指导他们根据项目需求选择最合适的工具。

@@ -36,7 +36,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.14 微前端架构"
 - Qiankun 的 JS 沙箱：Qiankun 内置了 JS 沙箱，通过代理 window 对象和 document 对象，隔离每个微应用的 JavaScript 执行环境，防止全局变量污染和副作用。
 - Webpack Module Federation 的共享依赖：通过配置共享依赖，确保所有微应用使用相同版本的共享库。
 - 严格的模块化：鼓励微应用内部使用 ES Modules，把变量和副作用限制在模块边界内。
-- Web Components：利用 Web Components 的封装性，将组件隔离在独立的自定义元素中。
+- iframe：每个 iframe 拥有独立的 JavaScript 全局环境，是浏览器原生、隔离最彻底的方式，代价是通信、路由同步、弹层和加载性能更难处理。注意 Web Components / Shadow DOM 只隔离 DOM 和样式，不隔离 JS 全局作用域，不能作为 JS 隔离手段。
 
 **表格：微前端实现方案对比 (Module Federation vs. Single-SPA vs. Qiankun)**
 

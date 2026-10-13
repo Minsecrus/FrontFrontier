@@ -29,11 +29,11 @@ TouchEvent 接口封装了当前所有活动的触摸点。
 
 Touch 接口表示单个触摸点，包含位置信息等。
 
-TouchList 接口表示一组触摸点，用于多点触控。实践中，监听这些事件并结合 event.preventDefault() 阻止浏览器默认行为，即可实现自定义的触摸交互。
+TouchList 接口表示一组触摸点，用于多点触控。实践中，可以监听这些事件并调用 event.preventDefault() 阻止浏览器默认行为（如滚动、缩放）来实现自定义的触摸交互。注意：浏览器默认把 window、document、documentElement 和 body 上的 touchstart/touchmove 监听器视为 passive，其中的 preventDefault() 不会生效，确需阻止时要显式传入 `{ passive: false }`；更推荐用 CSS `touch-action` 声明元素允许的手势，并让监听器保持 passive。新代码可优先使用 [Pointer Events](https://developer.mozilla.org/en-US/docs/Web/API/Pointer_events)，用同一套事件处理触摸、鼠标和触控笔。
 
 Touch.identifier 属性可唯一标识单个触摸点，便于在整个交互过程中持续追踪。
 
-直接使用原生 Touch 事件实现复杂手势（如捏合缩放、旋转、滑动）会非常繁琐。手势库封装了这些底层逻辑，提供了更高级、更易用的 API。[ZingTouch](https://zingchart.com/zingtouch) 是一个现代 JavaScript 触摸手势检测库，提供预定义手势（如 Tap、Swipe、Distance、Pan、Rotate），也支持创建自定义手势。预定义手势包括 Tap（轻触）、Pan（拖动）、Swipe（滑动）、Distance（两指距离变化，用于缩放）、Rotate（旋转）。手势接受的输入数量、灵敏度等参数可以定制。ZingTouch 提供了生命周期事件的钩子函数，开发者可在手势识别的不同阶段执行操作，或创建新的手势。可通过 Region 指定监听触摸事件的区域。手势事件会提供详细数据，例如 Swipe 的速度和方向，Distance 的距离和中心点，Pan 的距离和方向等。选择手势库时，应考量功能完整性（是否覆盖所需手势）、性能（手势识别的准确性和效率）、易用性（API 设计是否直观，学习曲线如何）以及社区支持（是否有活跃的社区和良好的文档）。
+直接使用原生 Touch 事件实现复杂手势（如捏合缩放、旋转、滑动）会非常繁琐。手势库封装了这些底层逻辑，提供了更高级、更易用的 API。[ZingTouch](https://zingchart.com/zingtouch) 是一个较早的 JavaScript 触摸手势检测库（npm 上的最新版本 1.0.6 发布于 2018 年，此后未再发布新版本，新项目选用前应评估维护风险），提供预定义手势（如 Tap、Swipe、Distance、Pan、Rotate），也支持创建自定义手势。预定义手势包括 Tap（轻触）、Pan（拖动）、Swipe（滑动）、Distance（两指距离变化，用于缩放）、Rotate（旋转）。手势接受的输入数量、灵敏度等参数可以定制。ZingTouch 提供了生命周期事件的钩子函数，开发者可在手势识别的不同阶段执行操作，或创建新的手势。可通过 Region 指定监听触摸事件的区域。手势事件会提供详细数据，例如 Swipe 的速度和方向，Distance 的距离和中心点，Pan 的距离和方向等。选择手势库时，应考量功能完整性（是否覆盖所需手势）、性能（手势识别的准确性和效率）、易用性（API 设计是否直观，学习曲线如何）以及社区支持（是否有活跃的社区、良好的文档和持续的版本维护）。
 
 ## **V.13.3 移动端特有的性能优化策略**
 

@@ -81,7 +81,7 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 3. **提取规范**：确认颜色、字体、间距、圆角、阴影是否来自设计 token。
 4. **映射组件**：优先复用现有组件库，再决定是否新增组件或扩展 props。
 5. **验证交互**：确认流程、动画、错误状态、空状态、移动端和无障碍细节。
-6. **管理资源**：图标优先 SVG，照片按清晰度与体积选择格式，能用 CSS 或组件实现的装饰元素不必导出。
+6. **管理资源**：图标优先 SVG，照片按清晰度与体积选择格式，能用 CSS 或组件实现的装饰元素不必导出。缺少设计支持时，可以用 [Lovart](https://www.lovart.ai/) 等 AI 设计工具生成插画、海报、logo 等视觉素材的方向稿；入库前确认风格与设计 token 一致，并核对素材的授权与商用条款。
 7. **留痕沟通**：把问题评论到具体节点，必要时链接到 issue、PR 或 Storybook story。
 
 设计协作依靠一条稳定的翻译链：**设计说明意图与约束，工具帮助读取和传递，代码再将其落实为可维护、可测试的产品行为。**
@@ -90,7 +90,8 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 
 设计系统在工程落地的关键在于将设计常量（颜色、字号、间距、阴影）转化为单一事实来源（Single Source of Truth）的自动化代码管线：
 
-1. **[W3C DTCG (Design Tokens Community Group)](https://design-tokens.github.io/community-group/format/) 国际规范**：
+1. **[W3C DTCG (Design Tokens Community Group)](https://www.designtokens.org/TR/2025.10/format/) 格式规范**：
+   - 该格式由 W3C 设计令牌社区组发布，2025 年 10 月推出首个稳定版（2025.10）。它属于社区组报告，并非 W3C 正式标准。
    - 采用标准 JSON 格式定义设计 Token，彻底消除 Figma Variables 与代码硬编码之间的语义鸿沟：
    ```json
    {
@@ -109,6 +110,6 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
    - 统一由 CI 监听 Token 仓库变更，通过 Style Dictionary 自动化编译输出为多端产物：
      - **Web 产物**：CSS 自定义属性 (`:root { --color-brand-primary: #2563eb; }`)、Tailwind CSS 主题配置文件、TypeScript 强类型常量对象；
      - **移动端产物**：iOS Swift 结构体 / Android XML 资源。
-3. **现代感知色彩对比度算法：APCA (Advanced Perceptual Contrast Algorithm)**：
-   - 传统 WCAG 2.1 对比度公式（如 4.5:1）存在物理光学缺陷，无法准确反映人眼在暗黑模式、极细字号下的真实空间感知。
-   - 现代设计系统正在逐步拥抱 **APCA** 算法，基于空间频率、背景极性与动态字阶精准计算可读性得分（$L^c$ 亮度对比度），实现真正的科学无障碍调色板。
+3. **色彩对比度检查：WCAG 2.2 基线与 APCA 补充参考**：
+   - [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 的对比度要求（正文 4.5:1、大字号 3:1）仍是当前无障碍合规的基线，Token 中的前景/背景组合应先满足它。
+   - [APCA (Accessible Perceptual Contrast Algorithm)](https://github.com/Myndex/SAPC-APCA) 是候选的感知对比度算法，会考虑字号、字重和前景/背景极性（如暗色模式下的浅字深底），用 Lc 值表示明度对比。它尚未成为正式标准，可在暗色主题、细字号等场景作为补充参考，不能替代 WCAG 2.2 检查。

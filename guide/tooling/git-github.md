@@ -16,7 +16,7 @@ title: "III. 基本开发环境和工具 / III.1 版本控制系统：Git 和 Gi
 
 [**GitHub**](https://github.com/) 是流行的 Git 仓库托管平台，提供问题和拉取请求等协作工具，促进代码审查并集成 CI/CD 工作流。除此之外，还有 **[GitLab](https://about.gitlab.com/)、[Gitee](https://gitee.com/)、[Bitbucket](https://bitbucket.org/product/)** 等仓库托管平台。
 
-版本控制 (Git) 和协作平台 (GitHub) 不仅仅是工具，更是现代软件开发的基础实践。它们提供清晰的审计跟踪和结构化协作，其采用直接支撑了敏捷方法、分布式团队和代码质量。”Fork and Pull”模式（即复刻仓库再提交拉取请求）是大型开源项目协作的基础。
+“Fork and Pull”模式（即复刻仓库再提交拉取请求）是大型开源项目协作的基础。
 
 ## **III.1.1 Git 的核心心智模型：四层架构与状态流转**
 
@@ -30,8 +30,9 @@ title: "III. 基本开发环境和工具 / III.1 版本控制系统：Git 和 Gi
        │  git commit
        ▼
 [ 本地仓库 (Local Repository / .git) ]
-       │  git push / fetch
-       ▼
+       │  ▲
+       │  │  git push（↓ 上传本地提交）/ git fetch（↑ 下载远程提交）
+       ▼  │
 [ 远程仓库 (Remote Repository / GitHub) ]
 ```
 
@@ -76,10 +77,10 @@ git reflog
 
 # 输出示例：
 # a1b2c3d HEAD@{0}: reset: moving to HEAD~1
-# e4f5g6h HEAD@{1}: commit: feat: implement instant search
+# e4f5a6b HEAD@{1}: commit: feat: implement instant search
 
 # 2. 根据 reflog 中的真实哈希重新找回提交并创建恢复分支
-git switch -c recovery-branch e4f5g6h
+git switch -c recovery-branch e4f5a6b
 ```
 
 Git 的所有提交对象在短期内（通常为 30-90 天）都不会真正从磁盘抹去，`reflog` 是挽救灾难性操作最强大的“后悔药”。

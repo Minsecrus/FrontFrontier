@@ -12,7 +12,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.6 元框架：增强开发
 - **Vue 生态**：首选通常是 [**Nuxt**](https://nuxt.com/)。
 - **Svelte 生态**：首选通常是 [**SvelteKit**](https://svelte.dev/docs/kit)。
 - **内容驱动站点**：常见选择是 [**Astro**](https://astro.build/) 或 VitePress 这类内容优先工具。
-- **偏实验/性能导向路线**：如 [**Qwik**](https://qwik.builder.io/)。
+- **偏实验/性能导向路线**：如 [**Qwik**](https://qwik.dev/)。
 
 React 生态已经形成了更丰富的路线选择。  
 [**React Router**](https://reactrouter.com/start/framework) 已明确提供 **Framework Mode**，把路由模块、`loader`、`action`、SSR、预渲染和部署适配器整合为完整应用框架。  
@@ -24,7 +24,7 @@ React 生态已经形成了更丰富的路线选择。
 - [**Nuxt**](https://nuxt.com/)：Vue 生态事实上的全栈主力框架。文件路由、自动导入、模块生态和 SSR/SSG/混合渲染体验都很成熟。
 - [**SvelteKit**](https://svelte.dev/docs/kit)：Svelte 官方应用框架，默认 SSR，支持 SSG/SPA/混合渲染；`load`、`actions` 与 adapter 组合让“同一套代码，多平台部署”非常自然。
 - [**Astro**](https://astro.build/)：内容优先和低 JavaScript 负载场景下非常强。Islands 架构适合文档站、博客、营销站和媒体站。
-- [**Qwik**](https://qwik.builder.io/)：以 resumability 为卖点的创新路线，强调极低启动成本，适合愿意投入学习和生态评估成本的团队。
+- [**Qwik**](https://qwik.dev/)：以 resumability 为卖点的创新路线，自带 UI 框架与元框架 [Qwik City](https://qwik.dev/docs/qwikcity/)，强调极低启动成本，适合愿意投入学习和生态评估成本的团队。
 
 元框架、Islands、RSC、Resumability 等路线的兴起，本质上都在回答同一个问题：**如何减少首屏等待、降低客户端 JavaScript 负担，同时保留交互能力。**  
 这些路线同时解决 SEO、Core Web Vitals、缓存策略、部署模型和团队工程效率。
@@ -50,7 +50,7 @@ React 生态已经形成了更丰富的路线选择。
 | [**Nuxt**](https://nuxt.com/)                                              | [Vue](https://vuejs.org/)     | SSR, SSG, SPA, 混合  | 约定式文件路由、自动导入、Nitro                  | Vue 生态默认主力                        | Vue 全栈应用、企业项目         |
 | [**SvelteKit**](https://svelte.dev/docs/kit)                               | [Svelte](https://svelte.dev/) | SSR 默认, SSG, 混合  | `load`、`actions`、adapter                       | Svelte 生态默认主力                     | 高性能应用、内容站、交互式工具 |
 | [**Astro**](https://astro.build/)                                          | 框架无关                      | SSG 为主, Islands    | 内容优先、按岛加载交互                           | 内容站和低 JS 负载强项                  | 博客、文档站、营销站、媒体站   |
-| [**Qwik**](https://qwik.builder.io/)                                       | 框架无关                      | 可恢复性, SSG/SSR    | 惰性恢复、细粒度加载                             | 创新性能路线                            | 对启动性能极端敏感的实验性项目 |
+| [**Qwik City**](https://qwik.dev/docs/qwikcity/)                           | [Qwik](https://qwik.dev/)     | 可恢复性, SSG/SSR    | 惰性恢复、细粒度加载                             | 创新性能路线                            | 对启动性能极端敏感的实验性项目 |
 
 对学习者而言，更重要的问题包括：
 

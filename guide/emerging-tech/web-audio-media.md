@@ -12,7 +12,7 @@ title: "VI. 新兴技术和专业领域 / VI.6 Web 音频和媒体流：实时�
 - **Media Source Extensions (MSE)**：支持基于 Web 的无插件流媒体，可通过 JavaScript 为 `<audio>` 和 `<video>` 元素创建媒体流，并细粒度地控制获取。
 - **[WebRTC](https://webrtc.org/) 与 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API)**：WebRTC 支持浏览器间点对点实时音视频流与 DataChannel 数据交换；WebTransport 则基于 HTTP/3 QUIC 协议提供双向低延迟多路复用传输。
 
-这些多媒体 API 是在浏览器中构建复杂实时应用（例如视频会议、在线数字音频工作站、网页视频编辑器、云游戏）的核心技术支撑，标志着 Web 功能向静态内容之外的重大扩展。
+这些多媒体 API 是在浏览器中构建复杂实时应用（例如视频会议、在线数字音频工作站、网页视频编辑器、云游戏）的核心技术支撑。
 
 ## **VI.6.1 麦克风预览的权限、生命周期与清理**
 

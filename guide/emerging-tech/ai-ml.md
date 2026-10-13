@@ -87,7 +87,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.js runtime 负责加载模型与调度算子；Wasm、WebGPU、WebNN 则提供不同的底层执行路径。
 
-- **WebAssembly（Wasm）**兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
+- **WebAssembly**（Wasm）兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
 - **WebGPU**向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
 - **WebNN**是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
 - **WebGL**原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
@@ -206,7 +206,7 @@ export async function summarize(
 
 ## **VI.8.10 受约束的工具 Schema**
 
-面向 Agent 的工具先定义输入 Schema，再由客户端执行权限检查和确认：
+面向 Agent 的工具先定义受约束的输入 Schema；客户端负责参数校验和用户确认，权限判断仍以服务端鉴权为准：
 
 ```json
 {
@@ -224,4 +224,4 @@ export async function summarize(
 }
 ```
 
-读取类工具可以在权限过滤后直接执行；写入、付款、删除和外部消息类工具应显示影响范围、请求用户确认，并提供撤销或回滚路径。
+读取类工具可以在权限过滤后直接执行；写入、付款、删除和外部消息类工具应显示影响范围、请求用户确认，并提供撤销或回滚路径。示例中的 `requiresConfirmation` 是应用自定义字段，不属于 MCP 规范；MCP 工具可以用 [`annotations`](https://modelcontextprotocol.io/specification/2025-06-18/server/tools)（如 `readOnlyHint`、`destructiveHint`）提示工具性质，但这些提示不能代替鉴权。

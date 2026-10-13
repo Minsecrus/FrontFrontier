@@ -56,20 +56,20 @@ export default defineConfig({
                   text: "Git & GitHub",
                   link: "/guide/tooling/git-github",
                 },
-                { text: "Git 进阶", link: "/guide/tooling/git-workflows" },
-                {
-                  text: "高级工程化工作流",
-                  link: "/guide/tooling/engineering-workflows",
-                },
+                { text: "IDE 配置", link: "/guide/tooling/ide" },
+                { text: "浏览器开发者工具", link: "/guide/tooling/devtools" },
                 { text: "包管理器", link: "/guide/tooling/package-managers" },
                 { text: "现代构建工具", link: "/guide/tooling/build-tools" },
                 {
                   text: "Linter & Formatter",
                   link: "/guide/tooling/lint-format",
                 },
-                { text: "IDE 配置", link: "/guide/tooling/ide" },
+                { text: "Git 进阶", link: "/guide/tooling/git-workflows" },
+                {
+                  text: "高级工程化工作流",
+                  link: "/guide/tooling/engineering-workflows",
+                },
                 { text: "AI 协作能力", link: "/guide/tooling/ai-tools" },
-                { text: "浏览器开发者工具", link: "/guide/tooling/devtools" },
                 {
                   text: "设计协作能力",
                   link: "/guide/tooling/design-collaboration",

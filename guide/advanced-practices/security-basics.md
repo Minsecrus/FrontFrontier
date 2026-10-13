@@ -14,7 +14,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.5 安全基础：保护�
   - **内容安全策略 (CSP)**：一个 HTTP 头，控制浏览器可以加载哪些资源，防止 XSS 攻击。
   - **CSP Report-Only**：先以报告模式收集违规信息，修复问题后再切换到强制模式，适合已有项目渐进迁移。
   - **Trusted Types**：通过浏览器原生约束，让 `innerHTML`、`eval` 等危险 DOM sink 只能接收经过策略处理的可信值，降低 DOM XSS 风险。
-  - **跨域资源共享 ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))**：一种基于 HTTP 头的机制，由服务器声明哪些源可以跨域加载资源，防止未经授权的访问。
+  - **跨域资源共享 ([CORS](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS))**：一种基于 HTTP 头的机制，由服务器声明允许哪些其他源的页面脚本读取其响应，是对同源策略的受控放宽。它不能阻止请求到达服务器，接口访问控制仍需服务端鉴权完成。
   - **Fetch Metadata**：利用 `Sec-Fetch-*` 请求头识别请求来源、模式和目标，在服务端实现资源隔离策略，抵御常见跨站请求。
   - **子资源完整性 ([SRI](https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity))**：一项安全功能，让浏览器用加密哈希验证从第三方主机（例如 CDN）获取的文件是否未被意外篡改。
   - **权限策略 (Permissions-Policy)**：限制摄像头、麦克风、地理位置、USB 等敏感浏览器能力的使用范围，降低第三方内容或嵌入页面滥用平台 API 的风险。
@@ -91,7 +91,7 @@ CSRF 的关键在于浏览器会自动携带 Cookie。当前常见防线是组�
 - **HttpOnly**：让 JavaScript 读不到 Cookie，降低 XSS 窃取会话标识的风险。
 - **Secure**：只通过 HTTPS 发送 Cookie。
 - **Domain / Path**：控制 Cookie 发送范围。范围越宽，暴露面越大。
-- **Partitioned Cookie / CHIPS**：适合第三方嵌入场景中的分区状态。`Partitioned` 会按顶级站点隔离 Cookie，通常需要与 `Secure` 一起设置。
+- **Partitioned Cookie / CHIPS**：适合第三方嵌入场景中的分区状态。`Partitioned` 会按顶级站点隔离 Cookie，必须同时设置 `Secure`，并建议使用 `__Host-` 前缀（见 [MDN：Partitioned cookies](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies/Partitioned_cookies)）。
 - **CSRF token**：对高风险写操作，服务端签发并校验不可预测 token，前端随表单或请求头提交。
 
 示例方向：
@@ -157,5 +157,3 @@ COOP + COEP 可以让页面进入 cross-origin isolated 状态，某些高能力
 | **跨站资源滥用**                                                                                          | 跨站请求调用内部接口或加载敏感资源         | Fetch Metadata 资源隔离，CORP / COOP / COEP，精确 CORS 策略                                                              |
 | **Cookie 配置不当**                                                                                       | 会话标识暴露、跨站发送范围过宽             | `HttpOnly`、`Secure`、`SameSite`、`__Host-` 前缀、必要时使用 `Partitioned`                                                |
 | **客户端数据验证不足**                                                                                    | 恶意用户绕过客户端验证发送无效数据         | 始终在服务器端验证数据，客户端验证仅用于提升 UX                                                                           |
-
-这个表格提供了常见前端漏洞及其解决方案的实用指南，帮助学习者理解具体威胁及如何实施对策，对构建安全可靠的 Web 应用程序至关重要。

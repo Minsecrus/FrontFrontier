@@ -10,7 +10,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.16 法律、合规与隐�
 
 [**GDPR (General Data Protection Regulation)**](https://gdpr.eu/) 是欧盟的一项数据保护法规，无论组织位于何处，只要处理欧盟居民的个人数据，就要受到严格约束。[**CCPA (California Consumer Privacy Act)**](https://oag.ca.gov/privacy/ccpa) 是美国加州的一项类似法规。这些法规对前端开发的影响主要体现在：
 
-- **用户同意 (Consent)**：在收集、处理用户个人数据（包括通过 Cookie、跟踪器、分析工具收集的数据）之前，必须获得用户的明确、知情同意。前端需要实现同意管理平台（Consent Management Platform, CMP），向用户清晰展示数据收集目的，并提供易于操作的同意/拒绝选项。
+- **用户同意 (Consent)**：GDPR 要求处理个人数据具备合法基础，同意只是第 6 条列出的六种合法基础之一；而在用户设备上存储或读取非必要信息（如分析、广告 Cookie 和各类跟踪器），在欧盟通常需要依据 ePrivacy 指令事先获得用户明确、知情的同意。CCPA 则以告知和“选择退出 (opt-out)”为主，例如提供“不出售或共享我的个人信息”入口。前端需要实现同意管理平台（Consent Management Platform, CMP），向用户清晰展示数据收集目的，并提供易于操作的同意/拒绝选项。
 - **数据最小化**：只收集必要的个人数据，并确保数据在传输和存储过程中的安全。
 - **用户权利**：用户有权访问、更正、删除个人数据，并反对数据处理。前端可能需要提供相应的界面或功能，让用户行使这些权利。
 - **透明度**：前端应用应清晰告知用户数据收集的类型、目的和处理方式，通常通过隐私政策和 Cookie 政策说明。
@@ -33,8 +33,6 @@ Cookie 是 Web 应用中广泛使用的技术，但也常常用于用户追踪�
   - **脚本阻塞**：在获得用户同意之前，使用 JavaScript 动态加载或阻塞非必要的第三方脚本（如 Google Analytics、广告脚本）。
   - **Cookie 设置控制**：在设置 Cookie 时，确保正确配置 SameSite、Secure 和 HttpOnly 属性（对于后端设置的 Cookie），以增强安全性。
   - **用户数据删除**：用户请求删除数据时，前端需要确保清除本地存储（LocalStorage、SessionStorage、IndexedDB）中的相关信息，并通知后端删除数据。
-
-法律、合规与隐私的考量，将前端开发从纯粹的技术实现延伸到法律和伦理层面。随着全球数据隐私法规的收紧，前端工程师需要将隐私保护和合规性内置到产品设计和开发流程中。这反映了现代软件开发对“责任”和“信任”的更高要求。专业级前端工程师需要理解这些法规的核心原则，并掌握如何在技术层面实现用户同意管理、数据最小化和安全实践，构建出功能强大、合法合规、赢得用户信任的 Web 产品。
 
 ## **V.16.3 用数据流和同意状态表达隐私边界**
 
@@ -72,7 +70,7 @@ function loadScript(src: string) {
 
 加载前应核对数据用途、供应商、保存周期、撤回行为和所在市场的法律要求。日志、LocalStorage、IndexedDB、Cookie 和第三方 SDK 都应进入数据清单。
 
-::: details 启发式示例：基于 Consent Mode 的第三方脚本安全按需加载
+::: details 启发式示例：基于同意状态的第三方脚本按需加载与撤回
 
 **违规反模式：在 HTML 中无条件直接加载第三方追踪脚本**
 ```html
@@ -90,6 +88,22 @@ export type ConsentPreferences = {
   marketing: boolean;
 };
 
+type OptionalCategory = "analytics" | "marketing";
+
+// 每个类别对应的脚本，以及该脚本在本站域名下写入的 Cookie 名称
+const VENDORS: Record<OptionalCategory, { id: string; src: string; cookies: string[] }> = {
+  analytics: {
+    id: "analytics-sdk",
+    src: "https://analytics.example.com/tracker.js",
+    cookies: ["_ex_analytics_id"],
+  },
+  marketing: {
+    id: "marketing-pixel",
+    src: "https://ads.example.com/pixel.js",
+    cookies: ["_ex_ads_id"],
+  },
+};
+
 class ConsentManager {
   private preferences: ConsentPreferences = {
     necessary: true,
@@ -105,26 +119,52 @@ class ConsentManager {
     try {
       const stored = localStorage.getItem("user_consent");
       if (stored) {
-        this.preferences = { ...this.preferences, ...JSON.parse(stored) };
+        this.preferences = { ...this.preferences, ...JSON.parse(stored), necessary: true };
         this.apply();
       }
     } catch {
-      // 容错处理
+      // 存储不可用或数据损坏时，保持默认的“全部拒绝”
     }
   }
 
-  public updateConsent(updates: Partial<ConsentPreferences>) {
-    this.preferences = { ...this.preferences, ...updates };
-    localStorage.setItem("user_consent", JSON.stringify(this.preferences));
+  public updateConsent(updates: Partial<Record<OptionalCategory, boolean>>) {
+    const previous = this.preferences;
+    this.preferences = { ...previous, ...updates, necessary: true };
+
+    try {
+      localStorage.setItem("user_consent", JSON.stringify(this.preferences));
+    } catch {
+      // 无法持久化时，本次会话仍按新的选择执行
+    }
+
+    const revoked = (Object.keys(VENDORS) as OptionalCategory[]).filter(
+      (category) => previous[category] && !this.preferences[category],
+    );
+
+    if (revoked.length > 0) {
+      revoked.forEach((category) => this.clearVendor(category));
+      // 已执行的脚本无法从内存中卸载，重新加载页面让撤回立即生效
+      location.reload();
+      return;
+    }
+
     this.apply();
   }
 
   private apply() {
-    if (this.preferences.analytics) {
-      this.loadScriptOnce("analytics-sdk", "https://analytics.example.com/tracker.js");
+    for (const category of Object.keys(VENDORS) as OptionalCategory[]) {
+      if (this.preferences[category]) {
+        this.loadScriptOnce(VENDORS[category].id, VENDORS[category].src);
+      }
     }
-    if (this.preferences.marketing) {
-      this.loadScriptOnce("marketing-pixel", "https://ads.example.com/pixel.js");
+  }
+
+  private clearVendor(category: OptionalCategory) {
+    const { id, cookies } = VENDORS[category];
+    document.getElementById(id)?.remove();
+    for (const name of cookies) {
+      // Path、Domain 需与写入时一致才能删除成功
+      document.cookie = `${name}=; Max-Age=0; Path=/`;
     }
   }
 
@@ -142,6 +182,8 @@ export const consentManager = new ConsentManager();
 ```
 
 通过将第三方脚本注入权限严格绑定到 `ConsentManager` 状态机上，确保在用户点击同意前，浏览器不会向任何第三方数据收集域名发出任何网络请求，从技术底层杜绝违规风险。
+
+撤回同意时，已执行的脚本无法从内存中卸载，示例会移除脚本节点、删除已知的本站 Cookie，再重新加载页面。第三方域名下的 Cookie 无法由页面脚本删除，需要通过供应商提供的接口或服务端流程处理。
 
 :::
 
@@ -162,4 +204,4 @@ export const consentManager = new ConsentManager();
    - **强传染型 (Copyleft)**：GPL、AGPL。若前端代码打包（Bundle）中直接静态链接了 GPL 模块，可能导致整个前端项目乃至后端代码被强制要求按照 GPL 开源。
    - **商业化协议变更 (BSL / SSPL)**：需密切关注部分开源基础设施（如 Redis、Elasticsearch 等历史协议变迁）的二次分发约束，避免在商业 SaaS 产品中违规打包。
 2. **SBOM (软件物料清单) 与自动化 CVE 审计**：
-   - 在 CI 流程中集成 `pnpm audit`、Socket.dev、Snyk 等依赖安全审计工具，对 npm 依赖进行依赖图谱静态扫描，防范恶意脚本注入（Typosquatting）、凭据窃取与越权漏洞。
+   - 在 CI 流程中集成 `pnpm audit`、Socket.dev、Snyk 等依赖安全审计工具。`pnpm audit` 只把依赖树与公开安全公告中的已知漏洞比对，发现不了尚未披露的恶意包；仿冒包名（Typosquatting，即发布名称与流行包极其相似的包，诱导开发者误装）、安装脚本窃取凭据等风险，需要结合包行为分析工具、锁文件审查和限制依赖安装脚本来防范。

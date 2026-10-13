@@ -20,7 +20,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.8 测试策略：确保�
   - [**MSW (Mock Service Worker)**](https://mswjs.io/)：现代网络层拦截事实标准，通过 Service Worker / Node 拦截器实现声明式 API 模拟，无缝共享给单元测试、E2E 测试与 Storybook。
 - **视觉回归测试**：比较应用程序 UI 在不同版本间的视觉外观像素差异，确保没有意外的视觉样式退化。工具包括 Chromatic (用于 Storybook) 和 Percy (一体化平台)。
 
-从 Jest 到 Vitest 的转变，凸显了行业对更快开发反馈循环的持续追求，这也直接影响了开发者生产力。Cypress 和 Playwright 之间的选择，体现了易用性/以 JS 为中心与跨浏览器/语言多功能性之间的权衡。全面的测试（单元、集成、E2E、视觉回归）是保障代码质量的关键手段，有助于减少技术债务并提升用户信任。
+Cypress 和 Playwright 之间的选择，是易用性、以 JS 为中心与跨浏览器、多语言支持之间的权衡。
 
 ::: details 启发式示例：Testing Library 用户视角测试
 
@@ -116,9 +116,7 @@ describe("<UserProfile /> 集成测试", () => {
 
 | 框架名称 | 类型（示例） | 速度 | 浏览器支持（示例） | 语言支持（示例） | 模拟能力 | 调试工具 | 社区/生态系统 | 理想用例（示例） |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [**Jest**](https://jestjs.io/) | 单元、集成、E2E | 良好，可靠 | Chrome, Firefox, Edge | JavaScript, TypeScript | 强大，内置 | 报告，快照，调试器 | 庞大，成熟 | 任何 JavaScript 项目，大型应用 |
+| [**Jest**](https://jestjs.io/) | 单元、集成 | 良好，可靠 | 不运行真实浏览器（Node 环境，可用 jsdom 模拟 DOM） | JavaScript, TypeScript | 强大，内置 | 报告，快照，调试器 | 庞大，成熟 | 任何 JavaScript 项目，大型应用 |
 | [**Vitest**](https://vitest.dev/) | 单元、集成、组件 | 极速 | Chrome, Firefox, Edge | JavaScript, TypeScript | 类似 Jest，更现代 | 浏览器 GUI，错误报告 | 正在增长 | Vite 项目，注重速度和现代 JS 特性 |
 | [**Cypress**](https://www.cypress.io/) | E2E | 良好 | Chrome, Firefox, Edge | JavaScript | 实时，内置 | GUI，时间旅行调试 | 较大，成熟 | JavaScript 密集型前端应用，实时反馈 |
 | [**Playwright**](https://playwright.dev/) | E2E、组件测试 | 极速 | Chrome, Firefox, Safari, Edge | JS/TS, Python, C#, Java | 强大，并行 | 强大 Trace Viewer | 正在增长 | 复杂集成场景，跨浏览器/设备测试，并行执行 |
-
-这个表格有助于学习者理解不同测试工具各自擅长什么。它还能帮助你做出有依据的选择，构建一个覆盖应用程序质量各方面的健壮测试策略，从单个组件到完整用户流程和视觉完整性。

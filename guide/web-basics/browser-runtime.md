@@ -117,7 +117,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 | 类型 | 作用范围 | 适合的工作 | 关键边界 |
 | :--- | :--- | :--- | :--- |
 | **Dedicated Worker** | 创建它的页面 | 搜索索引、数据聚合、图片处理、压缩和模型推理 | 通过消息与页面通信，DOM 由主线程管理 |
-| **SharedWorker** | 同源的多个浏览上下文 | 多标签页共享连接或协调状态 | 支持度和产品需求需按目标浏览器验证 |
+| **SharedWorker** | 同源的多个浏览上下文 | 多标签页共享连接或协调状态 | 2026 年随 Android 版 Chrome 补齐支持进入 Baseline，仍需按目标浏览器版本验证 |
 | **Service Worker** | 受控作用域内的页面和请求 | 离线缓存、请求代理、后台事件 | 生命周期独立于页面，详见 PWA 章节 |
 | **Worklet** | 浏览器提供的专用渲染或媒体管线 | Paint、Audio 等低层扩展点 | API 专用、执行环境受限 |
 

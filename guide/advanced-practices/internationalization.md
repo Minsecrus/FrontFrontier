@@ -13,7 +13,9 @@ title: "V. 高级主题和专业开发最佳实践 / V.9 国际化 (internationa
 1. **ICU 消息格式 (ICU Message Format)**：用于处理自然语言中复杂的**复数形式（Pluralization）**和**动态分支选择（Select）**。例如英文中 0 items / 1 item / 2 items 的单复数规则在斯拉夫语族中存在多种形态，必须依赖 ICU 规范而非硬编码 `count > 1 ? 's' : ''`。
 2. **原生 [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) API 体系**：无需加载庞大三方 JS 库，浏览器原生提供了高性能的区域化格式化原语：
    - `Intl.NumberFormat`：货币符号、千分位、百分比与度量单位；
-   - `Intl.DateTimeFormat`：相对时间（`Intl.RelativeTimeFormat`）、农历/伊斯兰历、时区转换；
+   - `Intl.DateTimeFormat`：日期时间格式、农历/伊斯兰历等日历，以及按指定时区（`timeZone`）显示；
+   - `Intl.RelativeTimeFormat`：“3 天前”“in 2 hours”这类相对时间；
+   - `Intl.PluralRules`：返回某个数字在目标语言中的复数类别（`one`、`few`、`many`、`other` 等），是选择复数文案的基础；
    - `Intl.ListFormat`：符合目标语言语法的列表连词（如 "A, B, and C" 与 "A、B 和 C"）；
    - `Intl.Segmenter`：针对中文、日文等无空格语言的精准分词与断句。
 3. **RTL（从右到左）与 CSS 逻辑属性**：针对阿拉伯语（Arabic）、希伯来语（Hebrew）等 RTL 语言，必须使用现代 CSS 逻辑属性（如 `margin-inline-start` 替代 `margin-left`、`inset-inline-end` 替代 `right`），配合 HTML `<html dir="rtl">` 标签实现一键镜像排版。
@@ -54,13 +56,23 @@ function formatItemCountBad(count: number, price: number) {
 
 **推荐实践：结合原生 Intl 格式化与 CSS 逻辑属性**
 ```ts
+// 英文只有 one/other 两类，俄语、阿拉伯语等还有 few/many/two/zero，
+// 统一交给 Intl.PluralRules 选择类别，避免硬编码 count === 1
+const enPluralRules = new Intl.PluralRules("en-US");
+const enItemWords: Partial<Record<Intl.LDMLPluralRule, string>> = {
+  one: "item",
+  other: "items",
+};
+
 const messages = {
   "zh-CN": {
     orderSummary: (name: string, count: number) => `尊敬的 ${name}，您的购物车共有 ${count} 件商品`,
   },
   "en-US": {
-    orderSummary: (name: string, count: number) =>
-      `Dear ${name}, you have ${count} ${count === 1 ? "item" : "items"} in your cart`,
+    orderSummary: (name: string, count: number) => {
+      const noun = enItemWords[enPluralRules.select(count)] ?? enItemWords.other;
+      return `Dear ${name}, you have ${count} ${noun} in your cart`;
+    },
   },
 } as const;
 
@@ -70,20 +82,20 @@ export function formatOrderSummary(
   locale: SupportedLocale,
   userName: string,
   itemCount: number,
-  totalAmount: number,
+  total: { amount: number; currency: string }, // 币种来自订单数据，如 "CNY"、"USD"
   orderDate: Date
 ) {
   // 1. 语言文案插值
   const summaryText = messages[locale].orderSummary(userName, itemCount);
 
-  // 2. 本地化货币与数字
+  // 2. 本地化货币与数字：locale 只决定显示格式，不决定币种
   const currencyFormatter = new Intl.NumberFormat(locale, {
     style: "currency",
-    currency: locale === "zh-CN" ? "CNY" : "USD",
+    currency: total.currency,
   });
-  const formattedPrice = currencyFormatter.format(totalAmount);
+  const formattedPrice = currencyFormatter.format(total.amount);
 
-  // 3. 本地化相对时间与日期
+  // 3. 本地化日期时间
   const dateFormatter = new Intl.DateTimeFormat(locale, {
     dateStyle: "medium",
     timeStyle: "short",

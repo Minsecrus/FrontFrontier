@@ -8,7 +8,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.7 htmx：超媒体驱动�
 
 **htmx 的哲学**是：稳定性优先，谨慎扩展核心功能，专注通用超媒体控制，并支持辅助工具。
 
-htmx 代表着对 JavaScript 密集型前端格局的一次理念反思。它聚焦超媒体驱动开发（Hypermedia Driven Architecture, HDA），挑战了"复杂交互必须完全存在于客户端"这一假设，为更简单、更快速、JavaScript 开销更少的应用提供了替代方案；对特定类型的应用，还能有效缩短开发周期。
+htmx 代表着对 JavaScript 密集型前端格局的一次理念反思。它聚焦超媒体驱动应用（[Hypermedia-Driven Application, HDA](https://htmx.org/essays/hypermedia-driven-applications/)），挑战了“复杂交互必须完全存在于客户端”这一假设，为更简单、更快速、JavaScript 开销更少的应用提供了替代方案；对特定类型的应用，还能有效缩短开发周期。
 
 ## **IV.7.1 核心机制与常用属性体系**
 
@@ -88,7 +88,7 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
     type="search"
     name="q"
     placeholder="输入关键词..."
-    hx-get="/api/search-products"
+    hx-get="/products"
     hx-trigger="input changed delay:300ms, search"
     hx-target="#search-results"
     hx-indicator="#search-spinner"
@@ -105,7 +105,7 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
 </div>
 ```
 
-服务端返回 HTML 片段：
+服务端识别到 htmx 请求（请求头 `HX-Request: true`）时，只返回 HTML 片段：
 
 ```html
 <ul class="product-list">
@@ -113,6 +113,8 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
   <li><a href="/products/2">Magic Trackpad - 黑色</a></li>
 </ul>
 ```
+
+`hx-push-url="true"` 会把请求地址（如 `/products?q=键盘`）推入历史。用户可能刷新或分享这个地址，htmx 在历史缓存未命中时也会重新请求它，所以它必须能直接返回完整页面。因此 `hx-get` 指向页面地址而非 `/api/...` 片段接口：没有 `HX-Request` 头时渲染整页，并在响应中加上 `Vary: HX-Request`，避免缓存混用片段与整页；同时按 [htmx 文档](https://htmx.org/docs/#history) 把 `htmx.config.historyRestoreAsHxRequest` 设为 `false`，让历史恢复请求拿到整页。
 
 这个示例展示了 htmx 的核心优势：无需引入状态管理库、无需在客户端解析 JSON 并拼接 DOM，通过声明式属性即可完整实现防抖搜索、历史记录更新与加载指示反馈。
 

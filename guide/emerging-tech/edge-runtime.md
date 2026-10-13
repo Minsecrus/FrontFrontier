@@ -10,11 +10,11 @@ title: "VI. 新兴技术和专业领域 / VI.9 边缘计算：Cloudflare Workers
 - [**Vercel Edge Functions**](https://vercel.com/docs/functions/runtimes/edge)：与 Next.js 等前端框架紧密集成的边缘流式计算方案。
 - [**Deno Deploy**](https://deno.com/deploy)：基于 Deno 运行时的原生 TypeScript 全球分布式计算平台。
 
-## **VI.9.1 运行时标准化：WinterCG 与 Web 互操作标准**
+## **VI.9.1 运行时标准化：WinterTC 与 Web 互操作标准**
 
-过去各家 Serverless 平台充斥着私有 API，导致代码难以跨云迁移。现代边缘生态的核心推动力是 **[WinterCG (Web-interoperable Runtimes Community Group)](https://wintercg.org/)**：
+过去各家 Serverless 平台充斥着私有 API，导致代码难以跨云迁移。现代边缘生态的核心推动力是 **[WinterTC（Ecma TC55）](https://wintertc.org/)**，它的前身是 W3C 的 WinterCG（Web-interoperable Runtimes Community Group），现已转入 Ecma International，旧站 wintercg.org 会跳转到新站：
 
-- **统一标准 API**：规范了边缘环境的“最小通用 Web 平台 API”（Minimum Common Web Platform API）。无论是 Cloudflare Workers、Deno、Bun 还是 Node.js，均原生支持标准的 `fetch`、`Request`、`Response`、`Headers`、`URLPattern`、`TransformStream` 以及 `Web Crypto API`。
+- **统一标准 API**：通过 [Minimum Common Web API](https://min-common-api.proposal.wintertc.org/) 定义服务端 JavaScript 运行时应共同提供的 Web API 子集，包括 `fetch`、`Request`、`Response`、`Headers`、`URLPattern`、`TransformStream` 以及 `Web Crypto API` 等。Cloudflare Workers、Deno、Bun 和 Node.js 都在向这份清单对齐，但具体 API 的支持仍以各运行时当前版本的文档为准。
 - **同构函数与框架适配**：前端元框架（Nuxt Nitro、SvelteKit Adapters、Astro）能够编写一次路由逻辑，通过标准 Web 接口无缝编译并部署到任意边缘提供商。
 
 ## **VI.9.2 边缘计算的工程考量与权衡**
@@ -32,16 +32,16 @@ title: "VI. 新兴技术和专业领域 / VI.9 边缘计算：Cloudflare Workers
 | 平台名称 | 提供商 | 运行时与底层模型 | 适合场景 | 优势与收益 | 需要注意的点 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | [**Cloudflare Workers**](https://workers.cloudflare.com/) | Cloudflare | V8 Isolates | 全球低延迟 API、缓存编排、边缘全栈应用 | 全球 Anycast 节点多、冷启动极快（<5ms）、边缘存储生态（KV, D1, R2）成熟 | 严格的 Web API 约束，部分依赖 Node 原生 C++ 绑定的老旧 npm 包不兼容 |
-| [**Vercel Edge Functions**](https://vercel.com/docs/functions/runtimes/edge) | Vercel | V8 Isolates (WinterCG 标准) | 与前端元框架紧密结合的流式输出、中间件路由 | 与 Next.js 等框架同构集成、部署工作流极其顺滑 | 需遵循最新 Vercel Functions 统一配置迁移指南 |
+| [**Vercel Edge Functions**](https://vercel.com/docs/functions/runtimes/edge) | Vercel | V8 Isolates (WinterTC 标准) | 与前端元框架紧密结合的流式输出、中间件路由 | 与 Next.js 等框架同构集成、部署工作流极其顺滑 | 需遵循最新 Vercel Functions 统一配置迁移指南 |
 | [**Deno Deploy**](https://deno.com/deploy) | Deno | Deno Runtime | TypeScript 优先的全球分布式 API 与全栈应用 | 原生 TypeScript 执行、内置 Deno KV 分布式数据库、Web 标准支持极佳 | 区分现代 Deno Deploy 与历史上已归档的 Classic 平台 |
 
 ## **VI.9.3 一个 Web 标准风格的边缘处理器**
 
-边缘入口适合做轻量请求编排。下面采用遵循 Web 标准的 `fetch` 处理器，展示地理位置感知、缓存头与流式响应：
+边缘入口适合做轻量请求编排。下面的 `export default { fetch }` 是 Cloudflare Workers 的模块写法（Deno、Bun 也支持同样的入口），处理器内部只用 `Request`、`Response`、`ReadableStream` 等标准 API，展示地理位置感知、缓存头与流式响应：
 
 ```ts
 export default {
-  async fetch(request: Request, env: any): Promise<Response> {
+  async fetch(request: Request, env: unknown): Promise<Response> {
     const url = new URL(request.url);
 
     if (url.pathname === "/health") {
@@ -51,12 +51,32 @@ export default {
     }
 
     if (url.pathname === "/api/geo") {
-      // 从边缘请求头中读取地理位置元信息
+      // cf-ipcountry 是 Cloudflare 注入的请求头；Vercel 对应 x-vercel-ip-country，其他平台各不相同
       const country = request.headers.get("cf-ipcountry") ?? "unknown";
       return new Response(JSON.stringify({ country }), {
         headers: {
           "content-type": "application/json",
-          "cache-control": "public, max-age=60, s-maxage=300",
+          // 结果因访问者而异，只允许浏览器私有缓存，不能进 CDN 等共享缓存
+          "cache-control": "private, max-age=60",
+        },
+      });
+    }
+
+    if (url.pathname === "/api/stream") {
+      const encoder = new TextEncoder();
+      const stream = new ReadableStream<Uint8Array>({
+        async start(controller) {
+          for (const chunk of ["边缘", "流式", "响应"]) {
+            controller.enqueue(encoder.encode(`data: ${chunk}\n\n`));
+            await new Promise((resolve) => setTimeout(resolve, 200));
+          }
+          controller.close();
+        },
+      });
+      return new Response(stream, {
+        headers: {
+          "content-type": "text/event-stream; charset=utf-8",
+          "cache-control": "no-store",
         },
       });
     }
@@ -65,5 +85,7 @@ export default {
   },
 };
 ```
+
+按访问者变化的响应（地理位置、登录态、A/B 分组）不能设置 `public` 或 `s-maxage`，否则 CDN 可能把第一个访问者的结果返回给其他所有人。流式分支先返回 `Response`、再逐块写入，客户端可以用 `EventSource` 或 `fetch` 的 `body.getReader()` 边收边渲染，适合 AI 输出和 Streaming SSR。
 
 部署前应核对运行时允许的 Web API、CPU/内存/请求时长限制、区域一致性要求和回源方式。Node.js 专属模块、长时间计算和大文件处理应沿用适合它们的运行环境。

@@ -42,7 +42,7 @@ Web 数据可视化关注如何在浏览器中把数据转换成图表、地图�
   - [**D3.js**](https://d3js.org/)：功能强大的 JavaScript 库，提供了灵活的数据绑定和转换能力，可以自定义各种图表类型，但学习曲线较陡峭。
   - **ECharts/[AntV](https://antv.vision/)/Chart.js**：开箱即用的图表库，提供了丰富的图表组件和配置选项，易于上手，适合快速构建常见的实时图表。
 - **性能考量**：
-  - **节流与防抖**：对于高频更新的数据，使用节流（throttle）或防抖（debounce）技术限制渲染频率。
+  - **节流与合帧**：对于高频更新的数据，使用节流（throttle）或 `requestAnimationFrame` 把多次更新合并到一帧再渲染。不要对持续到达的数据流使用防抖（debounce），否则只要数据不停，图表就一直不会刷新。
   - **动画优化**：动画使用 CSS transform 和 opacity 等属性，利用 GPU 加速。
   - **增量渲染**：只更新图表中发生变化的部分。
 
@@ -53,11 +53,9 @@ Web 数据可视化关注如何在浏览器中把数据转换成图表、地图�
 - **核心功能**：地图显示、地理数据查询、空间分析、路径规划、地理编码/逆地理编码等。
 - **前端技术栈**：
   - **地图库**：[Leaflet.js](https://leafletjs.com/)（轻量级、灵活）、[OpenLayers](https://openlayers.org/)（功能全面、复杂）、[Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)（基于 WebGL，高性能、定制性强）。
-  - **数据格式**：[GeoJSON](https://geojson.org/)、[TopoJSON](https://github.com/topojson/topojson)、[KML](https://www.ogc.org/standard/kml/)、[WKT](https://www.ogc.org/standard/wkt-crs/) 等。
+  - **数据格式**：[GeoJSON](https://geojson.org/)、[TopoJSON](https://github.com/topojson/topojson)、[KML](https://www.ogc.org/standards/kml/)、[WKT](https://www.ogc.org/standards/sfa/) 等。
   - **可视化**：结合 D3.js、ECharts GL 等库，在地图上叠加热力图、散点图、轨迹图等。
 - **应用场景**：位置服务、智慧城市、物流追踪、环境监测、灾害预警、房地产分析等。
-
-数据可视化专题的深化，展现了前端职能从”界面展示”向”数据洞察”的延伸。大数据可视化与实时数据可视化不仅要求前端工程师掌握渲染技术，还需要理解数据处理、性能优化和实时通信的复杂性。这反映出前端在业务决策和用户价值创造中正扮演着越来越重要的角色。
 
 ## **VI.5.5 用 Worker 预处理大批量数据**
 

@@ -43,7 +43,7 @@ title: "III. 基本开发环境和工具 / III.2 集成开发环境 (IDE) 和编
 | [**WebStorm**](https://www.jetbrains.com/webstorm/) | 个人非商业免费 / 商业付费 | 综合 IDE | 功能集成、智能分析 | 稳定，功能全面 | 深度调试、智能重构、内置 Git 工具、开箱即用 | 丰富的内置功能 |
 | [**Zed**](https://zed.dev/) | 免费开源 | 文本编辑器 | 原生极致性能、协同优先 | 极速 (Rust + GPU 加速) | 毫秒级启动、内置多人结对协同、原生 LSP 集成 | 插件生态持续增长 |
 
-这张表格有助于学习者理解开发环境背后的不同理念。从中可以看出，“免费”并不一定意味着“能力较差”，但通常意味着功能交付方式不同（扩展与内置），这是个人偏好和团队标准化时的关键考虑因素。
+“免费”不一定意味着“能力较差”，差别通常在于功能的交付方式：靠扩展还是内置。这是个人偏好和团队标准化时的关键考虑因素。
 
 ::: details 启发式示例：工程级团队统一工作区配置
 
@@ -82,6 +82,7 @@ trim_trailing_whitespace = false
 ```json
 {
   "recommendations": [
+    "editorconfig.editorconfig",
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "bradlc.vscode-tailwindcss",
@@ -90,6 +91,10 @@ trim_trailing_whitespace = false
 }
 ```
 
-这组配置保证了团队成员在克隆仓库后，无论使用何种操作系统，都能获得完全一致的 LF 换行符、Prettier 格式化标准，并自动锁定项目本地的 TypeScript 编译器版本。
+这组配置让团队成员在克隆仓库后获得一致的缩进、LF 换行符和 Prettier 格式化标准，并引导大家使用项目本地的 TypeScript 版本。有三点需要注意：
+
+- VS Code 本身不读取 `.editorconfig`，需要安装 [EditorConfig 扩展](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)（上面已列入推荐）。
+- `typescript.tsdk` 不会自动切换版本，VS Code 只会弹出提示，需要开发者选择“Use Workspace Version”。
+- Windows 上 Git 的 `core.autocrlf` 可能在检出时把 LF 转成 CRLF，可在仓库根目录添加 `.gitattributes`（例如 `* text=auto eol=lf`）统一换行符，参见 [GitHub 文档](https://docs.github.com/en/get-started/git-basics/configuring-git-to-handle-line-endings)。
 
 :::

@@ -1,5 +1,5 @@
 ---
-title: "IV. 前端框架和库 / IV.3 UI 组件库：加速开发的利器"
+title: "IV. 前端框架和库：构建现代 UI / IV.3 UI 组件库：加速开发的利器"
 ---
 
 # IV.3 UI 组件库：加速开发的利器
@@ -95,7 +95,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **Angular：官方基础与企业套件并重**
 
-- [**Angular Material**](https://material.angular.io/) 提供 Material 组件；[Angular CDK](https://material.angular.io/cdk) 提供 overlay、a11y、drag-drop 等更底层能力。二者的区别说明“直接使用成品”和“自己搭建组件”可以共存。
+- [**Angular Material**](https://material.angular.dev/) 提供 Material 组件；[Angular CDK](https://material.angular.dev/cdk) 提供 overlay、a11y、drag-drop 等更底层能力。二者的区别说明“直接使用成品”和“自己搭建组件”可以共存。
 - [**PrimeNG**](https://primeng.org/) 适合需要复杂表格、树、上传和模板生态的企业应用。
 - [**NG-ZORRO**](https://ng.ant.design/) 把 Ant Design 的企业产品语言带入 Angular，适合已有相同设计体系的团队。
 
@@ -118,12 +118,12 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 | 库名称                                           | 所属框架                        | 设计风格/理念                              | 无障碍支持   | 定制化模式                                        | 主要适用场景                 |
 | :----------------------------------------------- | :------------------------------ | :----------------------------------------- | :----------- | :------------------------------------------------ | :--------------------------- |
 | [MUI](https://mui.com/)                          | [React](https://react.dev/)     | [Material Design](https://m3.material.io/) | 优秀         | CSS-in-JS, 强大主题系统                           | 通用 Web 应用，内部工具      |
-| [Ant Design](https://ant.design/)                | [React](https://react.dev/)     | [Ant Design](https://ant.design/)          | 优秀         | [Less](https://lesscss.org/)/CSS 变量，主题定制   | 企业级中后台，管理系统       |
+| [Ant Design](https://ant.design/)                | [React](https://react.dev/)     | [Ant Design](https://ant.design/)          | 优秀         | CSS-in-JS + [Design Token](https://ant.design/docs/react/customize-theme)，可选 CSS 变量 | 企业级中后台，管理系统       |
 | [Chakra UI](https://chakra-ui.com/)              | [React](https://react.dev/)     | 实用至上/无障碍                            | 核心设计原则 | Style Props, 主题系统                             | 通用 Web 应用，设计系统      |
-| [Vuetify](https://vuetifyjs.com/)                | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/)/CSS 变量，预设主题 | 通用 Web 应用，Web 应用      |
+| [Vuetify](https://vuetifyjs.com/)                | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/)/CSS 变量，预设主题 | 通用 Web 应用                 |
 | [Element Plus](https://element-plus.org/)        | [Vue](https://vuejs.org/)       | Element Design                             | 良好         | [BEM](https://getbem.com/)-styled CSS, Sass 变量  | 企业级中后台，管理系统       |
 | [Quasar](https://quasar.dev/)                    | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 良好         | [Sass](https://sass-lang.com/)/CSS 变量，主题定制 | 多端（Web, Mobile, Desktop） |
-| [Angular Material](https://material.angular.io/) | [Angular](https://angular.dev/) | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/) 变量，主题定制     | 通用 Web 应用，Google 官方   |
+| [Angular Material](https://material.angular.dev/) | [Angular](https://angular.dev/) | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/) 变量，主题定制     | 通用 Web 应用，Google 官方   |
 | [PrimeNG](https://primeng.org/)                  | [Angular](https://angular.dev/) | 设计无关                                   | 优秀         | 主题设计师，CSS 变量                              | 企业级应用，复杂界面         |
 | [NG-ZORRO](https://ng.ant.design/)               | [Angular](https://angular.dev/) | [Ant Design](https://ant.design/)          | 优秀         | CSS 变量，主题定制                                | 企业级中后台，管理系统       |
 

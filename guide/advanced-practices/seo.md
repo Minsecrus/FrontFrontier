@@ -65,14 +65,14 @@ SEO 的关键在于让搜索引擎和各种抓取器稳定、及时地获得页�
   <meta name="description" content="详细解析现代浏览器从网络请求到像素绘制的 8 个关键阶段，提供实战优化指南。">
   
   <!-- 规范链接防重复权重稀释 -->
-  <link rel="canonical" href="https://frontfrontier.dev/guide/web-basics/browser-runtime">
+  <link rel="canonical" href="https://example.com/guide/web-basics/browser-runtime">
 
   <!-- Open Graph 社交卡片元信息 -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="深入浅出浏览器渲染管线">
   <meta property="og:description" content="详细解析现代浏览器从网络请求到像素绘制的 8 个关键阶段。">
-  <meta property="og:image" content="https://frontfrontier.dev/assets/cover-runtime.png">
-  <meta property="og:url" content="https://frontfrontier.dev/guide/web-basics/browser-runtime">
+  <meta property="og:image" content="https://example.com/assets/cover-runtime.png">
+  <meta property="og:url" content="https://example.com/guide/web-basics/browser-runtime">
 
   <!-- JSON-LD 结构化数据 -->
   <script type="application/ld+json">
@@ -80,7 +80,7 @@ SEO 的关键在于让搜索引擎和各种抓取器稳定、及时地获得页�
     "@context": "https://schema.org",
     "@type": "TechArticle",
     "headline": "深入浅出浏览器渲染管线",
-    "image": "https://frontfrontier.dev/assets/cover-runtime.png",
+    "image": "https://example.com/assets/cover-runtime.png",
     "author": {
       "@type": "Person",
       "name": "Minsecrus"

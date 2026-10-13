@@ -19,15 +19,12 @@ title: "VI. 新兴技术和专业领域 / VI.3 跨平台开发：移动端 (Reac
 | :------------------------------------------- | :----------------- | :---------------------- | :------------------- | :--- | :------- | :------------------------------------------------ | :------------------------------------------------------------------------------- |
 | [**React Native**](https://reactnative.dev/) | JavaScript/Native  | 原生 UI                 | 直接访问原生 API     | 较高 | 较陡峭   | 否                                                | 追求原生性能和体验，复杂应用                                                     |
 | [**Capacitor**](https://capacitorjs.com/)    | JavaScript/WebView | WebView                 | 通过插件访问原生 API | 中等 | 较低     | 是                                                | 将现有 Web 应用转换为移动应用，[PWA](https://web.dev/progressive-web-apps/) 优先 |
-
-这个表格是理解跨平台移动开发方法核心差异与权衡的关键，展示了不同框架如何在原生性能与 Web 开发便利性之间取得平衡。
-
 ## **VI.3.2 桌面应用程序开发**
 
 - [**Electron**](https://www.electronjs.org/)：捆绑 Chromium 实例与 Node.js，以 Web 技术构建跨平台桌面应用。代价是应用体积较大、资源消耗较高。
 - [**Tauri**](https://tauri.app/)：使用操作系统的原生 WebView 渲染界面，后端逻辑以 Rust 编写。相比 Electron，应用体积更小、内存占用更低、启动更快，安全性也更为突出。
 
-Tauri 以 Rust 驱动后端、采用原生 WebView，在资源效率与安全性上优势显著，对 Electron 的主导地位发起了有力挑战。这一趋势反映出业界对更轻量、更高性能桌面应用框架的需求，也直接影响着用户体验与系统资源消耗。
+Tauri 以 Rust 驱动后端、采用原生 WebView，在资源效率与安全性上优势显著，对 Electron 的主导地位发起了有力挑战。
 
 ### **表格：桌面应用程序开发框架比较**
 
@@ -35,9 +32,6 @@ Tauri 以 Rust 驱动后端、采用原生 WebView，在资源效率与安全性
 | :------------------------------------------ | :------------------------------------------------ | :----------- | :------------------ | :------- | :----------------- | :------------------------------------------------ |
 | [**Electron**](https://www.electronjs.org/) | 捆绑 Chromium + [Node.js](https://nodejs.org/)    | 较大         | 较高                | 较慢     | 较高暴露风险       | 熟悉 Web 技术                                     |
 | [**Tauri**](https://tauri.app/)             | 原生 WebView + [Rust](https://www.rust-lang.org/) | 极小         | 较低                | 极快     | 细粒度权限，沙盒化 | 性能优先，[Rust](https://www.rust-lang.org/) 后端 |
-
-这个表格清晰地比较了两个领先的桌面框架，强调架构选择对性能、资源效率与安全性的影响——这些正是桌面应用程序的关键因素。
-
 ## **VI.3.3 用适配器隔离平台能力**
 
 跨平台 UI 可以共享业务流程，把通知、文件选择和窗口控制等平台能力收敛到适配器：
@@ -50,16 +44,26 @@ export interface PlatformBridge {
 
 export const browserBridge: PlatformBridge = {
   async notify(title, body) {
+    if (!("Notification" in window)) return; // 不支持时由调用方降级为页面内提示
     if (Notification.permission === "default") {
       await Notification.requestPermission();
     }
-    if (Notification.permission === "granted") new Notification(title, { body });
+    if (Notification.permission !== "granted") return;
+
+    const registration = await navigator.serviceWorker?.getRegistration();
+    if (registration) {
+      await registration.showNotification(title, { body });
+    } else {
+      new Notification(title, { body }); // 仅桌面浏览器可用
+    }
   },
   async openExternal(url) {
     window.open(url, "_blank", "noopener,noreferrer");
   },
 };
 ```
+
+浏览器通知的平台差异很大：Android Chrome 禁止直接 `new Notification()`（会抛 `TypeError`），iOS Safari 只在添加到主屏幕的 Web 应用里提供通知。因此有 Service Worker 时统一使用 [`registration.showNotification()`](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorkerRegistration/showNotification)。
 
 平台适配器应拥有权限、失败和降级语义；业务模块依赖接口，Electron、Tauri、WebView 或原生桥接层分别提供实现。测试业务流程时可以注入内存适配器，减少对真实平台的依赖。
 

@@ -33,7 +33,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
 
 - **工作流程**：用户登录后，认证服务器签发短期 access token，并通过安全通道完成刷新和撤销策略。纯 API 客户端常用 `Authorization: Bearer` 发送 token；浏览器应用则越来越多地通过 BFF 让服务端持有敏感 token，浏览器只保存合理配置了 HttpOnly、Secure、SameSite 的会话 Cookie。
 - **优势**：
-  - **无状态与高扩展性**：服务器无需存储任何会话信息，每次请求都是自包含的。这使得后端服务可以轻松水平扩展，极大地提升了系统的可伸缩性。
+  - **无状态与高扩展性**：自包含的 access token 可以由资源服务器直接验签，校验请求时无需查询共享的会话存储，后端服务更容易水平扩展。refresh token、撤销列表和 BFF 会话仍需要服务端存储，因此完整方案通常是“请求校验无状态、会话管理有状态”。
   - **跨域友好与解耦**：Token 可以服务于 API、移动端、第三方集成等多种客户端，但浏览器端要额外考虑 XSS、CSRF 和刷新流程。
   - **权限表达清晰**：短期 access token 适合表达作用域、受众、过期时间等访问边界。
 - **劣势**：
@@ -45,7 +45,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
 如果你的应用需要让用户通过第三方服务（如 Google, GitHub, Facebook）登录，[OAuth](https://oauth.net/) 协议就派上了用场。浏览器应用应优先理解 **Authorization Code + PKCE** 流程。
 
 - **OAuth (开放授权)**：它是一个**授权**框架，而非认证协议。核心目的是允许用户授权一个应用（客户端）访问自己在另一个服务（资源服务器）上的受保护资源，而无需把用户名和密码直接暴露给该应用。例如，你授权一个图片打印网站访问自己 Google Photos 里的照片。
-- **OpenID Connect ([OIDC](https://openid.net/connect/))**：它是构建在 OAuth 2.0 之上的简单**身份认证层**。OAuth 只关心“授权”，OIDC 则增加了“认证”功能。它允许客户端不仅能获得访问资源的授权，还能验证用户身份并获取基本的用户信息。我们日常使用的“通过 Google/GitHub 登录”功能，实际上就是 OIDC 的应用。
+- **OpenID Connect ([OIDC](https://openid.net/connect/))**：它是构建在 OAuth 2.0 之上的简单**身份认证层**。OAuth 只关心“授权”，OIDC 则增加了“认证”功能。它允许客户端不仅能获得访问资源的授权，还能验证用户身份并获取基本的用户信息。“通过 Google 账号登录”“通过 Microsoft 账号登录”等功能通常基于 OIDC，客户端可以从 ID Token 中验证用户身份。但并非所有第三方登录都是 OIDC：例如“通过 GitHub 登录”基于普通 OAuth 2.0，应用拿到 access token 后还要调用 GitHub 用户 API 才能确认身份。
 
 ### **4. Passkeys、WebAuthn 与 FedCM**
 
@@ -77,7 +77,8 @@ if (role === "admin") {
   showDeleteButton();
 }
 
-// 接口权限由服务端鉴权与授权策略保护。
+// 问题：role 可被用户随意改写；如果服务端只校验登录态、不校验权限，
+// 任何登录用户直接调用这个接口就能越权删除。
 async function deleteUser(userId: string) {
   await fetch(`/api/admin/users/${userId}`, {
     method: "DELETE",
@@ -123,6 +124,3 @@ export async function DELETE(request: Request) {
 </BadGoodExample>
 
 在 BFF 模式中，服务端应为会话 Cookie 设置合理的 `HttpOnly`、`Secure`、`SameSite` 等属性，并配套 CSRF 防护、轮换和撤销策略。前端路由守卫和按钮显隐用于改善体验，服务端则对每次请求执行授权。客户端还应区分 401（需要恢复或重新登录）与 403（身份有效但无权操作）。
-
-理解这些认证与授权模式，不仅仅是后端工程师的职责。前端开发者作为用户体验的直接塑造者和数据交互的实现者，必须深刻理解这些模式在整个系统架构中的运作方式和安全影响，才能构建出既安全可靠又用户友好的现代 Web 应用。
-

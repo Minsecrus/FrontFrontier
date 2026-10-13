@@ -8,9 +8,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.6 TypeScript：为 JavaScript 
 
 TypeScript 的核心思想是作为 JavaScript 的**严格超集 (Superset)**，在 JavaScript 生态中引入**静态类型系统**。它在编译阶段对代码进行严格的类型检查，将大量潜在的、本要在运行时才会暴露的错误（如属性拼写错误、错误的函数传参、null 值引用等）在开发阶段就尽早暴露。最终，它编译成标准 JavaScript，在目标运行环境中执行。
 
-> **截至 2026 年的工具链变化**：TypeScript 7 正在把编译器和语言服务迁移到 Go 原生实现。官方在多个开源项目样本中观察到显著的编译速度提升，这些数据适合作为方向性参考。TypeScript 7 的 API 和嵌入式语言工具链仍在过渡，Vue、Svelte、Astro、Angular、MDX 等工作流升级时需要同时检查编辑器、插件、框架集成和构建服务。
-
-这种“先检查，后运行”的范式转变，是前端开发从“手工作坊”模式迈向“现代工业化”生产的关键一步。
+> **截至 2026 年的工具链变化**：[TypeScript 7.0 已于 2026 年 7 月发布](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/)，编译器和语言服务改为 Go 原生实现。官方在 VS Code、Sentry 等开源项目上测得完整构建提速约 8–12 倍，这些数据适合作为方向性参考。7.0 暂不提供编程 API（官方计划在 7.1 提供新 API），Vue、Svelte、Astro、MDX 等嵌入式语言工作流和 Angular 模板检查暂时仍需配合 TypeScript 6.0，升级时需要同时检查编辑器、插件、框架集成和构建服务。
 
 ## **II.6.1 核心价值与工程优势**
 
@@ -43,8 +41,8 @@ TypeScript 的成功并非孤立的，它与整个现代前端生态紧密相连
 - **泛型（Generics）**：让函数、类、接口具备“参数化类型”的能力，实现真正的可复用。例如 `Promise<T>`、`Array<T>` 的底层原理，以及自定义工具函数如 `identity<T>(arg: T): T`。
 - **联合类型（Unions）与交叉类型（Intersections）**：联合表达“或”（如 `string | number`），交叉表达“且”（如 `Partial<T> & Record<K, V>`）。结合辨识联合（Discriminated Unions）实现精准的类型分支。
 - **类型收窄（Type Narrowing）**：通过 `typeof`、`in`、`instanceof`、字面量辨识或自定义类型守卫，将宽泛的联合类型逐步收窄为精确类型，把 `any` 控制在少数清楚标注的边界内。
-- **声明文件（Declaration Files, .d.ts）**：理解如何为纯 JS 库编写类型声明，或使用 `@types/*` 包。掌握类型与运行时的边界——类型只存在于编译时，运行时需用如 zod、io-ts 等库桥接。
-- **类型与运行时边界**：明确类型擦除的现实，学会在需要时引入运行时校验（如 zod）来补足类型系统的盲区。
+- **声明文件（Declaration Files, .d.ts）**：理解如何为纯 JS 库编写类型声明，或使用 `@types/*` 包。
+- **类型与运行时边界**：明确类型擦除的现实——类型只存在于编译时，需要时引入运行时校验（如 zod、io-ts）来补足类型系统的盲区。
 
 <BadGoodExample bad-title="类型断言代替验证" good-title="在系统边界验证 unknown">
 <template #bad>
@@ -92,7 +90,7 @@ console.log(user.name.toUpperCase());
 
 类型系统负责检查静态可见的代码；网络响应、LocalStorage 和 URL 参数还需要运行时验证。启发式判断是：应用内部依赖静态类型；数据跨越不可信边界时，先以 `unknown` 接收，再验证并转换成内部类型。
 
-<BadGoodExample bad-title="三个布尔值描述加载状态" good-title="辨识联合排除不可能状态">
+<BadGoodExample bad-title="用布尔值组合描述加载状态" good-title="辨识联合排除不可能状态">
 <template #bad>
 
 ```ts
@@ -139,7 +137,7 @@ function getLabel(state: UserState): string {
 
 现实工程通常包含庞大的历史代码库、需要快速验证的独立脚本，以及暂时采用轻量编译流程的边缘项目。TypeScript 仍然可以通过 JSDoc、`checkJs` 和渐进迁移服务这些场景。
 
-恰恰相反。TypeScript 真正强大之处在于，它的核心理念——**静态类型检查**——已经超越了 `.ts` 文件的边界，以一种优雅的方式渗透到了整个 JavaScript 生态。这个关键的连接者，就是 [**JSDoc**](https://www.jsdoc.com.cn/)。
+TypeScript 真正强大之处在于，它的核心理念——**静态类型检查**——已经超越了 `.ts` 文件的边界，以一种优雅的方式渗透到了整个 JavaScript 生态。这个关键的连接者，就是 [**JSDoc**](https://www.jsdoc.com.cn/)。
 
 如果说 TypeScript 是为 JavaScript 世界建立的一套全新而严谨的“工业标准”，那么 JSDoc 就是一位灵活的“外交官”，能够将这套标准翻译并引入到那些依然遵循“手工作坊”模式的原生 JavaScript 代码中，让这些代码也能享受到工业化带来的质量与效率提升。
 
@@ -199,7 +197,7 @@ findUser([{ id: "1", name: "Ada" }], 1);
 
 即便在一个完全拥抱 TypeScript 的项目中，JSDoc 的价值也并未消失。TypeScript 的类型签名完美地回答了“**是什么**”的问题——这个函数需要什么参数，返回什么类型。但它很难解释“**为什么**”和“**怎么用**”。
 
-这时，JSDoc 再次成为 TypeScript 的重要补充。它有两类常见用途：一类是 TypeScript 语言服务在 JavaScript 文件中识别的类型标签，例如 `@param`、`@returns`、`@typedef`、`@template`；另一类是 TypeDoc、JSDoc 等文档工具读取的说明性标签，例如 `@example`、`@deprecated`、`@throws`。前者参与类型检查和智能提示，后者服务于 API 文档的呈现。TypeDoc 这样的工具生成 API 文档时，会结合 TypeScript 类型和注释内容，生成一份既有机器精度又有人性化解读的文档。
+这时，JSDoc 再次成为 TypeScript 的重要补充。它有两类常见用途：一类是 TypeScript 语言服务在 JavaScript 文件中识别的类型标签，例如 `@param`、`@returns`、`@typedef`、`@template`；另一类是 TypeDoc、JSDoc 等文档工具读取的说明性标签，例如 `@example`、`@throws`。前者参与类型检查和智能提示，后者服务于 API 文档的呈现。`@deprecated` 两边都用得上：文档工具会标注废弃，TypeScript 语言服务也会在编辑器里给已废弃的 API 加删除线提示。TypeDoc 这样的工具生成 API 文档时，会结合 TypeScript 类型和注释内容，生成一份既有机器精度又有人性化解读的文档。
 
 ## **II.6.5 TypeScript 7 与原生语言服务**
 
@@ -207,7 +205,7 @@ findUser([{ id: "1", name: "Ada" }], 1);
 
 迁移时至少要检查：
 
-- `strict`、`module`、`target`、`moduleResolution` 等 `tsconfig` 默认值是否改变了项目行为；
+- `strict`、`module`、`target`、`types`、`rootDir` 等 `tsconfig` 默认值是否改变了项目行为（TypeScript 6.0 起 `strict` 默认开启、`types` 默认为 `[]`，7.0 沿用这些默认值），以及 `moduleResolution: node` 等已移除选项是否仍在使用；
 - 构建工具、编辑器和框架插件是否已经支持新的语言服务 API；
 - Vue、Svelte、Astro、Angular、MDX 等嵌入式语言是否仍需要旧语言服务兼容层；
 - CI、生成代码、类型声明发布和本地编辑器是否使用了同一套 TypeScript 版本。
@@ -227,21 +225,24 @@ TypeScript 和 JSDoc 体现同一核心理念，分别服务于完整工程、�
 
 ## **II.6.7 TypeScript 7 迁移的最小检查单**
 
-迁移应先固定版本、配置和结果，再逐步替换工具链。下面是一份适合放进仓库的最小配置与命令：
+迁移应先固定版本、配置和结果，再逐步替换工具链。下面是一份适合 Vite 前端项目的最小配置与命令：
 
 ```json
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "types": ["vite/client"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true
   },
-  "include": ["src", "scripts"]
+  "include": ["src"]
 }
 ```
+
+由打包器处理的代码用 `bundler` 解析模式，导入路径可以省略扩展名；`types` 需要显式列出 `vite/client` 等全局类型。不经打包、直接用 Node 运行的脚本应单独建一份 tsconfig，使用 `"module": "NodeNext"` 和 `"types": ["node"]`，并在相对导入中写出 `.js` 扩展名。详见 [TypeScript 模块参考](https://www.typescriptlang.org/docs/handbook/modules/reference.html)。
 
 ```powershell
 pnpm exec tsc --version

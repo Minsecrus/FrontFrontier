@@ -282,13 +282,13 @@ Toast 的核心是轻量反馈：
 
 ## **V.11.5 产品工程与业务增长：从界面还原到商业价值**
 
-随着生成式 AI 逐渐承接基础页面切图与模板代码，现代前端正在加速向 **Product-minded Engineer（产品工程师）** 转型。前端工程师不再是单纯承接需求的“画票据人员”，而是直接对用户旅程和产品指标负责的构建者：
+随着生成式 AI 逐渐承接基础页面切图与模板代码，现代前端正在加速向 **Product-minded Engineer（产品工程师）** 转型。前端工程师不再是单纯承接需求的“切图人员”，而是直接对用户旅程和产品指标负责的构建者：
 
 1. **AARRR 增长漏斗与摩擦点消除**：
-   - 关注从 **获取 (Acquisition) → 激活 (Activation) → 留存 (Retention) → 转化 (Revenue) → 推荐 (Referral)** 的全链路漏斗。
-   - 能够定量分析每个关键交互节点的**跳出率 (Drop-off Rate)**，通过精简表单步长、引入乐观更新、优化首屏骨架屏消除用户认知摩擦。
+   - 关注从 **获取 (Acquisition) → 激活 (Activation) → 留存 (Retention) → 变现 (Revenue) → 推荐 (Referral)** 的全链路漏斗。
+   - 能够定量分析每个关键交互节点的**流失率 (Drop-off Rate)**，通过精简表单步长、引入乐观更新、优化首屏骨架屏消除用户认知摩擦。
 2. **科学的 A/B 测试与实验方法论**：
-   - **统计学显著性 ($p < 0.05$)**：拒绝“实验跑了两天发现转化率提升 10% 就立刻推全”的伪科学做法，严格计算最小充分样本量（Sample Size Estimation），防范过早窥探问题（Peeking Problem）与辛普森悖论。
+   - **统计学显著性 (p < 0.05)**：拒绝“实验跑了两天发现转化率提升 10% 就立刻推全”的伪科学做法，严格计算最小充分样本量（Sample Size Estimation），防范过早窥探问题（Peeking Problem）与辛普森悖论。
    - **分流机制**：结合边缘计算（Edge Middleware）或 Feature Flags 平台（如 LaunchDarkly、PostHog）实现无闪烁客户端分流。
 3. **数据埋点与“数据契约 (Data Contracts)”**：
    - 确立统一的事件命名规范（如 `[domain]:[entity]:[action]`，例 `checkout:coupon:apply`）。

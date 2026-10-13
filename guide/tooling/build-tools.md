@@ -7,11 +7,11 @@ title: "III. 基本开发环境和工具 / III.5 现代构建工具、打包器�
 **目的**：将源码转换为可部署产物，在开发期提供快速反馈循环，在生产环境提供更小、更快、更稳定的输出。
 
 - [**Webpack**](https://webpack.js.org/)：经典而成熟的模块打包器。生态极其完整，插件与 Loader 丰富，仍广泛用于大型存量项目和高度定制化工程。
-- [**Vite**](https://vite.dev/)：现代前端开发的主流选择之一。**Vite 6+** 引入了里程碑式的 **[Environment API](https://vite.dev/guide/api-environment.html)**，允许全栈元框架在单一 Vite 开发服务器实例中同时统一编排多个运行时环境（`client`、`ssr`、`rsc`、`edge worklets`），彻底打破了过去多环境隔离启动的架构摩擦；同时以 **[Rolldown](https://rolldown.rs/)**（基于 Rust / Oxc 架构）作为统一的高性能打包后端，兼顾极致构建性能与成熟的 Rollup 插件生态兼容性。
+- [**Vite**](https://vite.dev/)：现代前端开发的主流选择之一。**Vite 6** 引入了里程碑式的 **[Environment API](https://vite.dev/guide/api-environment.html)**（目前整体处于 Release Candidate 阶段，部分 API 仍为实验性），允许全栈元框架在单一 Vite 开发服务器实例中同时统一编排多个运行时环境（`client`、`ssr`，以及框架自定义的 `rsc`、`edge` 等环境），彻底打破了过去多环境隔离启动的架构摩擦；**[Vite 8](https://vite.dev/blog/announcing-vite8)**（2026 年 3 月）起以 **[Rolldown](https://rolldown.rs/)**（基于 Rust / Oxc 架构）取代此前开发期 esbuild、生产期 Rollup 的双打包器组合，成为统一的高性能打包后端，兼顾极致构建性能与成熟的 Rollup 插件生态兼容性。
 - [**Rspack / Rsbuild**](https://rspack.dev/)：基于 Rust 的高性能打包器及其上层构建工具，在兼容 Webpack 生态的同时追求更快的构建速度。对中大型应用和企业级工程尤具吸引力。
 - [**esbuild**](https://esbuild.github.io/)：用 [Go](https://go.dev/) 编写的超高速编译/打包工具，常作为构建链中的基础能力使用，例如预打包、转换、压缩，或充当其他工具的底层引擎。
 - [**Rollup**](https://rollupjs.org/)：偏向库构建的打包器，擅长 tree-shaking 和生成干净的 ESM/CJS 输出。很多工具会把它作为生产构建阶段的核心部件。
-- [**Turbopack**](https://turbo.build/pack)：面向 [Next.js](https://nextjs.org/) 生态的 Rust 增量打包器，强调大型应用开发期的响应速度与按需计算能力。
+- [**Turbopack**](https://nextjs.org/docs/app/api-reference/turbopack)：面向 [Next.js](https://nextjs.org/) 生态的 Rust 增量打包器，强调大型应用开发期的响应速度与按需计算能力。
 - [**SWC**](https://swc.rs/) 与 **[Oxc](https://oxc.rs/)**：基于 Rust 的下一代 TypeScript/JavaScript 编译底座。Oxc（Oxidation Compiler）提供极致的 Parser、Resolver 与 Transformer 性能（比 SWC 更快），正成为现代 JS 工具链的通用底层基石。
 
 前端工具链的职责分层正变得愈加清晰：
@@ -43,7 +43,7 @@ Vite/Rolldown/Oxc、Rspack、Turbopack、SWC 和 esbuild 都说明了一个方�
 | [**Rspack / Rsbuild**](https://rspack.dev/) | Rust                           | 中大型应用、企业工程   | 高性能、Webpack 兼容、迁移成本相对可控 | 近年增长很快       |
 | [**esbuild**](https://esbuild.github.io/)   | Go                             | 转换、压缩、预打包     | 极快、嵌入式能力强                     | 常作为底层引擎     |
 | [**Rollup**](https://rollupjs.org/)         | JavaScript                     | 库构建、产物优化       | Tree-shaking、ESM 优先                 | 仍是库生态核心之一 |
-| [**Turbopack**](https://turbo.build/pack)   | Rust                           | Next.js 开发/构建      | 增量计算、按需工作、默认集成度提升     | Next.js 专用路线   |
+| [**Turbopack**](https://nextjs.org/docs/app/api-reference/turbopack)   | Rust                           | Next.js 开发/构建      | 增量计算、按需工作、默认集成度提升     | Next.js 专用路线   |
 | [**SWC**](https://swc.rs/)                  | Rust                           | 编译、转换、压缩       | 快速 TS/JS 转换、JSX 支持              | 编译层工具         |
 
 选择这些工具时，最实用的判断标准包括：
@@ -73,15 +73,14 @@ import { Button } from "@/components";
 
 若 `package.json` 未标记 `sideEffects`，或构建器判定模块存在全局副作用，用户即使只用了 `Button`，整个图表与编辑器代码也会被全部打包进页面！
 
-**推荐实践：声明 `sideEffects: false` 与精准路径导出**
+**推荐实践：精确声明 `sideEffects` 与子路径导出**
+
+`packages/components/package.json`：
 
 ```json
-// packages/components/package.json
 {
   "name": "@my-app/components",
-  "sideEffects": [
-    "**/*.css" // 明确仅 CSS 文件具有全局副作用，其余 TS 文件均为纯模块
-  ],
+  "sideEffects": ["**/*.css"],
   "exports": {
     "./button": "./src/Button.tsx",
     "./chart": "./src/ComplexChart.tsx"
@@ -89,12 +88,14 @@ import { Button } from "@/components";
 }
 ```
 
+`"sideEffects": ["**/*.css"]` 表示只有 CSS 文件具有全局副作用，其余模块都可以安全剪枝；如果包内没有任何带副作用的文件，可以直接写 `"sideEffects": false`。注意 package.json 是严格 JSON，不能写注释。
+
 ```tsx
 // 业务页面采用精准子路径导入，杜绝无谓的模块解析：
 import { Button } from "@my-app/components/button";
 ```
 
-现代打包器（Vite/Rollup/Rspack）依赖精确的 `sideEffects` 声明来安全剪枝（Tree-shaking）。在大型项目中杜绝全局 Barrel 嵌套并规范子路径导出，能显著减少 30%~70% 的初次构建内存与首屏 JS 体积。
+现代打包器（Vite/Rollup/Rspack）依赖精确的 `sideEffects` 声明来安全剪枝（Tree-shaking）。在大型项目中杜绝全局 Barrel 嵌套并规范子路径导出，能显著减少初次构建内存与首屏 JS 体积，具体收益应以自己项目的构建报告为准。
 
 :::
 
@@ -119,7 +120,7 @@ vite-demo/
     "preview": "vite preview"
   },
   "devDependencies": {
-    "vite": "latest"
+    "vite": "^8.0.0"
   }
 }
 ```
@@ -172,10 +173,14 @@ pnpm preview
      "type": "module",
      "exports": {
        ".": {
-         "types": "./dist/index.d.ts",
-         "import": "./dist/index.js",
-         "require": "./dist/index.cjs",
-         "default": "./dist/index.js"
+         "import": {
+           "types": "./dist/index.d.ts",
+           "default": "./dist/index.js"
+         },
+         "require": {
+           "types": "./dist/index.d.cts",
+           "default": "./dist/index.cjs"
+         }
        },
        "./helpers": {
          "types": "./dist/helpers.d.ts",
@@ -185,10 +190,13 @@ pnpm preview
    }
    ```
 
+   - 注意 ESM 与 CJS 的类型要分开声明：在 `"type": "module"` 的包里，`.d.ts` 会被 TypeScript 当作 ESM 声明。如果 `require` 分支也共用它，CJS 使用者拿到的类型与实际模块格式不符，attw 会报“Masquerading as ESM”。`types` 条件要放在每个分支的第一位；示例中的 `./helpers` 则是只提供 ESM 的子路径。
+
 2. **防范双模块陷阱 (Dual Package Hazard)**：
    - 当一个库同时分发 ESM 和 CJS 产物时，如果上层应用的不同依赖分别通过 `import` 和 `require` 引入了该库，Node.js 会在内存中加载两份独立的模块实例，导致内部单例（Singleton）或全局状态断裂失效。现代最佳实践是采用纯 ESM 优先，或通过轻量 CJS Wrapper 转发共享状态。
 3. **产物合规性校验工具**：
    - [**publint**](https://publint.dev/)：自动化检查 `package.json` 的 `exports` 路径与实际文件是否存在映射缺陷；
-   - [**are-the-types-wrong (attw)**](https://github.com/arethetypeswrong/arethetypeswrong)：严格分析 TypeScript 类型定义文件在 Node10 / Node16 / Bundler 等不同模块解析模式下是否存在类型丢失或无法识别。
+   - [**are-the-types-wrong (attw)**](https://github.com/arethetypeswrong/arethetypeswrong.github.io)：严格分析 TypeScript 类型定义文件在 Node10 / Node16 / Bundler 等不同模块解析模式下是否存在类型丢失或无法识别。
 4. **现代库打包工具链**：
-   - [**tsup**](https://tsup.egoist.dev/)（基于 esbuild）与 [**unbuild**](https://github.com/unjs/unbuild)（Rollup/esbuild 驱动）：支持零配置一键生成 ESM + CJS 双产物，并原生支持将数百个零散的 `.d.ts` 类型声明合并打包为单个精简的 `index.d.ts`（DTS Bundling）。
+   - [**tsdown**](https://tsdown.dev/)（基于 Rolldown）与 [**unbuild**](https://github.com/unjs/unbuild)（Rollup/esbuild 驱动）：只需少量配置即可生成 ESM + CJS 双产物，并原生支持将数百个零散的 `.d.ts` 类型声明合并打包为单个精简的 `index.d.ts`（DTS Bundling）。
+   - 曾经常用的 [tsup](https://tsup.egoist.dev/)（基于 esbuild）已在 README 中声明不再积极维护，并推荐迁移到 tsdown，见[官方迁移指南](https://tsdown.dev/guide/migrate-from-tsup)。

@@ -10,7 +10,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.5 数据可视化组件库
 
 虽然许多通用 UI 组件库（如 Ant Design）提供了基础的图表功能，但专门的数据可视化库在市场中依然占据不可或缺的地位。原因在于**功能与性能的专业化需求**。通用组件库的图表组件通常功能相对基础，难以满足复杂交互、大数据量渲染和高度自定义的需求。例如，渲染超过 9,000 个数据点的图表时，性能挑战尤为突出。
 
-专门的图表库，如 [Highcharts](https://www.highcharts.com/) 和 [Nivo](https://nivo.rocks/)，借助底层技术（如 [D3.js](https://d3js.org/)）专注于数据可视化，提供了强大的功能、高性能的渲染引擎和更丰富的图表类型。随着 SaaS 和数据驱动型产品（如 BI 仪表盘、内部工具）的激增，市场对专业、可靠、美观的数据可视化工具的需求越来越高。因此，开发者会选择“术业有专攻”的专用库，以获得最佳的用户体验和性能表现。
+专门的图表库，如 [Highcharts](https://www.highcharts.com/)（自研 SVG 渲染引擎，不依赖 D3）和 [Nivo](https://nivo.rocks/)（基于 [D3.js](https://d3js.org/)），专注于数据可视化，提供了强大的功能、高性能的渲染引擎和更丰富的图表类型。随着 SaaS 和数据驱动型产品（如 BI 仪表盘、内部工具）的激增，市场对专业、可靠、美观的数据可视化工具的需求越来越高。因此，开发者会选择“术业有专攻”的专用库，以获得最佳的用户体验和性能表现。
 
 ## **IV.5.2 精选数据可视化库分析**
 
@@ -64,19 +64,24 @@ export function VisitChart({ data }: { data: Point[] }) {
   if (!data.length) return <p role="status">暂无访问数据</p>;
 
   return (
-    <div aria-label="访问量趋势" style={{ width: "100%", height: 280 }}>
-      <ResponsiveContainer>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="day" />
-          <YAxis allowDecimals={false} />
-          <Tooltip />
-          <Line dataKey="visits" name="访问量" stroke="#2563eb" />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
+    <figure style={{ margin: 0 }}>
+      <figcaption>访问量趋势</figcaption>
+      <div style={{ width: "100%", height: 280 }}>
+        <ResponsiveContainer>
+          <LineChart data={data}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="day" />
+            <YAxis allowDecimals={false} />
+            <Tooltip />
+            <Line dataKey="visits" name="访问量" stroke="#2563eb" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </figure>
   );
 }
 ```
+
+图表标题用 `<figure>` + `<figcaption>` 提供：直接给普通 `<div>` 加 `aria-label` 通常不会被读屏软件朗读，因为 ARIA 不允许为无语义的 generic 元素命名。
 
 数据量达到万级后，应评估 Canvas、WebGL、采样、窗口化和 Worker 预处理，并保留表格或摘要作为可访问回退。

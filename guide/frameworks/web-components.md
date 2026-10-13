@@ -4,13 +4,13 @@ title: "IV. 前端框架和库：构建现代 UI / IV.2 Web Components：原生�
 
 # IV.2 Web Components：原生、跨框架的组件化未来
 
-在探讨 React、Vue、Svelte 等框架如何实现组件化的同时，我们必须关注 Web 标准自身提供的原生组件化解决方案——[**Web Components**](https://www.webcomponents.org/)。它是一套由 W3C 标准化、浏览器原生支持的技术集合，旨在让开发者创建可复用、封装良好的自定义 HTML 元素。这些元素可以在任何 Web 页面中使用，并能与所有现代 JavaScript 框架无缝协作。
+在探讨 React、Vue、Svelte 等框架如何实现组件化的同时，我们必须关注 Web 标准自身提供的原生组件化解决方案——[**Web Components**](https://www.webcomponents.org/)。它是一套已纳入 WHATWG [HTML](https://html.spec.whatwg.org/multipage/custom-elements.html) 与 [DOM](https://dom.spec.whatwg.org/#shadow-trees) 标准、浏览器原生支持的技术集合，旨在让开发者创建可复用、封装良好的自定义 HTML 元素。这些元素可以在任何 Web 页面中使用，并能与所有现代 JavaScript 框架无缝协作。
 
 Web Components 主要由三项核心技术构成：
 
 1. **Custom Elements (自定义元素)**：允许开发者定义自己的 HTML 标签。你可以创建一个名为 `<my-button>` 的标签，并为其赋予特定的样式和行为。HTML 的语义因此可以无限扩展。
 
-2. **Shadow [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) (影子 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model))**：这是 Web Components 最具革命性的特性。它能把一棵独立的、“隐藏”的 DOM 树附加到元素上。Shadow DOM 内部的**样式和脚本完全封装、隔离**，不会影响到外部页面，外部页面的样式也不会意外泄露进来。它从根本上解决了 CSS 全局作用域污染这一困扰前端开发者多年的顽疾，提供了浏览器原生的样式封装。
+2. **Shadow [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) (影子 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model))**：这是 Web Components 最具革命性的特性。它能把一棵独立的、“隐藏”的 DOM 树附加到元素上。Shadow DOM 内部的 **DOM 结构和样式被封装**：内部样式规则不会影响外部页面，外部选择器也不会意外匹配内部元素。但它并不隔离脚本（组件代码与页面共享同一个全局环境），可继承的 CSS 属性（如 `color`、`font`）和 CSS 自定义属性也会穿透边界，后者正是组件对外开放主题定制的常用入口。它为 CSS 全局作用域污染这一困扰前端开发者多年的顽疾，提供了浏览器原生的样式封装方案。
 
 3. **HTML Templates (`<template>` 和 `<slot>`)**：`<template>` 标签允许我们声明一段惰性的 DOM 片段，直到激活时才会渲染。`<slot>` 元素则是一个占位符，允许我们将外部的 HTML 内容“投影”到组件的 Shadow DOM 内部，极大地增强了组件的灵活性和可组合性。
 

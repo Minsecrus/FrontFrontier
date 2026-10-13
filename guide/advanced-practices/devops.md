@@ -44,11 +44,9 @@ git push
 
 ## **V.15.4 缓存和 CDN 配置**
 
-- **强缓存与协商缓存**：理解如何用 Cache-Control（max-age、no-cache、no-store 等）和 Expires 实现强缓存，以及如何用 Last-Modified/If-Modified-Since 和 ETag/If-None-Match 实现协商缓存。
+- **强缓存与协商缓存**：理解如何用 `Cache-Control: max-age`（以及 `immutable`）和 Expires 实现强缓存，以及如何用 Last-Modified/If-Modified-Since 和 ETag/If-None-Match 实现协商缓存。注意 `no-cache` 并非不缓存，而是每次使用前都要向服务器验证（走协商缓存）；`no-store` 才表示完全不缓存。常见组合是 HTML 使用 `no-cache`，带内容哈希的 JS/CSS 使用 `max-age=31536000, immutable`。
 - **CDN 配置**：配置 CDN 时，注意缓存规则、回源策略、HTTPS 配置、Gzip/Brotli 压缩、跨域资源共享（CORS）头等。
 - **版本控制与缓存失效**：对于 JS/CSS 文件，通常在文件名中加入内容哈希（如 bundle.123abc.js），文件内容变化时，文件名也随之变化，强制浏览器加载新文件，实现缓存失效。对于图片等资源，可以采用类似策略或定期更新 URL。
-
-前端部署与 DevOps 的实践，体现了从”代码编写”到”代码交付”的完整生命周期管理。CI/CD 流水线、容器化和静态资源优化，共同构建了一套高效、可靠的前端交付体系。这不仅仅是技术工具的简单堆砌，更是对软件工程”持续交付”理念的贯彻。它要求前端工程师不仅关注代码本身，还要理解构建、测试、部署、运维的全链路流程——通过自动化减少人为错误，通过标准化提升团队效率，通过监控确保线上质量。这种从局部优化到全局流程优化的思维转变，使前端工程师得以更好地融入 DevOps 文化，成为全栈交付能力的重要一环。
 
 ## **V.15.5 一个前端 CI 门禁**
 

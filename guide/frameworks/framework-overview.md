@@ -8,7 +8,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 
 当前主流 UI 框架的差异需要同时从**编译优化、服务端/客户端分工、细粒度响应性（Fine-grained Reactivity）和运行时体积**等维度综合评估：
 
-- [**React**](https://react.dev/)：以组件化、声明式理念和庞大生态闻名。**React 19** 将 Actions 原语（`useActionState`、`useOptimistic`、`useFormStatus`、`use()`）和 Server Components (RSC) 标准化；**[React Compiler](https://react.dev/learn/react-compiler)**（原 Forget 项目）通过静态编译推导自动完成细粒度记忆化（Auto-memoization），彻底消除手动编写 `useMemo` / `useCallback` 及依赖数组的心智负担。
+- [**React**](https://react.dev/)：以组件化、声明式理念和庞大生态闻名。**React 19** 将 Actions 原语（`useActionState`、`useOptimistic`、`useFormStatus`、`use()`）和 Server Components (RSC) 标准化；**[React Compiler](https://react.dev/learn/react-compiler)**（原 Forget 项目）通过静态编译推导自动完成细粒度记忆化（Auto-memoization），让多数场景无需再手写 `useMemo` / `useCallback`；官方仍保留二者作为逃生口，用于需要精确控制记忆化的场合（如作为 Effect 依赖的值），详见 [useMemo、useCallback 与 Compiler 的关系](https://react.dev/learn/react-compiler/introduction#what-should-i-do-about-usememo-usecallback-and-reactmemo)。
 - [**Vue**](https://vuejs.org/)：渐进式框架，在灵活性与简洁性之间取得极佳平衡。**Vue 3.5+** 全面重构了响应式引擎（内存开销直降 56%，大型数组追踪性能提升达 10 倍），引入 `onWatcherCleanup()`、`useTemplateRef()` 与 `useId()`；同时积极推进 **Vapor Mode**（无虚拟 DOM 的纯原生 DOM 编译模式，对标 SolidJS）。
 - [**Svelte**](https://svelte.dev/)：编译时框架先驱。**Svelte 5** 完成了向 **Runes（符文系统：`$state`、`$derived`、`$effect`、`$props`、`$bindable`）** 的架构跃迁，打破了旧版仅在 `.svelte` 单文件生效的限制，实现了跨 `.svelte.ts` 文件的通用细粒度响应式，并以 **Snippets (`{#snippet}`)** 取代了传统 Slots。
 - [**SolidJS**](https://www.solidjs.com/)：细粒度响应式标杆。组件函数仅在挂载时执行一次，后续状态变更直接通过 Signals 依赖图精确定向驱动原生 DOM 节点，零虚拟 DOM 树 Diff 开销。
@@ -53,14 +53,16 @@ export function SearchBox() {
   const [query, setQuery] = useState("");
 
   return (
-    <label>
-      搜索
-      <input
-        value={query}
-        onChange={(event) => setQuery(event.currentTarget.value)}
-      />
+    <>
+      <label>
+        搜索
+        <input
+          value={query}
+          onChange={(event) => setQuery(event.currentTarget.value)}
+        />
+      </label>
       <output aria-live="polite">当前输入：{query}</output>
-    </label>
+    </>
   );
 }
 ```
@@ -77,8 +79,8 @@ const query = ref("");
   <label>
     搜索
     <input v-model="query" />
-    <output aria-live="polite">当前输入：{{ query }}</output>
   </label>
+  <output aria-live="polite">当前输入：{{ query }}</output>
 </template>
 ```
 
@@ -91,8 +93,10 @@ let query = $state("");
 <label>
   搜索
   <input bind:value={query} />
-  <output aria-live="polite">当前输入：{query}</output>
 </label>
+<output aria-live="polite">当前输入：{query}</output>
 ```
+
+三个示例都把 `<output>` 放在 `<label>` 之外：HTML 规定 `<label>` 内只能包含它所标注的那一个可标注控件，而 `<output>` 本身也是可标注元素；放在里面不仅不合规范，还会让输入框的可访问名称混入“当前输入：…”。
 
 对比时记录四项证据：状态存放位置、事件入口、更新范围、组件能否在服务器渲染。这样能把框架差异落到运行行为，再继续研究 Compiler、Signals、Runes 或 Server Components 的工程影响。

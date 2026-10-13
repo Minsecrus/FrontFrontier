@@ -67,13 +67,13 @@ GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基�
 
 ### **缓存与条件请求**
 
-[RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) 定义 HTTP 缓存行为。几个常见指令各司其职：
+[RFC 9111](https://www.rfc-editor.org/rfc/rfc9111.html) 定义 HTTP 缓存行为。几个常见的 Cache-Control 指令和验证器各司其职：
 
 - **max-age** 定义响应保持新鲜的时间。
 - **private** 限制响应只能由单个用户的私有缓存保存。
 - **no-cache** 允许保存响应，并要求复用前先向源站验证。
 - **no-store** 要求缓存避免保存请求或响应。
-- **ETag** 为资源表示提供验证器。
+- **ETag** 是响应头（定义于 RFC 9110），为资源表示提供验证器。
 
 客户端可以携带 **If-None-Match** 验证缓存；表示未变化时，服务端返回 304。更新操作可以携带 **If-Match** 表达“只修改我读到的版本”；资源已经变化时，服务端返回 412，前端再显示冲突并帮助用户合并。
 
@@ -103,10 +103,10 @@ const UserSchema = z.object({
   role: z.enum(["member", "admin"]),
 });
 
-const ProblemSchema = z.object({
+const ProblemSchema = z.looseObject({
   title: z.string(),
   detail: z.string().optional(),
-}).passthrough();
+});
 
 class ApiError extends Error {
   constructor(

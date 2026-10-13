@@ -65,7 +65,7 @@ AI 可以出现在云端环境、编辑器或终端里。三种形态的差别�
 | 工作形态 | 代表性工具 | 它解释的能力 | 更适合的场景 |
 | :--- | :--- | :--- | :--- |
 | **云端环境** | [CodeSandbox](https://codesandbox.io/)、[StackBlitz](https://stackblitz.com/) | 把代码、运行时和预览一起分享 | 原型、教学、最小复现、远程协作 |
-| **编辑器协作** | [GitHub Copilot](https://github.com/features/copilot)、[Cursor](https://cursor.com/)、[Windsurf](https://windsurf.com/)、[Trae](https://trae.ai/)、[CodeBuddy](https://codebuddy.ca/) | 围绕当前文件、符号和代码库问答、编辑多个文件 | 高频编码、局部重构、边写边审查 |
+| **编辑器协作** | [GitHub Copilot](https://github.com/features/copilot)、[Cursor](https://cursor.com/)、[Windsurf](https://windsurf.com/)、[Trae](https://trae.ai/)、[CodeBuddy](https://www.codebuddy.ai/) | 围绕当前文件、符号和代码库问答、编辑多个文件 | 高频编码、局部重构、边写边审查 |
 | **终端 Agent** | [Codex](https://developers.openai.com/codex/use-cases)、[Claude Code](https://www.claude.com/product/claude-code) | 在受控权限内读写文件、运行命令并根据结果继续工作 | 测试修复、跨文件任务、脚本与仓库级操作 |
 
 无论使用哪一种入口，都应检查同一组能力：

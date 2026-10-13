@@ -12,7 +12,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.4 无头组件与组件代
 
 这种范式的兴起，源于前端开发者需求的演变。MUI 等传统组件库虽然提供了完整的 UI 和设计规范，但在需要高度定制化的品牌网站或设计系统中，其固定的美学和复杂的样式重写机制往往成为限制。与此同时，Tailwind CSS 等“实用至上”的 CSS 框架流行起来，开发者更倾向于直接在 HTML 中通过 CSS 类控制样式。
 
-“无头”组件模式恰好解决了这一矛盾。它将组件的“逻辑”（由 Radix UI 等库提供）与“外观”（由开发者自行通过 Tailwind CSS 等框架实现）彻底解耦。shadcn/ui 则将这一理念推向了新的高度，采用“代码分发平台”模式：开发者通过 CLI 命令将组件代码直接复制到自己的项目中。这种模式让开发者对代码拥有**完全所有权**，解决了传统组件库中“依赖地狱”和无法深入定制的痛点。从“安装并使用”到“复制、拥有并扩展”，这一范式转变反映了开发者对极致灵活性、代码掌控和长期可维护性的新诉求。
+“无头”组件模式恰好解决了这一矛盾。它将组件的“逻辑”（由 Radix UI 等库提供）与“外观”（由开发者自行通过 Tailwind CSS 等框架实现）彻底解耦。shadcn/ui 则将这一理念推向了新的高度，采用“代码分发平台”模式：开发者通过 CLI 命令将组件代码直接复制到自己的项目中。这种模式让开发者对组件代码拥有**完全所有权**，缓解了传统组件库中升级受制于库版本、难以深入定制的痛点；不过底层的交互与无障碍原语（Base UI、Radix UI 等）仍以 npm 依赖的形式存在。据 [shadcn/ui 更新日志](https://ui.shadcn.com/docs/changelog/2026-07-base-ui-default)，自 2026 年 7 月起新项目默认采用 Base UI，Radix UI 仍受完整支持。
 
 ## **IV.4.2 技术特点与模式对比**
 
@@ -20,12 +20,12 @@ title: "IV. 前端框架和库：构建现代 UI / IV.4 无头组件与组件代
 
 | 库名称                                 | 组件模式   | 核心技术栈                                                                                                      | 代码所有权                                    | 定制化程度                  | 依赖管理           | 主要优势                                             |
 | :------------------------------------- | :--------- | :-------------------------------------------------------------------------------------------------------------- | :-------------------------------------------- | :-------------------------- | :----------------- | :--------------------------------------------------- |
-| [shadcn/ui](https://ui.shadcn.com/)    | 非库模式   | [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/)    | 开发者完全拥有                                | 极高                        | 无（代码直接复制） | 极致灵活性，无依赖锁定                               |
+| [shadcn/ui](https://ui.shadcn.com/)    | 非库模式   | [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Base UI](https://base-ui.com/) / [Radix UI](https://www.radix-ui.com/) | 开发者完全拥有                                | 极高                        | 组件源码复制进项目，底层原语仍是 npm 依赖 | 极致灵活性，组件源码不受库版本锁定 |
 | [Radix UI](https://www.radix-ui.com/)  | 无头库     | [React](https://react.dev/)                                                                                     | 开发者拥有（但需安装库）                      | 极高（需自行实现样式）      | 有                 | 专注于可访问性和逻辑                                 |
 | [Headless UI](https://headlessui.com/) | 无头库     | [React](https://react.dev/), [Vue](https://vuejs.org/)                                                          | 开发者拥有（但需安装库）                      | 极高（需自行实现样式）      | 有                 | 与 [Tailwind CSS](https://tailwindcss.com/) 完美集成 |
 | [Tremor](https://www.tremor.so/)       | 专用组件库 | [React](https://react.dev/), [Tailwind CSS](https://tailwindcss.com/), [Radix UI](https://www.radix-ui.com/)    | 开发者部分拥有                                | 高                          | 有                 | 专为数据仪表盘，现代化技术栈                         |
 | [MUI](https://mui.com/)                | 传统库     | [React](https://react.dev/), [Emotion](https://emotion.sh/)/[styled-components](https://styled-components.com/) | 无（作为 [npm](https://www.npmjs.com/) 依赖） | 中高（通过主题和样式重写）  | 有                 | 开箱即用，生态完整，文档完善                         |
-| [Ant Design](https://ant.design/)      | 传统库     | [React](https://react.dev/), [Less](https://lesscss.org/)                                                       | 无（作为 [npm](https://www.npmjs.com/) 依赖） | 中高（通过主题和 CSS 变量） | 有                 | 企业级组件丰富，设计规范                             |
+| [Ant Design](https://ant.design/)      | 传统库     | [React](https://react.dev/), CSS-in-JS（[Design Token](https://ant.design/docs/react/customize-theme)） | 无（作为 [npm](https://www.npmjs.com/) 依赖） | 中高（通过主题和 CSS 变量） | 有                 | 企业级组件丰富，设计规范                             |
 
 ## **IV.4.3 适用场景**
 
@@ -64,12 +64,19 @@ title: "IV. 前端框架和库：构建现代 UI / IV.4 无头组件与组件代
 const dialog = document.querySelector("#settings-dialog");
 const openButton = document.querySelector("#open-settings");
 
-openButton?.addEventListener("click", () => dialog?.showModal());
+openButton?.addEventListener("click", () => {
+  if (!dialog) return;
+  // 按 Escape 关闭时 returnValue 不会被改写，打开前先重置
+  dialog.returnValue = "";
+  dialog.showModal();
+});
 dialog?.addEventListener("close", () => {
   if (dialog.returnValue === "save") {
     console.log("保存设置");
   }
 });
 ```
+
+`form method="dialog"` 提交时，浏览器会把被点击按钮的 `value` 写入 `returnValue`；按 `Escape` 关闭则不会改写它。如果不在打开前重置，用户保存过一次后再按 `Escape`，`close` 事件仍会读到上一次的 `"save"`。
 
 验收时检查可访问名称、焦点进入与返回、`Escape` 关闭、键盘顺序、错误提示和关闭后的状态清理。组件库只提供行为基础，团队仍需拥有 API、样式 token、业务状态和测试用例。

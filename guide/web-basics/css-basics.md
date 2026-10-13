@@ -12,7 +12,7 @@ CSS（层叠样式表）用于样式化和布局网站，控制外观、颜色�
 - **特异性**是分配给 CSS 声明的权重，决定了多个选择器针对同一元素时哪个规则适用。
 - **继承**是指属性可以从父元素继承到其子元素。
 
-理解层叠、特异性和继承至关重要，因为 CSS 本质上是声明式的和非线性的。误解这些概念会直接导致不可预测的样式行为和“样式覆盖问题”，揭示出理论理解与实际可维护性之间的因果关系。
+理解层叠、特异性和继承至关重要，因为 CSS 本质上是声明式的和非线性的。误解这些概念会直接导致不可预测的样式行为和“样式覆盖问题”。
 
 ## **II.3.2 盒模型：理解元素尺寸**
 
@@ -23,8 +23,6 @@ CSS（层叠样式表）用于样式化和布局网站，控制外观、颜色�
 [**Flexbox**](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout)（弹性盒布局）是一种一维布局方法，用于在行或列中排列项目，实现灵活的对齐和空间分配。
 
 **CSS Grid Layout** 是一种二维布局系统，用于设计复杂的响应式 Web 布局。
-
-从旧的布局方法（浮动、表格）到 Flexbox 和 Grid 的转变，标志着 CSS 的重大演变。这些现代技术简化了复杂布局，也是响应式设计的基础，直接影响开发效率和 UI 质量。
 
 ## **II.3.4 常见内容样式：文本、图片、表单和表格**
 
@@ -138,11 +136,21 @@ CSS 调试的核心是回答三个问题：规则有没有匹配？匹配后有�
 随着浏览器引擎的演进，CSS 已能处理逻辑判断、感知状态、驱动高性能动画，大幅减少了对 JavaScript 的依赖，显著提升了渲染性能。
 
 - **逻辑选择器与原生嵌套**：
-  - **`:has()` (父类选择器)**：根据**子元素的状态**控制父元素或兄弟元素的样式。例如，`form:has(input:invalid)` 可以直接在 CSS 中实现“输入框非法时改变表单背景”，无需 JS 介入。
+  - **`:has()`（关系伪类，常被称为“父选择器”）**：根据**子元素的状态**控制父元素或兄弟元素的样式。例如，`form:has(input:invalid)` 可以直接在 CSS 中实现“输入框非法时改变表单背景”，无需 JS 介入。
   - **原生嵌套 (CSS Nesting)**：浏览器现已原生支持类似 Sass/Less 的嵌套语法，允许开发者直接在 CSS 中编写层级清晰的代码，减少了对构建工具的强依赖。
 
-- **视图过渡 (View Transitions API)**：
-  - 提供了一种原生机制来创建平滑的 DOM 状态切换动画。无论是单页应用 (SPA) 的路由跳转，还是多页应用 (MPA) 的页面加载，浏览器都能自动截取新旧状态的画面并生成过渡效果（如元素形变、淡入淡出），无需复杂的 JS 动画库。
+- **[视图过渡 (View Transitions API)](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)**：
+  - 提供了一种原生机制来创建平滑的 DOM 状态切换动画。浏览器会截取新旧状态的画面并生成过渡效果（如元素形变、淡入淡出），无需复杂的 JS 动画库，但需要开发者显式开启：单页应用 (SPA) 用 `document.startViewTransition()` 包裹 DOM 更新；同源多页应用 (MPA) 在新旧两个页面都声明 `@view-transition { navigation: auto; }`。
+  - 同文档过渡已进入 Baseline，跨文档过渡尚未进入 Baseline，宜作为渐进增强使用：
+
+    ```js
+    // 不支持时直接更新 DOM，功能不受影响
+    if (document.startViewTransition) {
+      document.startViewTransition(() => renderNextView());
+    } else {
+      renderNextView();
+    }
+    ```
 
 - **原生弹层与进入离开动画 (Popover API & `@starting-style`)**：
   - **[Popover API](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API)**（Baseline）：通过 HTML `popover` 属性与 `popovertarget` 按钮原生实现气泡卡片、抽屉与下拉菜单。浏览器原生托管在顶层图层（Top Layer），自带按 Esc 关闭、轻击外部区域（Light Dismiss）以及无障碍焦点回退能力，彻底告别 `z-index: 9999` 大战。
@@ -153,9 +161,10 @@ CSS 调试的核心是回答三个问题：规则有没有匹配？匹配后有�
   - **强类型 CSS 变量注册 (`@property`)**（Baseline）：允许显式声明 CSS 自定义属性的语法类型（如 `<color>`、`<percentage>`、`<length>`）、继承行为与初始值，使原本无法渐变的 CSS 变量（如渐变色角度、颜色插值）能够直接支持丝滑的 CSS Transition 与 Keyframe 动画。
   - **主题配色函数 `light-dark()`**（Baseline）：直接根据当前 `color-scheme` 声明双模配色（如 `color: light-dark(#1a1a1a, #ffffff)`），极大简化主题系统。
 
-- **滚动驱动动画 (Scroll-driven Animations)**：
-  - 允许将动画进度直接绑定到**滚动容器的滚动位置**，而非时间线。
-  - **性能优势**：此类动画运行在浏览器的**合成线程 (Compositor Thread)** 上，完全不阻塞主线程。即使 JavaScript 忙于处理繁重的业务逻辑导致页面卡顿，滚动动画（如视差滚动、阅读进度条）依然能保持丝滑流畅。
+- **[滚动驱动动画 (Scroll-driven Animations)](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Scroll-driven_animations)**：
+  - 允许将动画进度直接绑定到**滚动容器的滚动位置**，而非时间流逝。
+  - **性能优势**：当动画只改变 `transform`、`opacity` 等可合成属性时，浏览器可以把它放到**合成线程 (Compositor Thread)** 上运行，即使 JavaScript 占满主线程，视差滚动、阅读进度条等效果依然流畅。动画 `width`、`height`、`top` 等布局属性时仍需主线程参与，不具备这一优势。
+  - 截至 2026 年 10 月该能力尚未进入 Baseline，可用 `@supports (animation-timeline: scroll())` 做渐进增强。
 
 ## **II.3.9 高级样式：单位（rem、em、vw/vh）、函数（clamp()、calc()）**
 

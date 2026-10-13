@@ -82,6 +82,9 @@ async function submitSearch(query) {
   }
 }
 
+// 先等一次请求结束：measure 写在 finally 里，成功或失败都会留下记录
+await submitSearch("vite").catch(console.error);
+
 console.table(
   performance.getEntriesByName("search:request").map(({ duration, name }) => ({
     name,
@@ -89,5 +92,7 @@ console.table(
   })),
 );
 ```
+
+注意时序：`console.table` 必须在请求结束后读取。如果在函数定义后立即同步执行，此时还没有任何 measure 条目，只会打印空表。示例中的顶层 `await` 可以直接在 DevTools Console 或 ES 模块中运行。
 
 练习时先在 Network 面板观察请求瀑布，再在 Performance 面板过滤 `search:request`。如果页面交互仍然卡顿，继续检查请求完成后的 JSON 解析、DOM 更新和长任务，形成“时间线证据 -> 假设 -> 修复 -> 再测量”的闭环。

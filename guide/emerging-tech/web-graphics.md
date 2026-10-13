@@ -27,10 +27,10 @@ title: "VI. 新兴技术和专业领域 / VI.4 Web 图形和沉浸式体验"
 
 Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进反映了行业对更丰富、更沉浸式 Web 体验（包括游戏和 AR/VR）的追求。Three.js、Babylon.js 等高级库以及 TresJS、[A-Frame](https://aframe.io/) 等声明式框架，封装了底层 API 的复杂性，让高级图形能力对前端开发者更加触手可及，有效扩展了浏览器中可直接构建的应用类型。
 
-### **Web Animations API 和 Framer Motion**
+### **Web Animations API 和 Motion（原 Framer Motion）**
 
 - [**Web Animations API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API)：JavaScript API，提供动画的播放控制和时间线，可细粒度地控制 Web 动画。
-- [**Framer Motion**](https://www.framer.com/motion/)：用于 React 的动画库，具有混合引擎（原生浏览器 + JavaScript 动画），支持手势和布局动画。
+- [**Motion**](https://motion.dev/)：原名 Framer Motion，2024 年 11 月从 Framer [独立并更名](https://motion.dev/blog/framer-motion-is-now-independent-introducing-motion)，现支持 React、原生 JavaScript 和 Vue。具有混合引擎（原生浏览器 + JavaScript 动画），支持手势和布局动画。新项目安装 `motion` 包，React 中从 `motion/react` 导入；旧教程里的 `framer-motion` 包名仍很常见。
 
 ### **表格：3D 图形/游戏引擎比较**
 
@@ -44,9 +44,6 @@ Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进�
 | [**PixiJS**](https://pixijs.com/) | 2D 渲染器 | 2D 游戏，交互式动效看板 | WebGL / WebGPU | 较平缓 | GPU 批处理加速，场景图，滤镜管线 | 灵活 |
 | [**Phaser**](https://phaser.io/) | 2D 游戏引擎 | 2D Web 游戏，H5 互动小游戏 | Canvas / WebGL | 较低 | 物理引擎，骨骼动画，音频与输入管理 | 无 |
 | [**PlayCanvas**](https://playcanvas.com/) | 3D 游戏引擎 | 3D Web 游戏，实时协作编辑器 | WebGL / WebGPU | 中等 | 云端协同编辑器，轻量运行时，物理系统 | 无 |
-
-此表有助于区分原始 API 与高级 3D 图形抽象，指导学习者根据项目的复杂度和性能需求选择合适的工具，同时也突出了 WebGPU 日益增长的重要性。
-
 ## **VI.4.2 沉浸式 Web (Immersive Web): WebXR：AR/VR，A-Frame**
 
 - [**WebXR Device API**](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)：在 Web 应用中启用增强现实 (AR) 和虚拟现实 (VR) 体验，可对接混合现实硬件（如 Apple Vision Pro、Meta Quest）。
