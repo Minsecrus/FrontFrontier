@@ -4,46 +4,40 @@ title: "VI. 新兴技术和专业领域 / VI.1 渐进式 Web 应用程序（PWA�
 
 # VI.1 渐进式 Web 应用程序（PWA）：原生般的 Web 体验
 
-**目的**：兼具网站的易触达与移动应用的能力，提供更快的加载、离线可用和接近原生应用的体验。
+渐进式 Web 应用（PWA）在不引入应用商店分发的前提下，用标准 Web 技术补齐弱网与离线可用、主屏安装、后台消息触达三项能力。其运行建立在三个核心机制之上：
 
-- **关键组件**：
-  - [**Service Workers**](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)：在后台运行的脚本，支持离线缓存、后台同步和推送通知等功能。
-  - [**Web App Manifest**](https://developer.mozilla.org/en-US/docs/Web/Manifest)：一个 JSON 文件，向浏览器提供有关 PWA 的信息（名称、图标、显示模式），“添加到主屏幕”和推送通知都依赖它。
-  - **推送通知**：服务器可以向用户设备发送消息，即使用户当前没有打开该 Web 应用。
-- **优点**：及时推送消息、召回用户、个性化内容、离线可用。
+- [**Service Workers**](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)：独立于页面的后台脚本，负责拦截网络请求、管理离线缓存、执行后台同步与接收推送。
+- [**Web App Manifest**](https://developer.mozilla.org/en-US/docs/Web/Manifest)：描述应用名称、图标、启动路径与窗口显示模式的 JSON 清单，“添加到主屏幕”和安装提示均依赖它。
+- **推送通知**：结合 Service Worker 与推送服务，在用户未打开页面时下发消息并召回用户。
 
 ## **VI.1.1 衡量与提升性能**
 
-- **PRPL 模式（PRPL Pattern）：** Google 提出的性能模式，用于加快 Web 应用的加载与交互响应。字母含义如下：
-  - **Push（推送）：** 为初始路由推送关键资源。
-  - **Render（渲染）：** 渲染初始路由，尽快让用户看到内容。
-  - **Pre-cache（预缓存）：** 使用 Service Worker 预缓存剩余的路由资源。
-  - **Lazy-load（懒加载）：** 按需懒加载和创建剩余的路由。
+PWA 的离线与安装体验建立在首屏加载和交互性能达标的基础上，通常从加载架构、量化目标、核心指标和调试工具四个层面把控：
 
-这个模式是构建高性能 PWA 的指导思想。
-
-- **RAIL 模型（RAIL Model）：** 以用户为中心的性能模型，用于衡量应用的性能表现。RAIL 代表：
-  - **Response（响应）：** 在 100 毫秒内响应用户输入。
-  - **Animation（动画）：** 动画的每一帧在 16 毫秒内完成（即 60 fps）。
-  - **Idle（空闲）：** 利用主线程的空闲时间来完成延迟任务。
-  - **Load（加载）：** 在中端移动设备和慢速网络下，5 秒内交付内容并可交互；后续访问争取 2 秒内完成加载（见 [web.dev RAIL](https://web.dev/articles/rail)）。
-
-这个模型为 PWA 的性能优化提供了明确的量化目标。
-
-- **Performance Metrics（性能指标）：** 当前稳定的 Core Web Vitals 主要包括 LCP（最大内容绘制）、INP（Interaction to Next Paint，交互到下一次绘制）和 CLS（累积布局偏移）。LCP 关注加载速度，INP 关注整体交互响应性，CLS 关注视觉稳定性。这三项指标是量化用户体验的具体工具，帮助你评估应用真实的加载速度、响应性和视觉稳定性。
-- **使用 Lighthouse / DevTools：** 这两者是实践工具。Lighthouse 是自动化的网站质量评估工具，可以审计性能、无障碍、最佳实践和 SEO 并给出优化建议。Lighthouse 12（2024 年）已[移除 PWA 类别](https://github.com/GoogleChrome/lighthouse/releases/tag/v12.0.0)，[PWA](https://web.dev/progressive-web-apps/) 的可安装性、Manifest 和 Service Worker 状态改在 [DevTools 的 Application 面板](https://developer.chrome.com/docs/devtools/progressive-web-apps/)中检查。Chrome DevTools 的 Performance 面板则用于深入定位性能瓶颈。
+- **PRPL 模式（PRPL Pattern）**：面向单页与渐进式应用的加载架构模式：
+  - **Push（推送）**：优先推送或预加载初始路由的关键资源。
+  - **Render（渲染）**：尽快完成初始路由渲染，缩短白屏时间。
+  - **Pre-cache（预缓存）**：由 Service Worker 在后台预缓存后续路由资源。
+  - **Lazy-load（懒加载）**：按需加载并实例化剩余路由与非关键模块。
+- **RAIL 模型（RAIL Model）**：将用户体验拆解为四个可量化的性能预算（见 [web.dev RAIL](https://web.dev/articles/rail)）：
+  - **Response（响应）**：在 100 毫秒内响应用户输入。
+  - **Animation（动画）**：单帧渲染与逻辑控制在 16 毫秒内完成（60 fps）。
+  - **Idle（空闲）**：将非紧急任务拆小并推迟到主线程空闲时段执行。
+  - **Load（加载）**：在中端移动设备和慢速网络下，首次访问 5 秒内可交互，后续访问控制在 2 秒以内。
+- **Performance Metrics（性能指标）**：当前稳定的 Core Web Vitals 包括衡量加载速度的 LCP（最大内容绘制）、衡量整体交互响应性的 INP（Interaction to Next Paint，交互到下一次绘制）以及衡量视觉稳定性的 CLS（累积布局偏移）。
+- **Lighthouse 与 DevTools**：Lighthouse 用于自动化审计性能、无障碍、最佳实践与 SEO。注意 Lighthouse 12（2024 年）已[移除独立的 PWA 评分类别](https://github.com/GoogleChrome/lighthouse/releases/tag/v12.0.0)，[PWA](https://web.dev/progressive-web-apps/) 的可安装性、Manifest 解析和 Service Worker 生命周期改在 [DevTools 的 Application 面板](https://developer.chrome.com/docs/devtools/progressive-web-apps/)中核查；运行时卡顿与长任务则在 Performance 面板中定位。
 
 ## **VI.1.2 浏览器 API**
 
-本节介绍的 API 让网站突破传统页面的限制，获得更接近原生应用的能力，是 PWA 做到“可靠”（Reliable）和“有吸引力”（Engaging）的技术基础。
+PWA 依赖一组后台脚本、异步存储与系统集成 API 来处理断网容错和设备交互，接入时需要留意线程限制与权限边界：
 
-- **Service Workers：** PWA 技术栈的基础。它是独立于页面、在浏览器后台运行的脚本，能够拦截和处理网络请求，为 PWA 提供两项核心能力：
-  - **离线访问**：即使设备没有网络连接，Service Worker 也能从缓存中返回内容，让应用可以离线使用。这是实现“可靠”的关键。
-  - **消息推送**：即使用户关闭了浏览器页面，Service Worker 也能接收服务器发来的推送通知，重新吸引用户回来。
-- **Storage（存储）：** 包括 Web Storage（localStorage、sessionStorage）、IndexedDB 和 Cache Storage 等。为了实现离线体验，你必须能把应用数据（如文章内容、用户信息）存储在用户的设备上。注意 Service Worker 中只能使用 IndexedDB、Cache API 这类异步存储，同步的 Web Storage 在 Service Worker 里不可用；需要与 Service Worker 共享的离线数据应放进 IndexedDB。
-- **WebSocket / Server-Sent Events（SSE）：** 分别提供客户端与服务器之间的实时双向和单向通信，可用于实时聊天、数据实时更新等功能。
-- **Location（地理位置）、Device Orientation（设备方向）、Payments（支付）、Credentials（凭证管理）：** 这些 API 让 Web 应用能够使用过去多为原生应用专有的设备硬件和系统功能，例如获取用户位置、感知设备旋转、调用系统支付界面，缩小了 Web 应用与原生应用之间的差距。
-- **Notifications（通知）：** 通常与 Service Worker 配合使用，负责把推送消息展示给用户。借助它，PWA 可以像原生应用一样在用户不活跃时提醒用户回来，这是“有吸引力”的重要体现。
+- **Service Workers**：运行在独立线程中，无法直接访问 DOM，通过拦截 `fetch` 与监听系统事件提供两项核心能力：
+  - **离线访问**：网络不可用或超时时直接从本地缓存返回响应，避免展示浏览器默认的断网错误页。
+  - **消息推送**：页面关闭后仍可由系统唤醒，接收服务端推送并触发通知展示。
+- **Storage（存储）**：涵盖 Web Storage（`localStorage`、`sessionStorage`）、IndexedDB 和 Cache Storage。Service Worker 内部只能调用 IndexedDB 和 Cache API 等异步存储，同步的 Web Storage 在其中不可用；需要跨主线程与 Service Worker 共享的结构化离线数据应存入 IndexedDB。
+- **WebSocket / Server-Sent Events（SSE）**：在线状态下分别提供全双工通信与服务端单向流式推送，常用于实时消息与状态同步。
+- **Location（地理位置）、Device Orientation（设备方向）、Payments（支付）、Credentials（凭证管理）**：在安全上下文（HTTPS）与用户授权下调用设备定位、姿态传感、系统支付界面和登录凭证管理。
+- **Notifications（通知）**：配合 Service Worker 在系统层面展示通知，需先通过用户手势完成权限申请，并妥善处理权限被拒或被系统静默的情况。
 
 ::: details 示例：离线能力是一组明确的缓存决策
 
@@ -105,14 +99,14 @@ async function cacheFirst(request) {
 
 :::
 
-PWA（Progressive Web Apps）融合了 Web 的开放性与原生应用的优势，核心特性包括：
+除缓存与存储外，交付完整的 [PWA](https://web.dev/progressive-web-apps/) 还需要统筹安装配置、后台队列与搜索引擎可发现性：
 
-- **可安装性（Installability）**：通过 [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) 定义应用的名称、图标、主题色、启动 URL 等，让应用可以添加到主屏幕，获得类似原生应用的启动体验。
-- **离线能力（Offline Capability）**：通过 Service Worker 拦截网络请求，实现资源缓存、离线访问和断网提示。
-- **推送通知（Push Notifications）**：通过 Service Worker 和 [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) 向用户发送通知，用户未打开应用时也能收到消息。
-- **后台同步（Background Sync）**：用户离线时操作先在本地排队，恢复联网后再自动发出请求，例如离线提交表单。
-- **Web Share API / Web Share Target API**：调用操作系统的原生分享功能，或作为分享目标接收其他应用分享的内容。
-- **SEO**：PWA 同样需要做 SEO，包括提交站点地图、为每个视图提供独立 URL（使用 History API）、监控性能、优化元数据和结构化数据（Schema），以及按需采用 SSR/SSG 等混合渲染。
+- **可安装性（Installability）**：通过 [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest) 声明名称、图标、主题色与启动 URL，满足浏览器安装条件后即可添加到主屏幕或桌面并以独立窗口启动。
+- **离线能力（Offline Capability）**：由 Service Worker 区分导航请求、静态资源与接口请求，分别落地缓存、离线回退页和断网提示。
+- **推送通知（Push Notifications）**：结合 Service Worker 和 [Push API](https://developer.mozilla.org/en-US/docs/Web/API/Push_API) 接收服务端推送，在应用未打开时触达用户。
+- **后台同步（Background Sync）**：离线时将表单提交等写操作暂存本地队列，待网络恢复后由 Service Worker 在后台重放请求。
+- **Web Share API / Web Share Target API**：调用系统原生分享面板，或将 PWA 注册为系统分享目标以接收外部应用传入的内容。
+- **SEO**：安装型 Web 应用同样依赖搜索引擎入口，需为每个视图提供独立 URL（History API）、提交站点地图、完善元数据与结构化数据（Schema），并对需要收录的页面采用 SSR/SSG 等渲染方案。
 
 ## **VI.1.3 Manifest、注册与更新验证**
 

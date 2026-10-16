@@ -4,15 +4,15 @@ title: "IV. 前端框架和库：构建现代 UI / IV.2 Web Components：原生�
 
 # IV.2 Web Components：原生、跨框架的组件化未来
 
-除了 React、Vue、Svelte 等框架各自的组件化方案，Web 标准本身也提供了原生的组件模型——[**Web Components**](https://www.webcomponents.org/)。它是一套已纳入 WHATWG [HTML](https://html.spec.whatwg.org/multipage/custom-elements.html) 与 [DOM](https://dom.spec.whatwg.org/#shadow-trees) 标准、浏览器原生支持的技术集合，旨在让开发者创建可复用、封装良好的自定义 HTML 元素。这些元素可以在任何 Web 页面中使用，也能在主流 JavaScript 框架中使用。需要注意的是，React 18 及更早版本只会把 props 当作字符串 attribute 传给自定义元素，也不能用 `onXxx` 直接监听自定义事件，通常要借助 ref 手动设置 property 和绑定事件；React 19 起才完整支持自定义元素。
+除了 React、Vue、Svelte 等框架各自的组件模型，浏览器平台本身也通过 WHATWG [HTML](https://html.spec.whatwg.org/multipage/custom-elements.html) 与 [DOM](https://dom.spec.whatwg.org/#shadow-trees) 标准提供了原生组件化方案——[**Web Components**](https://www.webcomponents.org/)。它允许开发者定义封装良好的自定义 HTML 元素，既能在无框架页面中直接挂载，也能接入主流 JavaScript 框架。不过在跨框架集成时需要注意版本边界：React 18 及更早版本只会将 props 作为字符串 attribute 写入自定义元素，且无法通过 `onXxx` 直接监听自定义事件，往往需要借助 `ref` 手动读写 property 和绑定监听器；直到 React 19 才原生补齐了对自定义元素属性与事件的完整支持。
 
-Web Components 主要由三项核心技术构成：
+Web Components 由三项浏览器原生技术协同构成：
 
-1. **Custom Elements（自定义元素）**：开发者可以定义自己的 HTML 标签，例如创建一个名为 `<my-button>` 的标签，并赋予它特定的样式和行为。不过，自定义元素本身没有内建语义，按钮、对话框等角色和键盘行为仍需开发者通过 ARIA 和脚本补齐。
+1. **Custom Elements（自定义元素）**：通过 `customElements.define()` 注册自定义 HTML 标签（如 `<my-button>`），并挂载生命周期钩子与特定交互行为。需要注意，自定义元素默认不包含任何内建无障碍语义，诸如按钮、对话框等角色声明（ARIA）与键盘导航逻辑，仍需开发者显式补齐。
 
-2. **Shadow [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)（影子 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)）**：这是 Web Components 中最有特色的部分。它能把一棵独立的、“隐藏”的 DOM 树附加到元素上。Shadow DOM 内部的 **DOM 结构和样式被封装**：内部样式规则不会影响外部页面，外部选择器也不会意外匹配内部元素。但它并不隔离脚本（组件代码与页面共享同一个全局环境），可继承的 CSS 属性（如 `color`、`font`）和 CSS 自定义属性也会穿透边界，后者正是组件对外开放主题定制的常用入口。对于 CSS 全局作用域污染这一长期问题，它提供了浏览器原生的样式封装方案。
+2. **Shadow [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)（影子 [DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)）**：将一棵独立的内部 DOM 树挂载到宿主元素上，从浏览器引擎层面实现 **DOM 结构与样式的作用域隔离**——内部样式规则不会泄漏到外部文档，外部 CSS 选择器也不会意外命中内部节点。但这种隔离仅针对 DOM 与非继承样式：组件脚本仍与宿主页面共享同一个全局执行环境；`color`、`font` 等可继承 CSS 属性以及 CSS 自定义属性（`--*`）依然会穿透 Shadow 边界，后者正是自定义元素对外暴露主题定制契约的标准入口。
 
-3. **HTML Templates（`<template>` 和 `<slot>`）**：`<template>` 标签用来声明一段惰性的 DOM 片段，其内容不会渲染，直到脚本把它克隆并插入文档。`<slot>` 元素是一个占位符，用来把外部的 HTML 内容“投影”到组件的 Shadow DOM 内部，增强了组件的可组合性。
+3. **HTML Templates（`<template>` 和 `<slot>`）**：`<template>` 用于声明解析后暂不渲染的惰性 DOM 片段，待组件实例化时再通过脚本克隆并挂载；`<slot>` 则作为内容投影插槽，将宿主标签内部的外部 HTML 节点映射到 Shadow DOM 指定位置，支撑组件的组合扩展。
 
 ::: details 示例：一个具备输入、输出和清理边界的原生组件
 
@@ -74,6 +74,5 @@ customElements.define("toggle-panel", TogglePanel);
 
 :::
 
-- **核心优势：跨框架复用与技术无关性**：Web Components 是浏览器原生标准，用它创建的组件不依赖任何特定框架。用 Web Components 编写的组件库，可以在 React、Vue、Angular 或原生 JavaScript 项目中复用，通常无需修改组件本身（React 18 及更早版本的接入限制见本章开头）。对于构建企业级设计系统，或需要在技术栈不同的多个团队之间共享 UI 组件的场景，这一点优势明显。
-
-- **生态与未来**：Google 的 **Lit**、微软的 FAST 等轻量级库，进一步简化了 Web Components 的编写。随着浏览器兼容性日益完善、前端生态对“技术栈无关性”的需求增加，Web Components 作为一种可持续的组件化方案，受到越来越多的关注。它代表了组件化能力回归 Web 平台本身的趋势。
+- **核心价值：跨技术栈的设计系统底座**：由于直接运行在浏览器标准之上，Web Components 组件不绑定特定框架运行时，同一套组件产物可以同时供 React、Vue、Angular 或原生页面消费（React 18 及更早版本的接入限制见本章开头）。这使它非常适合作为多团队、多技术栈共用的企业级基础组件库或微前端公共 UI 底座。
+- **工程工具链与演进**：直接手写原生 `HTMLElement` 往往需要处理大量属性同步与 DOM 更新样板代码。实际工程中通常借助 Google 的 **Lit** 或微软的 FAST 等轻量封装库，以极小的运行时开销获得声明式模板与响应式属性支持，将组件能力建立在长期稳定的 Web 平台标准之上。

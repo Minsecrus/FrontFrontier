@@ -4,19 +4,17 @@ title: "VI. 新兴技术和专业领域 / VI.6 Web 音频和媒体流：实时�
 
 # VI.6 Web 音频和媒体流：实时音频/视频处理
 
-**目的**：在浏览器中实现高级音频处理、实时通信、底层音视频编解码和媒体捕获/录制。
+标准 `<audio>` 与 `<video>` 元素只负责成品媒体的加载与播放。当应用需要采集摄像头与麦克风、在独立线程运行自定义音频信号处理（DSP）、直接调用硬件编解码器处理原始帧，或建立低延迟实时通信时，需要按媒体管线层级组合以下 Web API：
 
-- [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)：功能完整的音频处理系统，支持模块化路由、音效处理、可视化和空间音效，是 `<audio>` 元素的补充，用于复杂处理。需要在独立线程中运行自定义信号处理（DSP）代码时，使用 **[AudioWorklet](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet)**，它取代了已弃用、在主线程运行的 `ScriptProcessorNode`。
-- **[Media Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API)**：支持流式传输音频和视频数据，可访问用户摄像头/麦克风（`getUserMedia()`）或屏幕共享（`getDisplayMedia()`），并配合 **[MediaRecorder API](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)** 在客户端录制音视频。
-- **[WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)**：直接访问浏览器底层的编解码器（VideoEncoder/Decoder、AudioEncoder/Decoder，可利用硬件加速），暴露原始 `VideoFrame` 与 `AudioData`，为 Web 端视频剪辑与低延迟推流奠定基础。
-- **Media Source Extensions（MSE）**：无需插件即可在网页中播放流媒体。JavaScript 可以为 `<audio>` 和 `<video>` 元素构造媒体流，并精细控制何时获取哪一段媒体数据。
-- **[WebRTC](https://webrtc.org/) 与 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API)**：WebRTC 支持浏览器间点对点实时音视频流与 DataChannel 数据交换；WebTransport 则基于 HTTP/3（QUIC）提供低延迟、支持多路复用的双向传输。
-
-在浏览器中构建视频会议、在线数字音频工作站、网页视频编辑器、云游戏等复杂实时应用，主要依靠这些 API。
+- [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)：基于节点图（AudioNode Graph）的模块化音频处理系统，支持混音、滤波、频谱分析与空间音效，填补了 `<audio>` 元素无法精细干预音频流的空白。需要在独立线程中运行自定义 DSP 算法时，应使用 **[AudioWorklet](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet)**，它取代了已弃用且容易阻塞主线程的 `ScriptProcessorNode`。
+- **[Media Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API)**：抽象本地音视频轨道流（`MediaStream`），通过 `getUserMedia()` 访问摄像头/麦克风，或通过 `getDisplayMedia()` 捕获屏幕共享，并可配合 **[MediaRecorder API](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)** 在客户端直接封装录制结果。
+- **[WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)**：绕过高层播放器，直接调用浏览器底层的音视频编解码器（`VideoEncoder`/`VideoDecoder`、`AudioEncoder`/`AudioDecoder`，支持硬件加速），暴露原始 `VideoFrame` 与 `AudioData`，是网页非线性视频剪辑与超低延迟推流的核心原语。
+- **Media Source Extensions（MSE）**：允许 JavaScript 动态向 `<audio>` 和 `<video>` 喂入分片媒体字节流（如 HLS/DASH 自适应码率播放器），精细控制缓冲区间与清晰度切换。
+- **[WebRTC](https://webrtc.org/) 与 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API)**：WebRTC 提供浏览器间点对点（P2P）实时音视频流与 `RTCDataChannel` 数据传输；WebTransport 则基于 HTTP/3（QUIC）提供客户端与服务端之间的低延迟多路复用双向流和不可靠数据报（Datagrams）。
 
 ## **VI.6.1 麦克风预览的权限、生命周期与清理**
 
-媒体能力需要在 HTTPS 和用户手势下启动，并为权限拒绝、设备变化和页面离开准备清理逻辑。
+媒体采集必须在安全上下文（HTTPS）中结合用户手势启动，并为权限拒绝、设备热插拔和组件卸载准备显式的轨道释放与上下文关闭逻辑。
 
 ```js
 export async function startMicrophonePreview(audioElement) {
@@ -44,9 +42,9 @@ export async function startMicrophonePreview(audioElement) {
 }
 ```
 
-调用方应在 `try/catch` 中区分权限拒绝、设备占用和浏览器能力缺失，并在组件卸载或用户停止录音时调用返回的清理函数。产品界面还应明确展示麦克风指示、录制状态和数据用途。
+调用方应在 `try/catch` 中区分权限拒绝（`NotAllowedError`）、设备缺失或被占用（`NotFoundError` / `NotReadableError`）与浏览器能力缺失，并在组件卸载或用户停止录音时调用返回的清理函数，否则浏览器的麦克风采集指示灯会一直保持激活。产品界面还应明确展示采集状态与数据去向。
 
-**表格：现代 Web 媒体技术体系与选型指南**
+下表梳理了各媒体 API 所处的管线层级、运行线程与工程边界：
 
 | 技术方案 | 核心层级与机制 | 运行环境 / 线程 | 适用场景 | 注意事项与局限 |
 | :--- | :--- | :--- | :--- | :--- |

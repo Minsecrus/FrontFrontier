@@ -4,16 +4,16 @@ title: "III. 基本开发环境和工具 / III.4 包管理器：npm、Yarn 和 p
 
 # III.4 包管理器：npm、Yarn 和 pnpm 依赖管理
 
-**目的**：管理 JavaScript 项目中的依赖项（可重用代码包），负责包的安装、更新、配置和删除。
+前端工程通常依赖数百个第三方包。包管理器不仅负责下载、更新和卸载依赖，还决定了依赖树如何解析、`node_modules` 如何布局，以及团队与 CI 环境能否复现完全一致的安装结果：
 
-- **npm（Node Package Manager）**：随 [Node.js](https://nodejs.org/) 一起安装，是使用最广泛的包管理器，并持续加强可信发布、来源证明（provenance）和安全审计能力。
-- [**Yarn**](https://yarnpkg.com/)：由 Facebook 开发，注重速度、正确性、安全性和开发者体验，提供离线缓存、并行安装等功能。
-- [**pnpm**](https://pnpm.io/)：用内容寻址存储加硬链接、符号链接组织 `node_modules`，消除重复安装、减少磁盘占用，并防止“幽灵依赖”（代码能引用未在 `package.json` 中声明、只是被间接安装的包）。它在 Monorepo（单仓多项目）和严格依赖治理中很常见。
-- [**Bun**](https://bun.sh/)：既是 JavaScript 运行时，也提供包管理、测试和打包能力。它适合追求一体化工具链和高速本地反馈的项目，但仍要评估团队生态、CI、部署平台和兼容性。
+- **npm（Node Package Manager）**：随 [Node.js](https://nodejs.org/) 默认分发，兼容性最广，近年持续强化可信发布、来源证明（provenance）和安全审计能力。
+- [**Yarn**](https://yarnpkg.com/)：早期为解决 npm 安装慢与锁文件不确定性而生，提供离线缓存、并行安装、Plug'n'Play（PnP）以及校验工作区依赖规则的 Constraints 机制。
+- [**pnpm**](https://pnpm.io/)：用全局内容寻址存储加硬链接、符号链接组织 `node_modules`，消除跨项目重复安装、节省磁盘空间，并默认阻断“幽灵依赖”（即代码直接 `import` 未在 `package.json` 中显式声明、仅被底层依赖间接安装的包），是当前 Monorepo（单仓多项目）与严格依赖治理的主流选择。
+- [**Bun**](https://bun.sh/)：集成了 JavaScript 运行时、包管理、测试运行器和打包能力。安装与脚本启动速度突出，适合追求一体化高速反馈的项目；引入前需核对团队现有工具链、CI 镜像与目标部署平台的兼容性。
 
-从 npm 到 Yarn、pnpm 和 Bun 的演变，反映了行业对效率（速度、磁盘空间）、可靠性（严格的依赖检查，防止幽灵依赖）和供应链安全的持续追求。包管理器的选择会直接影响构建时间、CI/CD 耗时和大型项目的稳定性。
+包管理器的演进围绕三个核心工程问题展开：缩短本地与 CI 的安装耗时、通过严格隔离防止幽灵依赖引发的线上故障，以及借助锁文件与来源校验保障供应链安全。
 
-现代项目还应该在 `package.json` 中使用 `packageManager` 字段固定包管理器和版本，并结合 Corepack 或团队统一的安装脚本，让同一仓库总能生成一致的锁文件。注意：Node.js 25 起安装包不再附带 Corepack，需要先通过 `npm install -g corepack` 单独安装（见 [Corepack 仓库](https://github.com/nodejs/corepack)）；Node.js 16.9~24 仍内置 Corepack。
+为了防止不同成员混用包管理器导致锁文件冲突或依赖解析漂移，项目应在 `package.json` 中用 `packageManager` 字段锁定工具及版本，并配合 Corepack 或统一安装脚本强制执行。注意：Node.js 25 起安装包不再附带 Corepack，需要先通过 `npm install -g corepack` 单独安装（见 [Corepack 仓库](https://github.com/nodejs/corepack)）；Node.js 16.9~24 仍内置 Corepack。
 
 ::: details 示例：packageManager + Corepack
 
@@ -41,7 +41,7 @@ pnpm install --frozen-lockfile
 
 :::
 
-**表格：流行 JavaScript 包管理器比较**
+下表对比了四款主流包管理器的设计取舍与适用场景：
 
 | 特性         | [npm](https://www.npmjs.com/)          | [Yarn](https://yarnpkg.com/)            | [pnpm](https://pnpm.io/)                 | [Bun](https://bun.sh/)                     |
 | :----------- | :------------------------------------- | :-------------------------------------- | :--------------------------------------- | :----------------------------------------- |

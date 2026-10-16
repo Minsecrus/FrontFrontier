@@ -4,23 +4,15 @@ title: "III. 基本开发环境和工具 / III.1 版本控制系统：Git 和 Gi
 
 # III.1 版本控制系统：Git 和 GitHub 协作开发
 
-[**Git**](https://git-scm.com/) 是一种快速、可扩展的分布式版本控制系统。它跟踪文件更改，让开发者查看项目历史（谁在何时改了什么、为什么改）、恢复到以前的版本，并与他人协作。
+多人并行修改同一份代码库时，团队需要准确追踪“谁在何时改了什么、为什么改”，并在出错时安全回退。[**Git**](https://git-scm.com/) 通过分布式版本控制解决这一问题：每位开发者本地都持有完整的**仓库**（文件及其修订历史），通过**提交**记录关键时间点的项目快照，并借助**分支**将新功能开发、实验性改动与主线代码隔离开来。
 
-核心概念包括：
+日常协作主要围绕一组核心命令展开：`git init` 与 `git clone` 用于初始化或获取仓库，`git status`、`git add`、`git commit` 负责检查状态并记录本地快照，`git branch` 与 `git merge` 管理分支演进，`git pull` 与 `git push` 则用于同步远程变更。
 
-- **仓库**：文件、文件夹及其修订历史的完整集合。
-- **提交**：项目历史中的时间快照。
-- **分支**：独立的开发线，实现隔离的开发测试和并行工作。
-
-常用命令包括：`git init`、`git clone`、`git add`、`git commit`、`git status`、`git branch`、`git merge`、`git pull`、`git push`。
-
-[**GitHub**](https://github.com/) 是流行的 Git 仓库托管平台，提供 issue 跟踪和 Pull Request（PR，拉取请求）等协作工具，支持代码审查并集成 CI/CD 工作流。除此之外，还有 **[GitLab](https://about.gitlab.com/)、[Gitee](https://gitee.com/)、[Bitbucket](https://bitbucket.org/product/)** 等仓库托管平台。
-
-“Fork and Pull”模式（先 Fork 复刻仓库，再向原仓库提交 PR）是大型开源项目协作的基础。
+在本地版本控制之上，[**GitHub**](https://github.com/)、[**GitLab**](https://about.gitlab.com/)、[**Gitee**](https://gitee.com/)、[**Bitbucket**](https://bitbucket.org/product/) 等托管平台补齐了团队协作闭环：通过 Issue 跟踪任务与缺陷，借助 Pull Request（PR，拉取请求）开展代码审查并触发 CI/CD 流水线。开源社区普遍采用“Fork and Pull”模式——协作者先 Fork 复刻目标仓库，在个人仓库分支完成修改后，再向原仓库发起 PR 请求合并。
 
 ## **III.1.1 Git 的核心心智模型：四层架构与状态流转**
 
-理解 Git 的关键在于建立清晰的“数据在哪个区域”的心智模型，而非死记命令：
+死记命令很容易在冲突或回滚时出错，排查问题的关键是先分清“数据当前处在哪一层”：
 
 ```text
 [ 工作区 (Working Directory) ]

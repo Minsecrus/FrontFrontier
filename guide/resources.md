@@ -4,157 +4,153 @@ title: "附录 A：前端学习资料汇总"
 
 # 附录 A：前端学习资料汇总
 
-按正在解决的问题选择资料：先用正文建立概念，再查官方文档确认 API 和配置，最后用练习或项目验证。阅读工具文档时应选择与项目依赖相符的版本。
+建议按当前正在解决的具体问题查阅资料：先通过本指南建立心智模型与边界认知，再查官方文档确认当前版本的 API 与配置细节，最后用代码练习或真实项目完成验证。
 
 ## **0. 学习路线图（The Map）**
 
-_出发前的指南针，迷茫时的导航仪。_
+_用于建立全局坐标、规划阶段性学习重点。_
 
 - **[roadmap.sh](https://roadmap.sh/)**
-  - **用途**：通过 [Frontend Roadmap](https://roadmap.sh/frontend) 了解技能之间的关系，也可按 React、Vue 或全栈方向继续查阅。
-  - **何时阅读**：开始学习或阶段复盘时，对照本文标记已掌握的知识，再根据项目需要安排后续主题。
+  - **用途**：通过 [Frontend Roadmap](https://roadmap.sh/frontend) 梳理前端技能树及上下游关联，也可按 React、Vue 或全栈方向深入查阅。
+  - **何时阅读**：入门规划或阶段性复盘时，对照本文标记已掌握的模块，再按实际项目诉求安排下一阶段主题。
 - **[The Odin Project](https://www.theodinproject.com/)**
-  - **用途**：免费的项目驱动型全栈课程，覆盖本地开发环境、Git、命令行和 Web 应用练习。
-  - **何时阅读**：已经看懂基础教程、但还不能独立完成项目时，选择对应练习，把正文概念落实到代码中。
+  - **用途**：免费的项目驱动型全栈课程，覆盖本地开发环境搭建、Git、命令行操作与完整的 Web 应用实战。
+  - **何时阅读**：能够看懂零散语法教程、但独立从零搭建项目仍感吃力时，可通过其配套项目把理论落实为代码。
 
 ## **1. Web 文档、兼容性与标准（Web References）**
 
-_这些是所有前端开发的基石，遇到问题时的第一检索源。_
+_确认浏览器标准行为、兼容性基线与无障碍规范的第一信源。_
 
 - **[MDN Web Docs](https://developer.mozilla.org/zh-CN/)**
-  - **用途**：查询 HTML、CSS、JavaScript 和 Web API 的用法、示例及兼容性；需要确认规范细节时，继续查看条目中的规范链接。
+  - **用途**：查询 HTML、CSS、JavaScript 和 Web API 的标准用法、示例与浏览器兼容性；需要核实底层边缘行为时，可直接顺着词条底部的规范链接查阅 W3C / WHATWG / ECMAScript 原文。
 - **[web.dev](https://web.dev/)**
-  - **用途**：学习性能、Core Web Vitals、PWA 和无障碍的实现方法，适合在发现具体体验问题后按主题阅读。
+  - **用途**：系统学习性能优化、Core Web Vitals、PWA 与无障碍的工程实践，适合在定位到具体体验瓶颈后按专题精读。
 - **[Web Platform Baseline](https://web.dev/baseline/)**
-  - **用途**：了解 Web 特性在主要浏览器中的支持状态；决定是否采用时，还要核对项目的目标浏览器和用户分布。
+  - **用途**：判断某项 Web 特性在主流浏览器中的跨引擎普及程度；决定生产环境是否直接使用前，仍需结合自身项目的目标浏览器与真实用户设备分布。
 - **[Web Platform Dashboard / WebStatus](https://webstatus.dev/)**
-  - **用途**：按特性查询 Web 平台能力、Baseline 状态与浏览器进展。
+  - **用途**：按特性检索 Web 平台能力、Baseline 状态与各浏览器内核的实现进展。
 - **[Can I Use](https://caniuse.com/)**
-  - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`、Container Queries）。
+  - **用途**：按浏览器版本细致查询 CSS / JS 特性的兼容矩阵（如 `:has()`、Container Queries、View Transitions）。
 - **[WCAG 2.2](https://www.w3.org/TR/WCAG22/)** / **[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)**
-  - **用途**：用 WCAG 查询无障碍成功标准，用 APG 参考组件语义、键盘交互和实现示例，适合在组件设计与验收时查阅。
+  - **用途**：用 WCAG 核对无障碍合规标准，用 APG 查阅各类复杂交互组件（弹窗、菜单、标签页等）的 ARIA 角色、键盘导航规范与参考实现。
 - **[Patterns.dev](https://www.patterns.dev/)**
-  - **用途**：学习 Web 应用的设计模式、渲染模式和性能取舍，适合比较 CSR、SSR、SSG、Streaming、Islands 等方案时阅读。
+  - **用途**：对比学习现代 Web 应用的设计模式、渲染架构（CSR、SSR、SSG、Streaming、Islands）与性能取舍。
 
 ## **2. 核心技术栈深度学习（Deep Dives）**
 
-_不仅是官方文档，更是进阶教程。_
+_跨越“会调 API”阶段，深入理解语言机制与框架心智模型。_
 
 - **JavaScript**
-  - **[JavaScript.info](https://javascript.info/)**
-    - **用途**：按顺序学习语言基础、对象、异步、DOM 与网络请求；适合从零学习，也适合针对薄弱主题精读。
-    - **中文站**：[现代 JavaScript 教程](https://zh.javascript.info/)。
+  - **[JavaScript.info](https://javascript.info/)**（中文版：[现代 JavaScript 教程](https://zh.javascript.info/)）
+    - **用途**：循序渐进地掌握语言核心、对象原型、异步编程、DOM 事件与网络请求；既适合系统入门，也适合针对薄弱环节专项补强。
   - **[You Don't Know JS Yet (GitHub)](https://github.com/getify/You-Dont-Know-JS)**
-    - **用途**：深入理解作用域、闭包、对象与类型机制，适合已经会使用语法、需要解释代码行为时阅读。
+    - **用途**：深入剖析作用域、闭包、原型委托与类型转换底层机制，适合需要准确解释复杂代码运行行为时精读。
   - **[Just JavaScript](https://justjavascript.com/)**
-    - **用途**：通过值、变量、对象与引用建立 JavaScript 心智模型，适合梳理对象共享和相等性判断中的困惑。
+    - **用途**：围绕“值、变量、对象与引用”构建清晰的 JavaScript 内存心智模型，消除对象引用共享与不可变更新中的常见困惑。
 - **TypeScript**
-  - **[Total TypeScript](https://www.totaltypescript.com/)**：通过练习学习泛型、类型推断和应用类型设计，适合掌握基础语法后进阶。
-  - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**：官方手册，适合系统学习类型系统，也可在遇到类型收窄、泛型或模块问题时查阅。
+  - **[Total TypeScript](https://www.totaltypescript.com/)**：通过交互式练习掌握泛型推导、类型体操与工程级类型设计，适合跨过基础语法后的进阶训练。
+  - **[TypeScript Handbook](https://www.typescriptlang.org/docs/)**：官方权威手册，适合系统梳理类型系统或在遇到类型收窄、逆变/协变、模块解析问题时按章查阅。
 - **React 生态**
-  - **[React.dev](https://react.dev/)**：通过官方教程和练习学习组件、状态与 Effect，适合入门和检查常见使用误区。
-  - **[Josh W Comeau's Blog](https://www.joshwcomeau.com/)**：通过交互式示例讲解 CSS 和 React，适合需要观察布局或渲染行为时阅读。
+  - **[React.dev](https://react.dev/)**：通过交互式图解与挑战练习讲透组件纯度、状态快照与 Effect 边界，特别是“You Might Not Need an Effect”一章值得反复精读。
+  - **[Josh W Comeau's Blog](https://www.joshwcomeau.com/)**：用极高质量的可交互可视化组件剖析 CSS 布局算法与 React 渲染机制。
 - **Vue 生态**
-  - **[Vue.js 官方文档](https://vuejs.org/)**：学习响应式、组件与组合式 API，并按项目写法查阅 Options API 或 Composition API。
-  - **[Anthony Fu (antfu)](https://antfu.me/)**：阅读开源工具的设计过程与工程经验，适合了解工具链实现中的取舍。
+  - **[Vue.js 官方文档](https://vuejs.org/)**：系统学习响应式原理、组件通信与组合式 API（Composition API）的组织范式。
+  - **[Anthony Fu (antfu)](https://antfu.me/)**：通过核心开源作者的视角，理解现代前端工具链、约定优于配置以及工程开源库的设计取舍。
 - **现代全栈课程**
   - **[Full Stack Open](https://fullstackopen.com/)**
-    - **用途**：通过 React、Node.js、TypeScript、GraphQL、测试、CI/CD 和容器相关练习，学习 Web 应用的完整开发过程。
-    - **何时阅读**：掌握 HTML、CSS、JavaScript 基础后，系统补齐 SPA、后端接口、测试和部署能力。
-- **中文知识库**
-  - **[千古前端图文教程](https://github.com/qianguyihao/Web)**：覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题，适合作为中文补充材料，按知识点查漏补缺。
+    - **用途**：由赫尔辛基大学维护的实战型全栈课程，覆盖 React、Node.js、TypeScript、GraphQL、自动化测试、CI/CD 与容器化部署。
+    - **何时阅读**：掌握前端三剑客基础后，需要打通前后端接口、数据库、测试门禁与部署全链路时系统跟练。
+- **中文综合补充**
+  - **[千古前端图文教程](https://github.com/qianguyihao/Web)**：涵盖 HTML、CSS、JavaScript、工程化与常见数据结构基础，适合作为中文检索与查漏补缺的参考。
 
 ## **3. 样式与 UI 设计（CSS & Design）**
 
-_从“写出 CSS”到“写出好用的 UI”。_
+_从“写出能显示的样式”进阶到“构建有层级、可维护、无障碍的界面体系”。_
 
-- **CSS 进阶**
-  - **[Modern CSS](https://moderncss.dev/)**：专注于现代 CSS 解决方案的教程。
-  - **[SmolCSS](https://smolcss.dev/)**：极简的现代 CSS 布局片段。
-- **图标库**
-  - **[Lucide](https://lucide.dev/)**：风格统一的图标集合，适合按同一视觉语言为界面选择图标。
-  - **[React Icons](https://react-icons.github.io/react-icons/)**：以 React 组件形式提供多套图标集合，适合在项目中按需选择和引用。
-- **无头组件（Headless UI）**
-  - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**：提供逻辑和无障碍能力，不带样式的组件库底座。
-  - **[shadcn/ui](https://ui.shadcn.com/)**：将组件源码引入项目后自行维护，适合需要调整组件实现、统一样式和保留代码控制权的场景。
-- **UI/UX 设计基础**
-  - **[Refactoring UI](https://www.refactoringui.com/)**：面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
-  - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**：UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
-  - **[Laws of UX](https://lawsofux.com/)**：简洁地整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
-- **设计系统参考**
-  - **[Material Design](https://m3.material.io/)**：Google 的设计系统，适合学习组件规范、动效、颜色体系和跨平台体验一致性。
-  - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**：Apple 平台设计指南，适合理解系统级交互、平台习惯和高质量原生体验。
-  - **[IBM Carbon Design System](https://carbondesignsystem.com/)**：面向企业级产品的成熟设计系统，适合学习数据密集界面、组件状态和设计 token 的组织方式。
-  - **[Atlassian Design System](https://atlassian.design/)**：面向协作和工作流产品的设计系统，适合参考复杂产品中的导航、表单、反馈和内容设计。
+- **现代 CSS 实践**
+  - **[Modern CSS](https://moderncss.dev/)**：针对真实界面组件痛点提供基于现代 CSS 特性的工程解法。
+  - **[SmolCSS](https://smolcss.dev/)**：提炼极简、高复用的现代 CSS 响应式布局与组件代码片段。
+- **图标体系**
+  - **[Lucide](https://lucide.dev/)**：笔触与网格高度统一的开源图标库，支持按需 Tree Shaking，适合作为设计系统的默认图标集。
+  - **[React Icons](https://react-icons.github.io/react-icons/)**：将多套主流开源图标集封装为统一的组件接口，方便在原型或跨风格项目中按需检索。
+- **无头组件与源码自有组件（Headless & Copy-Paste UI）**
+  - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**：封装复杂的焦点管理、键盘导航、弹出层定位与 ARIA 状态，将视觉样式完全留给业务侧定制。
+  - **[shadcn/ui](https://ui.shadcn.com/)**：基于无头原语与 Tailwind CSS，将组件源码直接拷入业务仓库维护，适合需要深度定制交互细节并完全掌控组件代码的团队。
+- **UI/UX 设计方法论**
+  - **[Refactoring UI](https://www.refactoringui.com/)**：专为开发者编写的界面设计实战指南，用具体反例讲透视觉层级、留白间距、字重对比、色彩体系与边框阴影的调整技巧。
+  - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**：基于眼动实验与用户研究的可用性智库，适合在设计复杂导航、表单校验、搜索筛选与信息架构时查找实证依据。
+  - **[Laws of UX](https://lawsofux.com/)**：整理费茨定律、希克定律、米勒定律等经典人机交互心理学原则，适合在界面评审与体验复盘时对照检查。
+- **工业级设计系统参考**
+  - **[Material Design](https://m3.material.io/)**：Google 设计系统，适合参考动态色彩 Token、交互状态层（State Layer）与跨平台动效规范。
+  - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**：Apple 平台设计规范，适合理解触控目标尺寸、系统级手势、排版可读性与原生交互直觉。
+  - **[IBM Carbon Design System](https://carbondesignsystem.com/)**：面向复杂 B 端与数据密集型应用的设计系统，适合参考高密度表格、筛选器、数据可视化配色与企业级无障碍标准。
+  - **[Atlassian Design System](https://atlassian.design/)**：面向协同办公与复杂工作流的设计系统，适合参考表单反馈、空状态、权限提示与微文案（Microcopy）规范。
 
 ## **4. 工程化与工具链（Engineering）**
 
-_提升开发效率与代码质量的利器。_
+_支撑编译打包、静态分析、自动化测试、性能剖析与安全加固的工具参考。_
 
-- **构建与编译**
-  - **[AST Explorer](https://astexplorer.net/)**：查看代码的抽象语法树，适合编写代码转换或静态检查规则前观察节点结构。
-  - **[Bundlephobia](https://bundlephobia.com/)**：估算 npm 包的打包体积，适合初步比较依赖；项目中的实际成本仍需用构建产物分析确认。
-  - **[Vite 官方指南](https://vite.dev/guide/)**：查询开发服务器、静态资源、环境变量与生产构建，适合搭建工程或排查构建配置时阅读。
-  - **[TypeScript TSConfig Reference](https://www.typescriptlang.org/tsconfig/)**：查询编译选项的含义与影响，适合调整严格检查、模块解析和输出配置时查阅。
-- **测试与组件开发**
-  - **[Vitest](https://vitest.dev/guide/)**：学习测试组织、断言、Mock 和覆盖率配置，适合为业务逻辑与模块补充单元测试时阅读。
-  - **[Testing Library](https://testing-library.com/docs/guiding-principles/)**：学习从用户可观察的行为查询和操作界面，适合为表单、按钮等组件编写交互测试时阅读。
-  - **[Playwright](https://playwright.dev/docs/intro)**：学习在浏览器中验证关键流程，并通过自动等待和 Trace 排查失败，适合端到端测试与回归验证。
-  - **[Storybook](https://storybook.js.org/docs)**：将组件状态组织为独立的 Story，适合组件开发、设计评审及交互测试时查阅。
-- **调试与性能分析**
-  - **[Chrome DevTools 官方文档](https://developer.chrome.com/docs/devtools/)**：按 Elements、Console、Network、Performance 等面板学习排障，适合定位样式、请求或运行时性能问题。
-  - **[Regex101](https://regex101.com/)**：用样例验证正则表达式并查看解释；调试 JavaScript 正则时选择对应的引擎模式。
-  - **[JSON Crack](https://jsoncrack.com/)**：将嵌套 JSON 可视化，适合梳理接口数据结构和对象之间的关系。
-- **安全实践**
-  - **[OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)**：按 XSS、CSRF、CSP 等主题查询防护方法，适合处理不可信内容、设计认证交互或开展安全检查时阅读。
+- **构建与编译分析**
+  - **[AST Explorer](https://astexplorer.net/)**：实时可视化各类解析器（SWC、Babel、TypeScript、Oxc 等）生成的抽象语法树，是编写自定义 Lint 规则或 Codemod 代码转换脚本的必备工具。
+  - **[Bundlephobia](https://bundlephobia.com/)**：快速评估 npm 包的压缩体积与依赖树开销；引入后仍需结合项目自身的构建产物分析工具（如 `rollup-plugin-visualizer`）确认真实 Tree Shaking 效果。
+  - **[Vite 官方指南](https://vite.dev/guide/)**：查阅开发服务器、模块预构建、环境变量、静态资源处理与生产打包配置。
+  - **[TypeScript TSConfig Reference](https://www.typescriptlang.org/tsconfig/)**：逐项解释 `tsconfig.json` 编译选项的作用边界，适合调校严格类型检查（`strict`、`noUncheckedIndexedAccess`）与模块解析策略（`moduleResolution`）。
+- **测试与组件隔离开发**
+  - **[Vitest](https://vitest.dev/guide/)**：与 Vite 共享配置的高速测试运行器，适合编写纯函数、状态模型与组合式函数的单元/集成测试。
+  - **[Testing Library](https://testing-library.com/docs/guiding-principles/)**：倡导按用户可见文本与无障碍角色（`getByRole`）查询节点，避免测试与组件内部实现细节强耦合。
+  - **[Playwright](https://playwright.dev/docs/intro)**：支持多内核真实浏览器驱动、自动等待与 Trace 回放的端到端测试框架，适合验证登录、结算等跨页面核心业务链路。
+  - **[Storybook](https://storybook.js.org/docs)**：脱离业务后端环境独立渲染组件的各状态变体，支撑组件开发、视觉回归测试与设计走查。
+- **调试与性能剖析**
+  - **[Chrome DevTools 官方文档](https://developer.chrome.com/docs/devtools/)**：深入掌握 Elements、Console、Sources、Network、Performance 与 Memory 面板的排障工作流。
+  - **[Regex101](https://regex101.com/)**：交互式验证正则表达式、拆解匹配步骤并排查回溯性能隐患（调试时注意切换为 ECMAScript 引擎模式）。
+  - **[JSON Crack](https://jsoncrack.com/)**：将深层嵌套的 JSON 响应渲染为可缩放的节点关系图，便于快速梳理复杂接口结构。
+- **安全加固**
+  - **[OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)**：按 XSS、CSRF、CSP、认证会话管理与第三方依赖安全等专题提供可落地的防御核对清单。
 
 ## **5. AI 驱动开发（AI-Native）**
 
-阅读这组资料时，先明确是改进开发流程，还是把 AI 能力集成到产品中。具体配置与 API 应以所用工具的官方文档为准。
+查阅本节资料时，建议先区分目标是**把 AI 引入研发工作流（Coding Agent / Harness）**，还是**在前端产品中交付 AI 功能（端侧推理 / 流式 UI / Agent 接口）**。
 
-- **界面生成与编辑器**
-  - **[v0](https://v0.app/)**：通过描述和视觉输入探索界面实现，适合原型阶段比较布局，再结合项目组件与设计约束调整。
-  - **[Cursor 文档](https://cursor.com/docs)**：查阅代码库上下文、项目规则和 Agent 的使用方法，适合在编辑器中组织代码修改与检查流程。
+- **界面生成与编辑器协作**
+  - **[v0](https://v0.app/)**：通过自然语言与参考图快速探索 UI 布局与交互原型；合入生产代码前需按项目自身的设计 Token 与组件规范收口。
+  - **[Cursor 文档](https://cursor.com/docs)**：查阅代码库索引、仓库规则文件、上下文引用与多文件 Agent 协作机制。
 - **终端 Agent**
-  - **[Codex CLI 文档](https://learn.chatgpt.com/docs/codex/cli)**：查阅在本地仓库中阅读代码、修改文件、执行命令与配置工作流的方法，适合建立终端中的开发和验证流程。
-  - **[Claude Code 文档](https://code.claude.com/docs/en/overview)**：查阅终端开发、项目上下文、Skills 与 MCP 的使用方法，适合把项目约定和外部工具接入开发流程。
-- **前端 AI 工作流**
-  - **[Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)**：了解如何向 Agent 提供布局、变量与组件等设计上下文，适合把设计稿约束带入界面实现时查阅。
-  - **[Playwright MCP](https://github.com/microsoft/playwright-mcp)**：让 Agent 通过工具读取页面状态、操作浏览器并收集反馈，适合开发过程中复现交互与检查运行结果；需要长期回归的路径应另写为可重复运行的测试。
-  - **[Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance)**：参考将 Web 平台实践与兼容性知识组织为 Agent Skills 的方式，适合为团队整理可复用执行指引时阅读。
-- **AI 集成（Integration & SDKs）**
-  - **[LangChain JS](https://docs.langchain.com/oss/javascript/langchain/overview)**：学习模型调用、工具集成与 Agent 编排，适合需要组织多步骤 AI 处理流程时查阅。
-  - **[AI SDK UI](https://ai-sdk.dev/docs/reference/ai-sdk-ui)**：查询聊天、流式消息和结构化结果相关的 UI 接口，适合把模型输出接入应用界面时阅读。
-  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**：了解资源、提示模板与工具等协议能力，适合设计 Agent 与外部系统的连接方式时阅读。
-  - **[MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)**：了解工具如何提供可在支持该扩展的宿主中显示的交互式 UI。
-  - **[Google A2UI](https://github.com/google/A2UI)**：了解 Agent 声明界面结构、由客户端渲染组件的实现思路。
-  - **[WebMCP Draft](https://webmachinelearning.github.io/webmcp/)**：了解网页向 Agent 暴露工具的实验性草案，适合研究网页操作接口；落地前需核对草案与浏览器实现状态。
-  - **[Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai)**：查询浏览器内建 AI API 的使用方式、运行条件与能力检测，适合评估端侧 AI 功能时阅读。
+  - **[Codex CLI 文档](https://learn.chatgpt.com/docs/codex/cli)**：了解如何在本地终端受控沙箱中让 Agent 检索代码、修改文件、执行测试并根据终端报错闭环迭代。
+  - **[Claude Code 文档](https://code.claude.com/docs/en/overview)**：查阅项目上下文约定、可复用 Skills、自定义斜杠命令与 MCP 工具接入配置。
+- **前端 AI 工程工作流**
+  - **[Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)**：向 Agent 暴露设计稿的图层结构、Auto Layout 参数、设计变量与组件映射，减少视觉还原中的猜测误差。
+  - **[Playwright MCP](https://github.com/microsoft/playwright-mcp)**：支持 Agent 直接驱动真实浏览器读取可访问性树、执行交互并校验 DOM 状态；适合开发期的闭环自测，长期回归防线仍应沉淀为确定性的 Playwright 测试脚本。
+  - **[Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance)**：展示如何将现代 Web 平台特性与 Baseline 兼容性约束组织为可供 Agent 消费的工程指引。
+- **产品端 AI 集成与 Agent 协议（Integration & Protocols）**
+  - **[LangChain JS](https://docs.langchain.com/oss/javascript/langchain/overview)**：用于服务端或全栈环境下的模型调用、检索增强（RAG）与多步工具编排。
+  - **[AI SDK UI](https://ai-sdk.dev/docs/reference/ai-sdk-ui)**：封装流式文本输出、工具调用状态同步与结构化数据生成的前端状态管理接口。
+  - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**：连接模型与外部资源（Resources）、提示模板（Prompts）及可执行工具（Tools）的开放协议规范。
+  - **[MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/)**：定义工具调用结果如何在支持该扩展的对话宿主中渲染交互式 UI 组件。
+  - **[Google A2UI](https://github.com/google/A2UI)**：探索由 Agent 声明受控组件树结构、由客户端安全渲染交互界面的协议方案。
+  - **[WebMCP Draft](https://webmachinelearning.github.io/webmcp/)**：允许网页通过命令式 JS 或声明式表单向浏览器内 Agent 暴露可调用工具的社区组草案；落地上线前需严格做好能力检测与服务端权限校验。
+  - **[Chrome Built-in AI Docs](https://developer.chrome.com/docs/ai)**：查阅浏览器内置端侧模型的任务 API、硬件要求、下载状态检测与渐进增强实践。
 
-### **按日期阅读趋势资料**
+### **按发布时间与统计口径审视趋势报告**
 
-岗位和工具调查很容易过时，阅读时应记录发布日期、地域、样本和指标定义：
+行业调查与岗位报告具有很强的时效性，引用时应核对发布日期、抽样地域、样本结构与指标定义：
 
-- [Stack Overflow 2025 AI Survey](https://survey.stackoverflow.co/2025/ai)：观察开发者对 AI 准确性、Agent、信任和安全的态度。
-- [DORA 2025 Report](https://dora.dev/research/2025/dora-report/)：理解 AI 与组织工程能力、交付质量之间的关系。
-- [LinkedIn Talent 2026](https://news.linkedin.com/en-us/2026/LinkedIn-Research-Talent-2026)：观察招聘流程和求职竞争的变化。
-- [BLS Web Developers and Digital Designers](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm)：作为美国宽口径职业展望阅读；其他市场需要配合本地数据。
+- [Stack Overflow 2025 AI Survey](https://survey.stackoverflow.co/2025/ai)：观察开发者对 AI 生成代码准确性、验证成本、Agent 采纳率及安全信任度的真实反馈。
+- [DORA 2025 Report](https://dora.dev/research/2025/dora-report/)：分析 AI 辅助开发与组织交付吞吐量、变更失败率及工程平台能力之间的实证关系。
+- [LinkedIn Talent 2026](https://news.linkedin.com/en-us/2026/LinkedIn-Research-Talent-2026)：观察软件工程岗位技能需求迁移与招聘筛选机制的变化。
+- [BLS Web Developers and Digital Designers](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm)：美国劳工统计局的中长期岗位预测，作为宽口径参考；国内及其他市场需结合本地招聘数据综合判断。
 
-## **6. 实战与练习平台（Practice）**
+## **6. 实战训练与沙箱环境（Practice）**
 
-_眼过千遍不如手过一遍。_
+_通过真实的视觉还原、系统设计题与可复现沙箱锤炼动手能力。_
 
-- **[Frontend Mentor](https://www.frontendmentor.io/)**
-  - 提供设计图（Figma）和资源，让你从零实现页面，非常接近真实工作流。
-- **[GreatFrontend](https://www.greatfrontend.com/)**
-  - 专注前端大厂面试的准备平台（系统设计、算法、UI 挑战）。
-- **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**
-  - 云端 IDE，快速验证想法，无需本地配环境。
+- **[Frontend Mentor](https://www.frontendmentor.io/)**：提供完整的 Figma 设计稿、多端断点要求与静态素材，适合在不依赖教程手把手提示的情况下训练从零还原可访问界面的能力。
+- **[GreatFrontend](https://www.greatfrontend.com/)**：聚焦前端组件实现、JavaScript 工具函数与前端系统设计（System Design）的实战题库。
+- **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**：开箱即用的云端开发环境，适合快速验证技术方案、分享最小复现链接（Minimal Repro）与跨团队问题排查。
 
-## **7. 资讯与社区（Stay Updated）**
+## **7. 技术生态追踪（Stay Updated）**
 
-_保持技术敏感度。_
+_保持对标准演进与开源生态的理性关注。_
 
-- **[Bytes](https://bytes.dev/)**：幽默风趣的 JavaScript 每周简报。
-- **[This Week In React](https://thisweekinreact.com/)**：汇集 React 生态文章与项目动态，适合每周挑选与工作相关的主题阅读。
-- **[Best of JS](https://bestofjs.org/)**：按项目和关注度变化发现 JavaScript 生态工具，适合寻找待调研的候选项目；采用前仍需检查文档、维护情况和项目适配性。
+- **[Bytes](https://bytes.dev/)**：行文凝练、兼具趣味与深度的 JavaScript 生态周刊。
+- **[This Week In React](https://thisweekinreact.com/)**：汇总 React、React Native 及周边全栈生态的每周核心技术文章、RFC 进展与版本发布。
+- **[Best of JS](https://bestofjs.org/)**：按领域分类追踪 JavaScript / TypeScript 开源项目的趋势变化；适合作为技术选型初期的候选池，正式引入项目前仍需评估维护活跃度、包体积、类型质量与许可证合规性。

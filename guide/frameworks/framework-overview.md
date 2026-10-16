@@ -4,22 +4,20 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 
 # IV.1 UI 框架概述：React、Vue、Angular、Svelte、SolidJS、Lit
 
-**目的**：提供构建交互式用户界面的结构化方法，封装底层 DOM 操作并简化状态管理。
+直接在复杂界面中手写原生 DOM 读写与事件同步，很快就会陷入状态失步和局部更新难以追踪的泥潭。UI 框架通过声明式视图与状态绑定接管了底层 DOM 操作，而在当前的技术演进下，评估或选型一套框架已不再只是比较模板语法，而是要从**编译优化、服务端/客户端分工、细粒度响应式（Fine-grained Reactivity）和运行时体积**四个维度审视其运行机制：
 
-当前主流 UI 框架的差异需要同时从**编译优化、服务端/客户端分工、细粒度响应式（Fine-grained Reactivity）和运行时体积**等维度综合评估：
+- [**React**](https://react.dev/)：围绕组件化与声明式模型构建了最庞大的前端生态。**React 19** 将 Actions 原语（`useActionState`、`useOptimistic`、`useFormStatus`、`use()`）与服务器组件（Server Components，RSC）纳入标准能力；**[React Compiler](https://react.dev/learn/react-compiler)**（原 Forget 项目）则在编译期静态分析代码并自动完成细粒度记忆化（auto-memoization），日常开发中多数场景已无需手写 `useMemo` 与 `useCallback`。这两个 Hook 仍作为“逃生舱”（escape hatch，即自动机制不够用时手动接管的手段）保留，供需要精确控制记忆化边界的场景使用（如稳定 Effect 依赖项），详见 [useMemo、useCallback 与 Compiler 的关系](https://react.dev/learn/react-compiler/introduction#what-should-i-do-about-usememo-usecallback-and-reactmemo)。
+- [**Vue**](https://vuejs.org/)：采用渐进式设计，兼顾模板可读性与工程演进弹性。**Vue 3.5+** 重构了底层响应式系统（据官方数据，内存占用降低 56%，大型深层响应式数组的部分操作最高提速 10 倍），同时补充了 `onWatcherCleanup()`、`useTemplateRef()` 与 `useId()` 等实用原语；其正在推进的 **Vapor Mode** 则跳出虚拟 DOM，直接将模板编译为精准的原生 DOM 操作，底层思路与 SolidJS 接近。
+- [**Svelte**](https://svelte.dev/)：开创了编译时框架路线。**Svelte 5** 引入 **Runes（符文系统：`$state`、`$derived`、`$effect`、`$props`、`$bindable`）** 重塑响应式表达，使响应式状态不再受限于 `.svelte` 单文件组件，也能在 `.svelte.ts` 等普通模块中复用；同时以更灵活的 **Snippets（`{#snippet}`）** 取代了原有的 Slots 插槽机制。
+- [**SolidJS**](https://www.solidjs.com/)：细粒度响应式的典型代表。组件函数仅在挂载创建时执行一次，后续状态变更会沿着 Signals 依赖图直接定位并更新对应的真实 DOM 节点，完全省去了虚拟 DOM Diff 开销。
+- [**Angular**](https://angular.dev/)：Google 主导的企业级全栈框架，正全面转向 **Signals** 与 **Zoneless** 架构。所谓 Zoneless，是指摆脱对 zone.js 的依赖——过去 zone.js 需要通过“猴子补丁”（monkey patching，即在运行时改写 `setTimeout`、Promise 等原生 API）拦截异步任务来触发变更检测。结合独立组件（Standalone Components）与强类型表单，这一演进显著缩减了运行时体积，也让变更检测更加精准可控。
+- [**Lit**](https://lit.dev/)：Google 推出的轻量级 [Web Components](https://www.webcomponents.org/) 开发库，紧贴浏览器原生标准，在原生 Shadow DOM 样式隔离之上提供轻巧的声明式模板与响应式属性。
 
-- [**React**](https://react.dev/)：以组件化、声明式理念和庞大生态闻名。**React 19** 将 Actions 原语（`useActionState`、`useOptimistic`、`useFormStatus`、`use()`）和服务器组件（Server Components，RSC）标准化。**[React Compiler](https://react.dev/learn/react-compiler)**（原 Forget 项目）在编译期分析代码，自动完成细粒度记忆化（auto-memoization），多数场景无需再手写 `useMemo` / `useCallback`。官方仍保留这两个 Hook 作为“逃生舱”（escape hatch，即在自动机制不够用时手动接管的手段），用于需要精确控制记忆化的场合（如作为 Effect 依赖的值），详见 [useMemo、useCallback 与 Compiler 的关系](https://react.dev/learn/react-compiler/introduction#what-should-i-do-about-usememo-usecallback-and-reactmemo)。
-- [**Vue**](https://vuejs.org/)：渐进式框架，在灵活性与简洁性之间取得了较好的平衡。**Vue 3.5+** 重构了响应式系统（官方数据：内存占用降低 56%，大型深层响应式数组的部分操作最多快 10 倍），并引入 `onWatcherCleanup()`、`useTemplateRef()` 与 `useId()`；同时在推进 **Vapor Mode**（不使用虚拟 DOM、直接编译为原生 DOM 操作的模式，思路接近 SolidJS）。
-- [**Svelte**](https://svelte.dev/)：编译时框架的先驱。**Svelte 5** 改用 **Runes（符文系统：`$state`、`$derived`、`$effect`、`$props`、`$bindable`）** 表达响应式。响应式状态不再局限于 `.svelte` 组件文件，也可以写在 `.svelte.ts` 等模块中；**Snippets（`{#snippet}`）** 则取代了原来的 Slots。
-- [**SolidJS**](https://www.solidjs.com/)：细粒度响应式的代表。组件函数只在创建时执行一次；之后状态变化沿 Signals 依赖图直接更新对应的 DOM 节点，没有虚拟 DOM Diff 开销。
-- [**Angular**](https://angular.dev/)：Google 主导的企业级全栈框架，正在推进 **Signals** 与 **Zoneless** 架构。Zoneless 指不再依赖 zone.js：zone.js 通过“猴子补丁”（monkey patching，即在运行时改写 `setTimeout`、Promise 等原生 API）感知异步任务并触发变更检测。配合独立组件（Standalone Components）与强类型表单，这些变化减小了运行时体积，也让变更检测更精确。
-- [**Lit**](https://lit.dev/)：Google 推出的轻量级 [Web Components](https://www.webcomponents.org/) 库，紧贴浏览器标准，提供声明式模板、响应式属性与原生 Shadow DOM 隔离。
-
-各框架的差异，反映了它们在响应式模型（虚拟 DOM vs. 细粒度 Signals vs. 编译时代码生成）和开发者体验（灵活性 vs. 强预设约束）上的不同取舍。
+这些框架之所以呈现出迥异的 API 形态，本质上源于它们在**响应式更新粒度**（虚拟 DOM Diff、细粒度 Signals 依赖图、编译时直接生成 DOM 指令）与**工程约束强度**（自由组合 vs. 全家桶约定）上的不同取舍。
 
 ## **IV.1.1 从框架名称转向渲染模型**
 
-学习或选型时，可以先回答这些与框架无关的问题：
+在切入具体 API 之前，可以先用五个与框架名称无关的问题理清应用的运行边界：
 
 | 判断问题                | 需要理解的概念                                                        | 常见影响                             |
 | :---------------------- | :-------------------------------------------------------------------- | :----------------------------------- |
@@ -29,9 +27,9 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 | **数据如何进入组件？**  | loader、Server Functions、RSC、查询缓存、客户端状态                   | 序列化、错误恢复、缓存失效和权限边界 |
 | **优化由谁完成？**      | 手工 memo、编译器（React Compiler）、静态分析、运行时调度              | 代码写法、迁移风险和性能验证方式     |
 
-这些能力的组合才是框架的真实运行模型。版本和 API 会变化，模型和边界判断更值得长期掌握。
+这五个维度的组合才构成了框架真实的运行模型。版本与表层 API 会不断迭代，但底层的渲染时机与状态边界判断始终通用。
 
-**表格：流行 UI 框架比较（React、Vue、Svelte、SolidJS、Angular）**
+结合上述维度，下表横向对比了五大主流 UI 框架的响应式机制、运行时开销与适用场景：
 
 | 框架名称                                | 核心机制与响应式范式                                              | 学习曲线 | 性能与运行时开销                        | 生态系统与工具链                | 理想用例（示例）                                 |
 | :-------------------------------------- | :---------------------------------------------------------------- | :------- | :-------------------------------------- | :------------------------------ | :----------------------------------------------- |
@@ -43,7 +41,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.1 UI 框架概述：React�
 
 ## **IV.1.2 用同一个搜索交互比较框架边界**
 
-选型练习适合固定同一功能，再比较状态、事件和渲染位置。下面展示一个受控输入框在不同响应式模型下的核心代码：
+对比不同框架时，最直观的做法是固定同一个交互需求，观察各自的状态声明、事件绑定和 DOM 更新路径。下面以受控搜索框为例，对比三种响应式模型的核心实现：
 
 ```tsx
 // React 19：组件状态保存于 Fiber 树，状态更新触发函数重新执行（由 Compiler 自动优化）

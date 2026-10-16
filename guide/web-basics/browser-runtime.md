@@ -39,12 +39,12 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 7. **绘制**：浏览器把文字、颜色、边框、阴影和图片转换成绘制指令。
 8. **合成**：不同图层按顺序组合，最终画面提交到屏幕。
 
-脚本的加载方式会影响 HTML 解析：
+脚本的加载方式会直接影响 HTML 解析与首屏时机：
 
-- 普通经典脚本在解析器遇到它时执行，外部脚本还需等待下载完成。
-- 带有 **defer** 的经典脚本在文档解析完成后按文档顺序执行。
-- 带有 **async** 的脚本在资源准备好后执行，多个脚本的执行顺序取决于各自完成时间。
-- 模块脚本默认采用延后执行语义，并遵循模块依赖图。
+- 普通经典脚本（`<script src="...">`）会在解析器遇到标签时暂停 HTML 解析，等待脚本下载并执行完毕后再继续。
+- 带有 `defer` 的经典脚本在后台异步下载，待文档解析完成后、`DOMContentLoaded` 触发前按文档顺序执行。
+- 带有 `async` 的脚本在后台下载完成后立即抢占执行，多个 `async` 脚本的执行顺序取决于各自完成下载的时刻。
+- 模块脚本（`<script type="module">`）默认采用延后执行语义（等同于 `defer`），并在执行前先解析完整的模块依赖图。
 
 诊断首屏时，可以把 Network 中的请求瀑布与 Performance 中的主线程轨迹对齐。响应到达很早、画面出现很晚，通常需要继续查看脚本执行、样式计算、布局和绘制记录。
 
@@ -54,8 +54,8 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 
 1. 从任务队列取出一个任务，例如点击回调、定时器回调或消息事件。
 2. 执行该任务中的 JavaScript。
-3. 清空当前微任务队列，例如 Promise 回调和 **queueMicrotask** 回调。
-4. 浏览器决定更新画面时，运行 **requestAnimationFrame** 回调并完成样式、布局、绘制与合成。
+3. 清空当前微任务队列，例如 Promise 回调和 `queueMicrotask` 回调。
+4. 浏览器决定更新画面时，运行 `requestAnimationFrame` 回调并完成样式、布局、绘制与合成。
 5. 进入下一轮任务处理。
 
 浏览器根据刷新率、页面可见性和系统负载决定具体渲染时机。连续追加微任务会持续占用主线程，因此 Promise 链同样可能推迟下一帧。
@@ -79,7 +79,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 
 :::
 
-**requestAnimationFrame** 适合安排下一帧之前的视觉更新。网络请求、复杂数据聚合和大规模解析各有调度方式，其中计算密集型工作可以进一步交给 Worker。
+`requestAnimationFrame` 适合安排下一帧之前的视觉更新。网络请求、复杂数据聚合和大规模解析各有调度方式，其中计算密集型工作可以进一步交给 Worker。
 
 ## **II.7.4 样式、布局、绘制与合成**
 
@@ -90,9 +90,9 @@ function updateTabIndicator(tab, tabList, indicator) {
 | **Style** | 哪些 CSS 规则匹配元素，最终属性值是什么 | 修改 class、CSS 自定义属性、媒体条件或 DOM 结构 | Performance 中的 Recalculate Style |
 | **Layout** | 元素尺寸、位置以及彼此的几何关系 | 修改宽高、字体、内容、网格轨道或可用空间 | Performance 中的 Layout、Layout Shift |
 | **Paint** | 需要绘制的文字、颜色、边框、阴影和图片 | 修改颜色、背景、阴影或绘制区域 | Rendering 中的 Paint flashing |
-| **Composite** | 图层的顺序、变换、裁剪与最终组合 | 修改 transform、opacity 或滚动，通常只需经过合成阶段 | Layers、Performance 中的 Composite Layers |
+| **Composite** | 图层的顺序、变换、裁剪与最终组合 | 修改 `transform`、`opacity` 或滚动，通常只需经过合成阶段 | Layers、Performance 中的 Composite Layers |
 
-使用 **transform** 和 **opacity** 可以为动画提供更轻的执行路径，最终效果仍取决于浏览器的图层决策。大量图层会增加内存与管理成本，因此应结合 Performance 和 Layers 面板验证。
+使用 `transform` 和 `opacity` 可以为动画提供更轻的执行路径，最终效果仍取决于浏览器的图层决策。大量图层会增加内存与管理成本，因此应结合 Performance 和 Layers 面板验证。
 
 减少渲染成本时，可以优先检查：
 
@@ -101,7 +101,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 - 动态内容是否提前保留尺寸；
 - 阴影、滤镜和大面积绘制是否覆盖过多像素；
 - 动画是否持续触发布局或大面积绘制；
-- **contain**、**content-visibility** 等隔离能力是否适合长列表或独立区域。
+- `contain`、`content-visibility` 等隔离能力是否适合长列表或独立区域。
 
 ## **II.7.5 主线程响应与 Worker**
 
@@ -164,10 +164,10 @@ ArrayBuffer 的所有权已转移给 Worker，页面线程中的原缓冲区随�
 
 常用事件承担不同职责：
 
-- **visibilitychange**：页面进入隐藏状态时保存草稿、暂停视觉更新或记录会话状态。
-- **pagehide**：页面离开当前会话历史位置时完成轻量清理。
-- **pageshow**：页面首次显示或从 bfcache（往返缓存，back/forward cache）恢复时同步可能过期的数据。
-- **beforeunload**：仅在确实存在未保存输入时注册，用于请求用户确认离开。
+- **`visibilitychange`**：页面进入隐藏状态时保存草稿、暂停视觉更新或记录会话状态。
+- **`pagehide`**：页面离开当前会话历史位置时完成轻量清理。
+- **`pageshow`**：页面首次显示或从 bfcache（往返缓存，back/forward cache）恢复时同步可能过期的数据。
+- **`beforeunload`**：仅在确实存在未保存输入时注册，用于请求用户确认离开。
 
 [Page Lifecycle API](https://developer.chrome.com/docs/web-platform/page-lifecycle-api) 把这些状态放进同一条生命周期中。bfcache 会保存整个页面的运行状态，让前进、后退导航可以快速恢复；HTTP 缓存负责复用网络响应，两者解决不同层次的问题。
 
@@ -197,20 +197,22 @@ JavaScript 垃圾回收器会释放已失去引用的对象。前端内存问题
 - 未释放的 Blob URL、Worker、媒体流和图形资源；
 - 闭包长期持有大型数据结构。
 
-管理资源时，为每个创建动作定义对应的释放动作：
+管理资源时，应为每个创建动作显式配对释放动作：
 
 | 创建的资源 | 生命周期结束时的动作 |
 | :--- | :--- |
-| addEventListener | removeEventListener，或使用带 signal 的监听方式 |
-| setInterval / setTimeout | clearInterval / clearTimeout |
-| Observer、订阅和流 | disconnect、unsubscribe 或 cancel |
-| URL.createObjectURL | URL.revokeObjectURL |
-| Worker | terminate |
-| MediaStreamTrack | stop |
+| `addEventListener` | `removeEventListener`，或使用带 `signal` 的监听方式 |
+| `setInterval` / `setTimeout` | `clearInterval` / `clearTimeout` |
+| Observer、订阅和流 | `disconnect`、`unsubscribe` 或 `cancel` |
+| `URL.createObjectURL` | `URL.revokeObjectURL` |
+| `Worker` | `terminate` |
+| `MediaStreamTrack` | `stop` |
 
 DevTools Memory 可以比较 Heap Snapshot、观察 Allocation timeline，并查看对象的保留路径。可靠的检测方式是重复执行同一用户流程，主动触发垃圾回收后比较对象数量和内存基线。
 
 ## **II.7.8 从现象到证据的诊断顺序**
+
+面对线上或本地的性能与异常现象时，可按以下映射表直接采集首批诊断证据：
 
 | 用户现象 | 首先记录什么 | 重点寻找什么 |
 | :--- | :--- | :--- |
@@ -229,4 +231,4 @@ DevTools Memory 可以比较 Heap Snapshot、观察 Allocation timeline，并查
 5. 每次只改变一个主要因素并重新测量。
 6. 用真实用户监控确认实验室改进能够覆盖线上用户。
 
-浏览器运行时知识的价值，在于把网络、JavaScript、CSS、性能和生命周期连接成一个可观察系统。后续学习框架渲染、[性能优化](/guide/advanced-practices/performance)、[PWA](/guide/emerging-tech/pwa)和浏览器 AI 时，都可以继续沿用这条运行链。
+将网络请求、JavaScript 执行、CSS 像素管线、内存所有权与页面生命周期放进同一套可观察链路后，后续排查框架渲染、[性能优化](/guide/advanced-practices/performance)、[PWA](/guide/emerging-tech/pwa) 和浏览器端 AI 时，都可复用相同的诊断方法。

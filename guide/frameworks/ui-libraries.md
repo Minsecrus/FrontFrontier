@@ -76,34 +76,34 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ## **IV.3.3 主流生态中的代表性例子**
 
-下面的工具用于观察不同的组件库取向。
+不同框架生态孕育出了各有侧重的代表性组件库，折射出从“开箱即用”到“底层组合”的不同工程取向。
 
 ### **React：设计系统与组合自由并存**
 
-- [**MUI**](https://mui.com/material-ui/) 是 Material Design 的完整实现，主题和定制层次较清楚；[MUI X](https://mui.com/x/) 延伸到数据网格等复杂场景，[Toolpad](https://mui.com/toolpad/) 则面向内部工具。可见同一生态内部也会按复杂度继续分层。
-- [**Ant Design**](https://ant.design/) 用统一的企业设计语言覆盖布局、导航、数据录入、数据显示和反馈，适合流程与信息密度较高的中后台。
-- [**Chakra UI**](https://chakra-ui.com/docs/components/concepts/overview) 强调无障碍组件、组合方式和 style props，适合希望在现成行为之上建立自有主题的团队。
-- [**Fluent UI**](https://react.fluentui.dev/) 是微软自家产品使用的组件库，常用于希望接近微软生产力产品风格的项目。
-- [**PrimeReact**](https://primereact.org/) 强调复杂组件广度；[Mantine](https://mantine.dev/) 同时提供组件与 Hooks；[Flowbite React](https://flowbite-react.com/) 则是基于 Tailwind CSS 的组件库。
+- [**MUI**](https://mui.com/material-ui/)：完整实现了 Material Design，主题定制层次清晰；其生态内部按复杂度进一步分层，[MUI X](https://mui.com/x/) 覆盖数据网格等高复杂度组件，[Toolpad](https://mui.com/toolpad/) 则面向内部工具搭建。
+- [**Ant Design**](https://ant.design/)：以统一的企业级设计语言覆盖布局、导航、数据录入、数据展示与反馈，契合流程复杂、信息密度高的中后台系统。
+- [**Chakra UI**](https://chakra-ui.com/docs/components/concepts/overview)：主打无障碍组件原语、组合式 API 与 style props，适合在现成交互行为之上构建自有品牌主题的团队。
+- [**Fluent UI**](https://react.fluentui.dev/)：源自微软自身产品体系，适合追求微软生产力工具视觉与交互风格的应用。
+- **更多细分选择**：[**PrimeReact**](https://primereact.org/) 见长于复杂企业组件广度；[Mantine](https://mantine.dev/) 同时提供丰富的 UI 组件与实用 Hooks；[Flowbite React](https://flowbite-react.com/) 则围绕 Tailwind CSS 构建组件生态。
 
 ### **Vue：从现成后台到多端交付**
 
-- [**Vuetify**](https://vuetifyjs.com/) 把 Material Design 带进 Vue 生态，适合需要一致视觉语言和大量现成组件的应用。
-- [**Element Plus**](https://element-plus.org/) 常见于 Vue 3 中后台项目，表单、数据展示和主题变量是其主要使用入口。
-- [**Quasar**](https://quasar.dev/introduction-to-quasar/) 不只提供组件，还把 SPA、SSR、PWA、移动端、桌面端和浏览器扩展纳入同一套构建模式。在 Quasar 身上，“组件库”和“应用框架”的边界是重叠的。
-- [**Ant Design Vue**](https://antdv.com/) 适合希望在 Vue 中沿用 Ant Design 语言的团队；[Naive UI](https://www.naiveui.com/) 强调 TypeScript 与主题配置；[PrimeVue](https://primevue.org/) 则强调广泛组件和复杂数据场景。
+- [**Vuetify**](https://vuetifyjs.com/)：将 Material Design 完整引入 Vue 生态，适合需要统一视觉规范与大量现成组件的项目。
+- [**Element Plus**](https://element-plus.org/)：Vue 3 中后台项目的常见选择，围绕表单录入、数据表格与 CSS 变量主题体系提供高频业务组件。
+- [**Quasar**](https://quasar.dev/introduction-to-quasar/)：跨越了单纯“组件库”的边界，将 UI 组件与 SPA、SSR、PWA、移动端、桌面端及浏览器扩展纳入同一套构建与交付体系。
+- **更多细分选择**：[**Ant Design Vue**](https://antdv.com/) 便于在 Vue 项目中延续 Ant Design 规范；[Naive UI](https://www.naiveui.com/) 以完备的 TypeScript 类型与代码级主题配置见长；[PrimeVue](https://primevue.org/) 则侧重组件覆盖面与复杂数据场景。
 
 ### **Angular：官方基础与企业套件并重**
 
-- [**Angular Material**](https://material.angular.dev/) 提供 Material 组件；[Angular CDK](https://material.angular.dev/cdk) 提供 overlay、a11y、drag-drop 等更底层能力。前者是成品组件，后者用于自己搭建组件，两种用法可以在同一项目中共存。
-- [**PrimeNG**](https://primeng.org/) 适合需要复杂表格、树、上传和模板生态的企业应用。
-- [**NG-ZORRO**](https://ng.ant.design/) 把 Ant Design 的企业产品语言带入 Angular，适合已有相同设计体系的团队。
+- [**Angular Material**](https://material.angular.dev/) 与 [**Angular CDK**](https://material.angular.dev/cdk)：前者提供开箱即用的 Material 成品组件，后者抽离出 overlay、无障碍（a11y）、拖拽（drag-drop）等底层交互基础设施，两者常在同一项目中配合使用。
+- [**PrimeNG**](https://primeng.org/)：针对企业级复杂表格、树形结构、文件上传及商业模板生态提供了高度完备的套件。
+- [**NG-ZORRO**](https://ng.ant.design/)：将 Ant Design 企业级设计体系引入 Angular，便于多技术栈团队保持统一的后台交互规范。
 
 图表、仪表盘和专业可视化有独立的数据模型与交互问题，详见 [数据可视化组件库](/guide/frameworks/data-visualization-libraries)。
 
 ## **IV.3.4 跨维度比较与综合评估**
 
-读下面的表时，先把每一列换成一个问题：
+阅读对比表前，可以先将每一列还原为具体的选型审视问题：
 
 - **所属框架**：候选是否满足项目的硬约束？
 - **设计风格/理念**：团队是否愿意接受这套默认语言？
@@ -111,9 +111,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 - **定制化模式**：改一次、改一类和改全局分别用什么机制？
 - **主要适用场景**：它解决的问题是否与项目的难点重合？
 
-### **表格一：主流框架 UI 组件库功能与特性对比**
-
-下表帮助开发者快速了解各主流 UI 组件库的核心功能和特性，便于根据项目需求初步筛选。
+围绕上述五个问题，下表汇总了 React、Vue 与 Angular 生态主流组件库的设计取向与定制机制：
 
 | 库名称                                           | 所属框架                        | 设计风格/理念                              | 无障碍支持   | 定制化模式                                        | 主要适用场景                 |
 | :----------------------------------------------- | :------------------------------ | :----------------------------------------- | :----------- | :------------------------------------------------ | :--------------------------- |
@@ -127,13 +125,13 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 | [PrimeNG](https://primeng.org/)                  | [Angular](https://angular.dev/) | 设计无关                                   | 优秀         | Theme Designer 主题编辑器、CSS 变量               | 企业级应用、复杂界面         |
 | [NG-ZORRO](https://ng.ant.design/)               | [Angular](https://angular.dev/) | [Ant Design](https://ant.design/)          | 优秀         | CSS 变量、主题定制                                | 企业级中后台、管理系统       |
 
-表格中的工具还可以帮助理解几种典型取舍：
+横向对比这些方案，可以提炼出五类典型的架构取舍：
 
-- 从 MUI 与 Angular Material 可以看到“采用一套完整设计系统”意味着什么。
-- 从 Ant Design、Element Plus 与 NG-ZORRO 可以看到企业中后台为何重视表单、数据和统一交互。
-- 从 Chakra UI 可以看到可组合 API 与主题系统如何给品牌定制留出空间。
-- Quasar 的例子表明，选型范围可以同时包含组件和多端交付方式。
-- PrimeNG 的例子表明，复杂数据组件的广度本身也可能成为主要决策因素。
+- **采纳完整设计规范**（MUI、Angular Material、Vuetify）：开箱即可获得高度一致的视觉与动效细节，但深度改写视觉语言时往往需要逆向覆盖默认规则。
+- **聚焦企业中后台效率**（Ant Design、Element Plus、NG-ZORRO）：围绕复杂表单校验、高密度表格与标准工作流做了深度封装，显著降低后台页面拼装成本。
+- **优先保障组合与主题弹性**（Chakra UI）：弱化预设的产品级视觉印记，通过原子化属性与主题 Token 为自有品牌留出充足的定制空间。
+- **绑定多端构建与交付链路**（Quasar）：选型不仅决定了 UI 组件层，也同时确定了跨 Web、移动端与桌面端的工程打包模型。
+- **以复杂数据组件广度取胜**（PrimeNG）：当项目重度依赖高级表格、树表联动、日程排期等专业控件时，现成复杂组件的完备度往往直接决定研发周期。
 
 ## **IV.3.5 用小型试验做最终选择**
 

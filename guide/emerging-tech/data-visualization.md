@@ -8,54 +8,54 @@ Web 数据可视化关注如何在浏览器中把数据转换成图表、地图�
 
 ## **VI.5.1 核心可视化技术**
 
-- **D3.js（Data-Driven Documents）**：把数据绑定到 DOM、构建动态交互式可视化的 JavaScript 库。提供底层控制，便于实现定制设计。
-- **图表库（[Chart.js](https://www.chartjs.org/)、[ECharts](https://echarts.apache.org/)、[AntV](https://antv.vision/)）**：用于创建常见图表的高层库，通常基于 Canvas 或 SVG 渲染。
-- **MathJax、[KaTeX](https://katex.org/)：** 在浏览器中渲染数学公式和科学内容的库，排版美观，并支持无障碍输出。
-- **Web GIS（Geographic Information System）：** 在浏览器中显示、分析地理空间数据，并与之交互。
+- **D3.js（Data-Driven Documents）**：提供比例尺（Scales）、坐标轴、布局算法与 DOM/Canvas 数据绑定原语的底层可视化库，适合高度定制的图形语法与交互，但需自行组织组件状态与渲染更新。
+- **图表库（[Chart.js](https://www.chartjs.org/)、[ECharts](https://echarts.apache.org/)、[AntV](https://antv.vision/)）**：封装了常见图表类型、图例、提示框与坐标系的声明式高层库，底层基于 Canvas 或 SVG 渲染，适合快速交付业务报表与监控大盘。
+- **MathJax、[KaTeX](https://katex.org/)**：在浏览器中将 LaTeX 数学公式排版为 HTML/CSS、SVG 或 MathML，兼顾渲染速度与屏幕阅读器无障碍输出。
+- **Web GIS（Geographic Information System）**：在浏览器中加载瓦片地图、叠加空间矢量数据并执行地理空间查询与交互。
 
 如果关注 React/Vue/Angular 项目里的图表组件选型，可以先读 [数据可视化组件库](/guide/frameworks/data-visualization-libraries)。本篇更偏向渲染模型、性能策略和可视化场景本身。
 
 ## **VI.5.2 大数据可视化的性能策略**
 
-数据量过大时，前端可视化会遇到性能瓶颈。常用策略如下：
+当数据点从数百增长到数万乃至百万级时，直接生成等量 DOM/SVG 节点会迅速耗尽内存并阻塞主线程。工程上通常从数据降维、分批调度、底层渲染和增量更新四个层面拆解瓶颈：
 
-- **数据抽样与聚合**：不直接渲染全部数据点，而是先抽样（如随机抽样、均匀抽样）或聚合（如把时间序列按小时/天汇总），在较高层级只展示汇总信息，用户再按需钻取（drill-down）查看明细。
-- **分层渲染与按需加载**：
-  - **视口内渲染**：只渲染当前用户视口内的数据点或图形元素，视口外元素延迟加载或不渲染。
-  - **渐进式渲染**：先快速渲染低精度的图形，然后逐步加载和渲染更高精度的细节。
-  - **Web Workers**：把复杂的数据处理和计算（如过滤、聚合、格式化）放到 Web Worker 中，让界面保持流畅响应。
+- **数据抽样与聚合**：不在首屏直接绘制全量原始点，而是先在服务端或端侧执行降采样（如 LTTB 保形采样、均匀抽样）与时间窗口聚合（按小时/天汇总），默认呈现宏观趋势，待用户缩放或框选下钻（drill-down）时再按需拉取局部明细。
+- **分层渲染与计算解耦**：
+  - **视口裁剪**：只计算和绘制当前画布视口（Viewport）及缩放层级内可见的数据点，剔除视口外图元。
+  - **渐进式渲染**：交互拖拽或首次加载时先快速绘制低精度轮廓或抽样点，交互静止后再按时间片分批补齐高精度细节。
+  - **Web Workers**：将大数组过滤、分组聚合、布局计算和格式解析移入 Worker 线程，避免阻塞主线程的缩放与悬停响应。
 - **WebAssembly 与 WebGL/Canvas**：
-  - **Wasm**：计算密集型的数据处理或渲染逻辑可以用 C++/Rust 等语言编写，编译成 Wasm，在浏览器中以接近原生的速度运行。
-  - **WebGL/Canvas**：数据点达到上万个或包含复杂 3D 图形时，可以直接用 WebGL（GPU 加速）或 Canvas（2D 绘图 API）做底层渲染，性能优于大量 DOM/SVG 节点。D3.js 等库也支持渲染到 Canvas。
-- **数据流优化**：
-  - **增量更新**：数据源变化时，只更新受影响的图形元素。
-  - **虚拟化**：长列表或大量图形元素只在 DOM 中渲染可见部分，滚动时动态加载和卸载元素。
+  - **Wasm**：在端侧处理高密度空间索引、力导向图布局或列式分析（如 DuckDB-Wasm）时，用 Rust/C++ 编译为 Wasm 以降低 CPU 计算耗时。
+  - **WebGL/Canvas**：数据点达到数千至上万级时切换为 Canvas 2D 绘制；达到十万级或包含 3D 场景时改用 WebGL/WebGPU 批量提交顶点缓冲。D3.js 的比例尺与布局算法同样可以配合 Canvas/WebGL 渲染层使用。
+- **增量更新与虚拟化**：
+  - **增量更新**：数据源局部变化时只重绘受影响的图层或脏矩形区域，避免整图重建。
+  - **虚拟化**：配套的数据表格与长图例列表只挂载可视区域内的 DOM 节点，随滚动动态复用。
 
 ## **VI.5.3 实时数据可视化的技术选型**
 
-实时数据可视化要求前端能够高效地接收并渲染持续更新的数据流。
+实时监控与行情界面需要在持续到达的数据流下维持稳定帧率，选型涉及传输协议、图表引擎和帧调度策略：
 
 - **实时通信协议**：
-  - **WebSocket**：提供全双工通信，适合需要频繁双向交互的实时场景（如实时仪表盘、在线交易图表）。
-  - **Server-Sent Events（SSE）**：如果只需要服务器向客户端单向推送数据，SSE 更轻量、更易实现，且内置断线重连。
+  - **WebSocket**：提供全双工长连接，适合客户端需频繁动态切换订阅指标、调整过滤条件或双向交互的场景（如在线交易看盘、交互式监控台）。
+  - **Server-Sent Events（SSE）**：基于 HTTP 的单向事件流，协议轻量且原生支持断线重连，适合只由服务端持续推送指标更新的监控大盘。
 - **数据处理与渲染库**：
-  - [**D3.js**](https://d3js.org/)：提供灵活的数据绑定和转换能力，可以自定义各种图表类型，但学习曲线较陡峭。
-  - **ECharts/[AntV](https://antv.vision/)/Chart.js**：开箱即用的图表库，提供了丰富的图表组件和配置选项，易于上手，适合快速构建常见的实时图表。
-- **性能考量**：
-  - **节流与按帧合并**：数据更新频繁时，使用节流（throttle）或 `requestAnimationFrame` 把多次更新合并到一帧再渲染。不要对持续到达的数据流使用防抖（debounce），否则只要数据不停，图表就一直不会刷新。
-  - **动画优化**：动画优先使用 CSS `transform` 和 `opacity` 等属性，便于浏览器交给 GPU 合成。
-  - **增量渲染**：只更新图表中发生变化的部分。
+  - [**D3.js**](https://d3js.org/)：适合自定义流式时间轴过渡与非标图形映射，但高频更新时需手动管理数据窗口裁剪与 Canvas 重绘循环。
+  - **ECharts / [AntV](https://antv.vision/) / Chart.js**：内置动态数据追加接口与默认动画过渡，适合快速搭建标准时序折线图、仪表盘与柱状图。
+- **帧率与内存保护**：
+  - **节流与按帧合并**：高频消息到达时，先将增量数据写入内存环形缓冲区，再通过节流（throttle）或 `requestAnimationFrame` 合并为每帧最多一次视图刷新。切勿对持续不断的数据流使用防抖（debounce），否则只要消息不中断，画面将永远无法触发重绘。
+  - **动画与合成优化**：高频刷新模式下应关闭或缩短昂贵的逐点过渡动画；确需动画时优先使用可由 GPU 合成的变换，或限制同屏活动图元数量。
+  - **滑动窗口淘汰**：流式图表必须限制保留的历史点数上限，及时丢弃滑出时间窗口的旧数据，防止长时间挂机导致内存泄漏。
 
 ## **VI.5.4 Web GIS 简介**
 
-**Web GIS（Geographic Information System）** 是把地理信息系统功能集成到 Web 平台上的技术，用于在浏览器中显示、分析地理空间数据并与之交互。
+Web GIS 将地理空间坐标系、瓦片金字塔与前端渲染结合，核心工程问题在于底图渲染、空间数据格式选择与图层叠加性能：
 
-- **核心功能**：地图显示、地理数据查询、空间分析、路径规划、地理编码/逆地理编码等。
-- **前端技术栈**：
-  - **地图库**：[Leaflet.js](https://leafletjs.com/)（轻量级、灵活）、[OpenLayers](https://openlayers.org/)（功能全面、复杂）、[Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)（基于 WebGL，高性能、定制性强）。
-  - **数据格式**：[GeoJSON](https://geojson.org/)、[TopoJSON](https://github.com/topojson/topojson)、[KML](https://www.ogc.org/standards/kml/)、[WKT](https://www.ogc.org/standards/sfa/) 等。
-  - **可视化**：结合 D3.js、ECharts GL 等库，在地图上叠加热力图、散点图、轨迹图等。
-- **应用场景**：位置服务、智慧城市、物流追踪、环境监测、灾害预警、房地产分析等。
+- **地图渲染引擎**：
+  - **[Leaflet.js](https://leafletjs.com/)**：体积轻量、插件生态丰富，基于 DOM/栅格瓦片与 SVG/Canvas 覆盖物，适合标记点较少、以常规二维底图交互为主的场景。
+  - **[OpenLayers](https://openlayers.org/)**：支持多投影坐标系转换、OGC 标准服务（WMS/WFS）与复杂矢量编辑，适合专业测绘与地理信息系统。
+  - **[Mapbox GL JS](https://docs.mapbox.com/mapbox-gl-js/api/)**：基于 WebGL 渲染矢量瓦片（Vector Tiles），支持无级缩放旋转、3D 地形与建筑拉伸，适合高密度空间点线面渲染与定制地图样式。
+- **空间数据格式**：中小型矢量要素常用 [GeoJSON](https://geojson.org/)；需要压缩共享边界并减小传输体积时使用 [TopoJSON](https://github.com/topojson/topojson)；跨系统交换还常涉及 [KML](https://www.ogc.org/standards/kml/) 与 [WKT](https://www.ogc.org/standards/sfa/)。数据量较大时应切片为矢量瓦片（MVT）按视口按需加载，避免一次性解析数十 MB 的 GeoJSON。
+- **可视化图层叠加**：在底图之上可结合 D3.js、ECharts GL 或 deck.gl 叠加空间热力图、迁徙飞线、蜂窝聚合与实时轨迹，需注意底图相机矩阵与覆盖物重绘的同步。
 
 ## **VI.5.5 用 Worker 预处理大批量数据**
 

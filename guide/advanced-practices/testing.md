@@ -4,23 +4,24 @@ title: "V. 高级主题和专业开发最佳实践 / V.8 测试策略：确保�
 
 # V.8 测试策略：确保代码质量和可靠性（*）
 
-**目的**：验证软件功能是否符合预期，及早发现错误，并确保代码质量和可维护性。
+前端重构组件内部状态、升级依赖或调整接口字段时，单靠手工点按很难兼顾回归速度与边界覆盖；而过度绑定组件内部实现细节（如浅渲染或死盯内部 state 变量）的测试，又会在每次代码重构时大面积脆弱报错。现代前端测试普遍采用**测试奖杯（Testing Trophy）**模型，在执行速度、维护成本与真实环境置信度之间分配投入：
 
-- **测试类型与测试奖杯（Testing Trophy）**：
-  - **静态分析（Static Analysis）**：TypeScript 类型系统与 ESLint 规则，在编码阶段拦截语法错误、拼写错误与类型不匹配。
-  - **单元测试（Unit Tests）**：独立测试单个纯函数、复杂业务逻辑或算法。
-  - **集成与组件测试（Integration & Component Tests）**：**通常被视为现代前端投入产出比最高的层级**。它把多个父子组件、数据请求和本地状态当作一个整体，测试它们之间的协作。
-  - **端到端（E2E）测试**：在真实浏览器中运行生产构建，模拟真实用户完成跨页面的完整流程（如登录、支付）。
-- **框架和库**：
-  - [**Jest**](https://jestjs.io/)：成熟的经典 JavaScript 测试框架，提供测试运行器、断言工具、Mock 和代码覆盖率。
-  - [**Vitest**](https://vitest.dev/)：基于 Vite 构建的现代测试框架，原生支持 ESM 与 TypeScript，监听模式下只重跑受影响的测试；提供 Browser Mode，可在真实浏览器中运行组件测试。
-  - [**Cypress**](https://www.cypress.io/)：专注于 Web 应用的 E2E 测试工具，提供实时反馈、交互式 GUI 和时间旅行调试。
-  - [**Playwright**](https://playwright.dev/)：微软推出的跨浏览器 E2E 与组件测试框架，支持 Chromium、Firefox、WebKit 三种浏览器引擎和多语言绑定，默认并行执行测试，并提供用于回溯失败现场的 Trace Viewer。
-  - **Testing Library**：轻量级 UI 查询方案，通过模拟真实用户感知（Role、Label、Text）查找节点，鼓励将测试重点放在用户可感知的功能行为上。
-  - [**MSW（Mock Service Worker）**](https://mswjs.io/)：常用的网络层 API 模拟库，在浏览器中通过 Service Worker、在 Node 中通过请求拦截器实现声明式 API 模拟，同一套请求处理器可以在单元测试、E2E 测试与 Storybook 之间复用。
-- **视觉回归测试**：比较应用程序 UI 在不同版本间的视觉外观像素差异，确保没有意外的视觉样式退化。工具包括 Chromatic（用于 Storybook）和 Percy（一体化平台）。
+- **静态分析（Static Analysis）**：TypeScript 类型系统与 ESLint 规则，在编码阶段以零运行时成本拦截语法错误、拼写错误与类型契约不匹配。
+- **单元测试（Unit Tests）**：独立验证纯函数、数据转换工具、复杂状态机或算法逻辑，执行极快且无需浏览器环境。
+- **集成与组件测试（Integration & Component Tests）**：**通常被视为现代前端投入产出比最高的层级**。它把多个父子组件、网络请求与本地状态当作一个整体，按真实用户的交互方式验证协作结果。
+- **端到端（E2E）测试**：在真实无头或有头浏览器中运行完整构建，模拟用户走通登录、搜索、结账等跨页面核心业务漏斗。
+- **视觉回归测试（Visual Regression Testing）**：对比 UI 在不同代码版本间的像素级渲染快照，拦截 CSS 布局坍塌、样式污染或意外的间距偏移，常用工具包括 Chromatic（集成 Storybook）和 Percy。
 
-在 Cypress 和 Playwright 之间选择，主要看团队更看重什么：Cypress 上手容易、以 JavaScript 为中心，交互式调试体验直观；Playwright 覆盖 Chromium、Firefox、WebKit 等多种浏览器引擎，并支持 JavaScript/TypeScript、Python、Java、C# 等多种语言。
+围绕上述测试分层，主流工具链各司其职：
+
+- [**Jest**](https://jestjs.io/)：成熟的经典 JavaScript 测试框架，内置测试运行器、断言工具、Mock 机制和代码覆盖率统计。
+- [**Vitest**](https://vitest.dev/)：基于 Vite 构建的现代测试框架，原生支持 ESM 与 TypeScript，监听模式下按模块依赖图只重跑受影响的测试；同时提供 Browser Mode，可在真实浏览器而非模拟 DOM（jsdom）中运行组件测试。
+- [**Cypress**](https://www.cypress.io/)：专注于 Web 应用的 E2E 与组件测试工具，提供实时重载、交互式 GUI 和直观的 DOM 时间旅行调试。
+- [**Playwright**](https://playwright.dev/)：微软推出的跨浏览器 E2E 与组件测试框架，原生支持 Chromium、Firefox、WebKit 三大内核与多语言绑定，默认多进程并行执行，并提供可回放完整网络、控制台与 DOM 快照的 Trace Viewer。
+- **Testing Library**：轻量级 UI 节点查询方案，强制通过真实用户可感知的线索（可访问角色 Role、表单 Label、可见文本 Text）查找元素，避免测试与 CSS 类名或内部 state 耦合。
+- [**MSW（Mock Service Worker）**](https://mswjs.io/)：网络层 API 模拟库，在浏览器端通过 Service Worker、在 Node 端通过底层请求拦截器实现声明式 Mock。由于拦截发生在网络边界而非篡改业务代码中的 `fetch`/`axios` 引用，同一套 Mock 处理器（handlers）可以在单元测试、E2E 测试与 Storybook 之间无缝复用。
+
+在 Cypress 和 Playwright 之间做 E2E 选型时，主要取决于团队技术栈与跨端诉求：Cypress 以 JavaScript 为中心，本地 GUI 交互式调试体验直观；Playwright 则在多浏览器引擎（含 WebKit/Safari）覆盖、多窗口/多标签页控制、并行执行速度以及 Trace 离线排障上更具优势。
 
 ::: details 示例：Testing Library 用户视角测试
 
@@ -112,7 +113,7 @@ describe("<UserProfile /> 集成测试", () => {
 
 :::
 
-**表格：流行测试框架比较**
+下表从测试层级、运行环境与生态定位对比了四款主流测试框架：
 
 | 框架名称 | 类型（示例） | 速度 | 浏览器支持（示例） | 语言支持（示例） | 模拟能力 | 调试工具 | 社区/生态系统 | 理想用例（示例） |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |

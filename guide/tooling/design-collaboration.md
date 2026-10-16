@@ -90,9 +90,7 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 
 设计系统工程落地的关键，是把设计常量（颜色、字号、间距、阴影）集中维护在单一事实来源（Single Source of Truth）中，再由自动化管线生成各端代码：
 
-1. **[W3C DTCG（Design Tokens Community Group）](https://www.designtokens.org/TR/2025.10/format/) 格式规范**：
-   - 该格式由 W3C 设计 token 社区组发布，2025 年 10 月推出首个稳定版（2025.10）。它属于社区组报告，并非 W3C 正式标准。
-   - 用标准 JSON 格式定义设计 token，让 Figma Variables 与代码共用同一套语义命名，减少两侧各自硬编码造成的不一致：
+1. **[W3C DTCG（Design Tokens Community Group）](https://www.designtokens.org/TR/2025.10/format/) 格式规范**：由 W3C 设计 token 社区组发布，2025 年 10 月推出首个稳定版（2025.10；属于社区组报告，并非 W3C 正式标准）。它用标准 JSON 格式定义设计 token，让 Figma Variables 与代码共用同一套语义命名，减少两侧各自硬编码造成的不一致：
    ```json
    {
      "color": {
@@ -106,10 +104,5 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
      }
    }
    ```
-2. **设计 token 的自动化编译与分发管线（[Style Dictionary](https://styledictionary.com/)）**：
-   - 由 CI 监听设计 token 仓库的变更，用 Style Dictionary 自动编译为多端产物：
-     - **Web 产物**：CSS 自定义属性（`:root { --color-brand-primary: #2563eb; }`）、Tailwind CSS 主题配置文件、TypeScript 强类型常量对象；
-     - **移动端产物**：iOS Swift 结构体 / Android XML 资源。
-3. **色彩对比度检查：WCAG 2.2 基线与 APCA 补充参考**：
-   - [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 的对比度要求（正文 4.5:1、大字号 3:1）仍是当前无障碍合规的基线，设计 token 中的前景/背景组合应先满足它。
-   - [APCA（Accessible Perceptual Contrast Algorithm）](https://github.com/Myndex/SAPC-APCA) 是候选的感知对比度算法，会考虑字号、字重和前景/背景极性（如暗色模式下的浅字深底），用 Lc 值（Lightness Contrast，明度对比值）表示明度对比。它尚未成为正式标准，可在暗色主题、细字号等场景作为补充参考，不能替代 WCAG 2.2 检查。
+2. **设计 token 的自动化编译与分发管线（[Style Dictionary](https://styledictionary.com/)）**：由 CI 监听设计 token 仓库的变更，用 Style Dictionary 自动编译为多端产物——Web 端输出 CSS 自定义属性（`:root { --color-brand-primary: #2563eb; }`）、Tailwind CSS 主题配置与 TypeScript 强类型常量对象；移动端输出 iOS Swift 结构体与 Android XML 资源。
+3. **色彩对比度检查：WCAG 2.2 基线与 APCA 补充参考**：[WCAG 2.2](https://www.w3.org/TR/WCAG22/) 的对比度要求（正文 4.5:1、大字号 3:1）仍是当前无障碍合规的基线，设计 token 中的前景/背景组合应先满足它。[APCA（Accessible Perceptual Contrast Algorithm）](https://github.com/Myndex/SAPC-APCA) 是候选的感知对比度算法，会综合字号、字重和前景/背景极性（如暗色模式下的浅字深底），用 Lc 值（Lightness Contrast，明度对比值）表示明度对比。它尚未成为正式标准，可在暗色主题、细字号等场景作为补充参考，不能替代 WCAG 2.2 检查。
