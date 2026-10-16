@@ -2,7 +2,7 @@
 title: "III. 基本开发环境和工具 / III.9 AI 协作能力与工程化工作流"
 ---
 
-# III.9 AI 协作能力与工程化工作流 (*)
+# III.9 AI 协作能力与工程化工作流（*）
 
 学习 AI 辅助开发时，重点是贯穿工具更迭的五个稳定问题：
 
@@ -16,7 +16,7 @@ title: "III. 基本开发环境和工具 / III.9 AI 协作能力与工程化工�
 
 > 目标 → 上下文 → 执行 → 反馈 → 治理
 
-下文介绍的在线 IDE、编辑器、终端 Agent、Skills、MCP 和测试工具，分别展示了这条链上不同位置的工作方式。
+下文介绍的在线 IDE、编辑器、终端 Agent（能调用工具、分多步执行任务的 AI 助手）、Skills（可复用的任务做法说明）、MCP（模型上下文协议，用于连接外部数据和工具）和测试工具，分别展示了这条链上不同位置的工作方式。
 
 截至 2026 年，AI 工具的核心评估标准已经转向生成结果的准确性、可维护性、可解释性以及进入真实系统时的安全性。开发者调查显示，很多人愿意用 AI 加快低风险任务，同时对部署、监控、准确性和安全性保持谨慎。因此，本章把 AI 定位为工程系统中的一个参与者，交付责任由工程流程和负责人共同承担。
 
@@ -40,14 +40,14 @@ AI 和人一样，只有在环境可运行时，才能可靠地定位问题。�
 
 ## **III.9.2 从提示词扩展到工程循环**
 
-AI 协作的范围已经从提示词扩展到上下文、执行环境和反馈循环。社区常用 **Prompt Engineering → Context Engineering → Harness Engineering → Loop Engineering** 来描述这种逐层包含的工程范围。
+AI 协作的范围已经从提示词扩展到上下文、执行环境和反馈循环。社区常用 **Prompt Engineering（提示词工程）→ Context Engineering（上下文工程）→ Harness Engineering（执行框架工程）→ Loop Engineering（迭代循环工程）** 来描述这种逐层包含的工程范围。
 
 | 层级 | 关注点 | 在开发工作流中的含义 |
 | :--- | :--- | :--- |
 | **Prompt Engineering** | 怎么说 | 用清晰的角色、目标、约束、输出格式和示例，让模型更容易理解任务。 |
 | **Context Engineering** | 给什么信息 | 管理模型能看到的上下文，包括相关文件、错误日志、设计稿、接口契约、仓库规则和历史决策。[Anthropic](https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents) 将其概括为在推理过程中维护最合适的信息集合。 |
 | **Harness Engineering** | 在什么系统里工作 | 为 Agent 配置工具、权限、沙箱、测试命令、质量门禁、可观测性和人类审批机制。[Martin Fowler](https://martinfowler.com/articles/harness-engineering.html) 将 coding agent 的 harness 视为包裹在模型外部、帮助约束和反馈模型行为的工程结构。 |
-| **Loop Engineering** | 如何持续推进和自我修正 | 设计“计划 -> 执行 -> 观察 -> 修复 -> 验收”的循环，让 Agent 能在工具反馈、测试结果、guardrails 和人工确认之间迭代。[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/agents/) 这类框架也把 tools、handoffs、guardrails、tracing、human-in-the-loop 等能力作为 Agent 系统的一部分。 |
+| **Loop Engineering** | 如何持续推进和自我修正 | 设计“计划 → 执行 → 观察 → 修复 → 验收”的循环，让 Agent 能在工具反馈、测试结果、guardrails（护栏，即对输入、输出和工具调用的自动校验与拦截）和人工确认之间迭代。[OpenAI Agents SDK](https://openai.github.io/openai-agents-python/agents/) 这类框架也把 tools（工具调用）、handoffs（把任务移交给另一个 Agent）、guardrails、tracing（记录模型调用、工具调用等执行过程的追踪）、human-in-the-loop（关键步骤由人介入确认）等能力作为 Agent 系统的一部分。 |
 
 以“修复结算页重复提交”这个任务为例，可以直观看到四层的差别：
 
@@ -62,7 +62,7 @@ AI 协作的范围已经从提示词扩展到上下文、执行环境和反馈�
 
 AI 可以出现在云端环境、编辑器或终端里。三种形态的差别主要是工作入口和权限范围，实际能力由模型、上下文、工具与反馈共同决定。
 
-| 工作形态 | 代表性工具 | 它解释的能力 | 更适合的场景 |
+| 工作形态 | 代表性工具 | 主要能力 | 更适合的场景 |
 | :--- | :--- | :--- | :--- |
 | **云端环境** | [CodeSandbox](https://codesandbox.io/)、[StackBlitz](https://stackblitz.com/) | 把代码、运行时和预览一起分享 | 原型、教学、最小复现、远程协作 |
 | **编辑器协作** | [GitHub Copilot](https://github.com/features/copilot)、[Cursor](https://cursor.com/)、[Windsurf](https://windsurf.com/)、[Trae](https://trae.ai/)、[CodeBuddy](https://www.codebuddy.ai/) | 围绕当前文件、符号和代码库问答、编辑多个文件 | 高频编码、局部重构、边写边审查 |
@@ -83,12 +83,12 @@ AI 可以出现在云端环境、编辑器或终端里。三种形态的差别�
 “简洁”“现代”“有高级感”等形容词很难形成稳定的验收标准。让 Agent 生成或调整界面时，应把设计意图落实为可读取、可比较的约束：
 
 - **视觉方向与内容层级**：提供相关设计节点、参考图或现有页面，说明主次内容、主要操作和需要保留的视觉特征。引用参考时，明确借鉴的是排版、密度、配色还是交互方式。
-- **设计 Token 与素材**：给出颜色、字体、间距、圆角和主题变量的来源，以及项目实际使用的图标、图片和字体资源。让 Agent 沿用语义化 Token，并核对素材加载后的真实效果。
+- **设计 token 与素材**：给出颜色、字体、间距、圆角和主题变量的来源，以及项目实际使用的图标、图片和字体资源。让 Agent 沿用语义化的设计 token，并核对素材加载后的真实效果。
 - **组件与代码映射**：提供现有组件的导入路径、props、变体和 Storybook 用法。要求先查找可复用实现，再判断是否需要扩展组件或新增组件，避免为相同交互重复实现一套样式与状态。
 - **布局与状态约束**：说明容器宽度、换行、溢出、断点与内容伸缩规则，同时列出加载、空数据、错误、禁用、焦点和成功等适用状态。单张设计图没有表达的行为，应在实现前识别出来。
 - **验收依据**：固定要检查的页面、视口、主题和状态，分别检查信息层级、间距、文字可读性、组件一致性与操作反馈，把“看起来不对”转成可定位的差异。
 
-[Figma MCP](https://developers.figma.com/docs/figma-mcp-server/) 可以向 Agent 提供变量、组件和布局信息；配合 [Code Connect](https://developers.figma.com/docs/code-connect/) 可以关联设计组件与代码中的真实用法。接入后仍需核对映射与项目当前实现是否一致。没有设计工具连接时，也可以提供导出的设计说明、Token 文件和组件文档，保持约束可追溯。设计信息的读取与映射方法见[设计协作能力](/guide/tooling/design-collaboration)。
+[Figma MCP](https://developers.figma.com/docs/figma-mcp-server/) 可以向 Agent 提供变量、组件和布局信息；配合 [Code Connect](https://developers.figma.com/docs/code-connect/) 可以关联设计组件与代码中的真实用法。接入后仍需核对映射与项目当前实现是否一致。没有设计工具连接时，也可以提供导出的设计说明、设计 token 文件和组件文档，保持约束可追溯。设计信息的读取与映射方法见[设计协作能力](/guide/tooling/design-collaboration)。
 
 视觉比较要在字体、图片加载完成后进行，并保持视口、数据和页面状态一致。对差异应给出具体位置与调整依据，再让 Agent 修改和重新观察；响应式规则、键盘操作与错误恢复也要分别验证。
 
@@ -161,7 +161,7 @@ AI 可以解释这些结果、提出修复并补测试，但“是否允许合�
 
 浏览器观察应从初始复现开始，并随修改反复进行。先确认实际运行的地址、路由、视口、测试数据与登录状态，再让 Agent 操作页面；每次修改后重走受影响的路径，检查问题是否消失、相邻状态是否出现回归。
 
-[Playwright MCP](https://github.com/microsoft/playwright-mcp) 等浏览器工具能让 Agent 直接操作运行中的页面。DOM 与可访问性快照适合定位元素、读取语义和状态，截图适合观察布局、排版与视觉差异。根据问题选择需要的证据：
+[Playwright MCP](https://github.com/microsoft/playwright-mcp) 等浏览器工具能让 Agent 直接操作运行中的页面。DOM 与无障碍快照适合定位元素、读取语义和状态，截图适合观察布局、排版与视觉差异。根据问题选择需要的证据：
 
 - **布局与样式**：结合截图、DOM、计算样式和元素尺寸，定位溢出、遮挡、错误换行、字体回退与断点问题；记录发生问题的视口和内容条件。
 - **交互与焦点**：实际执行点击、输入、键盘导航、提交与取消，检查按钮状态、焦点位置、错误提示和重复操作的结果。
@@ -184,9 +184,9 @@ AI 可以解释这些结果、提出修复并补测试，但“是否允许合�
 | 出错后怎样恢复？ | 小步 diff、版本控制、可重放测试和明确回滚点 |
 | 事后怎样解释？ | 保存关键输入、工具调用、测试结果、审批记录和变更说明 |
 
-[OpenAI Agents SDK 的 human-in-the-loop](https://openai.github.io/openai-agents-python/human_in_the_loop/) 展示了敏感工具调用如何暂停并等待批准；[tracing](https://openai.github.io/openai-agents-js/guides/tracing/) 则说明工具调用、模型生成和 guardrail 等事件为何需要记录。这些机制构成所有自动执行系统都应具备的治理基础。
+[OpenAI Agents SDK 的 human-in-the-loop](https://openai.github.io/openai-agents-python/human_in_the_loop/) 展示了敏感工具调用如何暂停并等待批准；[tracing](https://openai.github.io/openai-agents-js/guides/tracing/) 则说明工具调用、模型生成和 guardrail 等事件为何需要记录。对会自动执行操作的系统来说，这些机制是治理的基础。
 
-在前端项目中，AI 还可以辅助发现 RSC 与客户端组件边界、硬编码密钥、Cookie 属性、第三方脚本和埋点风险。但这类输出只是审查线索：安全、隐私和法规结论仍要结合真实数据流、部署配置和责任人的确认。
+在前端项目中，AI 还可以辅助发现 RSC（React Server Components，React 服务端组件）与客户端组件的边界问题、硬编码密钥、Cookie 属性、第三方脚本和埋点风险。但这类输出只是审查线索：安全、隐私和法规结论仍要结合真实数据流、部署配置和责任人的确认。
 
 ## **III.9.7 前端项目的专门质量门禁**
 
@@ -194,12 +194,12 @@ AI 可以解释这些结果、提出修复并补测试，但“是否允许合�
 
 - **行为**：核心用户路径、错误恢复、取消和重复提交是否符合需求；
 - **浏览器**：控制台、网络请求、响应式布局和不同浏览器的真实行为是否正常；
-- **可访问性**：语义、可访问名称、键盘操作、焦点顺序和动态播报是否通过检查；
+- **无障碍**：语义、可访问名称、键盘操作、焦点顺序和动态播报是否通过检查；
 - **视觉**：组件状态、断点、字体加载和关键页面是否出现视觉回归；
 - **性能**：构建产物、LCP/INP/CLS、请求瀑布和最差设备体验是否满足预算；
 - **安全**：服务端/客户端边界、凭据、Cookie、第三方脚本、用户输入和日志是否经过人工复核。
 
-AI 输出应被视为候选变更。它可以帮助生成测试、解释失败和提出修复；最终判断依赖真实浏览器、可访问性工具、性能数据和负责人的审查。
+AI 输出应被视为候选变更。它可以帮助生成测试、解释失败和提出修复；最终判断依赖真实浏览器、无障碍工具、性能数据和负责人的审查。
 
 ## **III.9.8 一套可落地的协作顺序**
 
@@ -238,4 +238,4 @@ approval:
   - review-diff
 ```
 
-契约中的检查应覆盖行为、浏览器、可访问性和性能边界。Agent 每完成一小步就读取真实输出，再决定继续、修复或暂停。这样可以把“生成代码”转成可追踪的工程任务。
+契约中的检查应覆盖行为、浏览器、无障碍和性能边界。Agent 每完成一小步就读取真实输出，再决定继续、修复或暂停。这样可以把“生成代码”转成可追踪的工程任务。

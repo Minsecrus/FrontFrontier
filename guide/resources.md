@@ -6,7 +6,7 @@ title: "附录 A：前端学习资料汇总"
 
 按正在解决的问题选择资料：先用正文建立概念，再查官方文档确认 API 和配置，最后用练习或项目验证。阅读工具文档时应选择与项目依赖相符的版本。
 
-## **0. 学习路线图 (The Map)**
+## **0. 学习路线图（The Map）**
 
 _出发前的指南针，迷茫时的导航仪。_
 
@@ -17,7 +17,7 @@ _出发前的指南针，迷茫时的导航仪。_
   - **用途**：免费的项目驱动型全栈课程，覆盖本地开发环境、Git、命令行和 Web 应用练习。
   - **何时阅读**：已经看懂基础教程、但还不能独立完成项目时，选择对应练习，把正文概念落实到代码中。
 
-## **1. Web 文档、兼容性与标准 (Web References)**
+## **1. Web 文档、兼容性与标准（Web References）**
 
 _这些是所有前端开发的基石，遇到问题时的第一检索源。_
 
@@ -30,13 +30,13 @@ _这些是所有前端开发的基石，遇到问题时的第一检索源。_
 - **[Web Platform Dashboard / WebStatus](https://webstatus.dev/)**
   - **用途**：按特性查询 Web 平台能力、Baseline 状态与浏览器进展。
 - **[Can I Use](https://caniuse.com/)**
-  - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`, Container Queries）。
+  - **用途**：查询 CSS/JS 新特性的浏览器兼容性（如 `:has()`、Container Queries）。
 - **[WCAG 2.2](https://www.w3.org/TR/WCAG22/)** / **[WAI-ARIA Authoring Practices](https://www.w3.org/WAI/ARIA/apg/)**
-  - **用途**：用 WCAG 查询可访问性成功标准，用 APG 参考组件语义、键盘交互和实现示例，适合在组件设计与验收时查阅。
+  - **用途**：用 WCAG 查询无障碍成功标准，用 APG 参考组件语义、键盘交互和实现示例，适合在组件设计与验收时查阅。
 - **[Patterns.dev](https://www.patterns.dev/)**
   - **用途**：学习 Web 应用的设计模式、渲染模式和性能取舍，适合比较 CSR、SSR、SSG、Streaming、Islands 等方案时阅读。
 
-## **2. 核心技术栈深度学习 (Deep Dives)**
+## **2. 核心技术栈深度学习（Deep Dives）**
 
 _不仅是官方文档，更是进阶教程。_
 
@@ -64,30 +64,30 @@ _不仅是官方文档，更是进阶教程。_
 - **中文知识库**
   - **[千古前端图文教程](https://github.com/qianguyihao/Web)**：覆盖 HTML、CSS、JavaScript、工程化、算法和面试等主题，适合作为中文补充材料，按知识点查漏补缺。
 
-## **3. 样式与 UI 设计 (CSS & Design)**
+## **3. 样式与 UI 设计（CSS & Design）**
 
 _从“写出 CSS”到“写出好用的 UI”。_
 
 - **CSS 进阶**
-  - **[Modern CSS](https://moderncss.dev/)**: 专注于现代 CSS 解决方案的教程。
-  - **[SmolCSS](https://smolcss.dev/)**: 极简的现代 CSS 布局片段。
+  - **[Modern CSS](https://moderncss.dev/)**：专注于现代 CSS 解决方案的教程。
+  - **[SmolCSS](https://smolcss.dev/)**：极简的现代 CSS 布局片段。
 - **图标库**
   - **[Lucide](https://lucide.dev/)**：风格统一的图标集合，适合按同一视觉语言为界面选择图标。
   - **[React Icons](https://react-icons.github.io/react-icons/)**：以 React 组件形式提供多套图标集合，适合在项目中按需选择和引用。
-- **无头组件 (Headless UI)**
-  - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**: 提供逻辑和无障碍能力，不带样式的组件库底座。
+- **无头组件（Headless UI）**
+  - **[Radix UI](https://www.radix-ui.com/)** / **[Headless UI](https://headlessui.com/)**：提供逻辑和无障碍能力，不带样式的组件库底座。
   - **[shadcn/ui](https://ui.shadcn.com/)**：将组件源码引入项目后自行维护，适合需要调整组件实现、统一样式和保留代码控制权的场景。
 - **UI/UX 设计基础**
-  - **[Refactoring UI](https://www.refactoringui.com/)**: 面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
-  - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**: UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
-  - **[Laws of UX](https://lawsofux.com/)**: 简洁地整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
+  - **[Refactoring UI](https://www.refactoringui.com/)**：面向开发者的界面设计入门，特别适合理解层级、间距、对齐、色彩和组件细节如何影响成品质感。
+  - **[Nielsen Norman Group](https://www.nngroup.com/articles/)**：UX 研究和可用性原则的经典资料库，适合补充用户行为、信息架构、表单和导航设计的底层判断。
+  - **[Laws of UX](https://lawsofux.com/)**：简洁地整理常见 UX 心理学原则，适合作为设计决策和界面复盘时的快速参考。
 - **设计系统参考**
-  - **[Material Design](https://m3.material.io/)**: Google 的设计系统，适合学习组件规范、动效、颜色体系和跨平台体验一致性。
-  - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**: Apple 平台设计指南，适合理解系统级交互、平台习惯和高质量原生体验。
-  - **[IBM Carbon Design System](https://carbondesignsystem.com/)**: 面向企业级产品的成熟设计系统，适合学习数据密集界面、组件状态和设计 token 的组织方式。
-  - **[Atlassian Design System](https://atlassian.design/)**: 面向协作和工作流产品的设计系统，适合参考复杂产品中的导航、表单、反馈和内容设计。
+  - **[Material Design](https://m3.material.io/)**：Google 的设计系统，适合学习组件规范、动效、颜色体系和跨平台体验一致性。
+  - **[Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines)**：Apple 平台设计指南，适合理解系统级交互、平台习惯和高质量原生体验。
+  - **[IBM Carbon Design System](https://carbondesignsystem.com/)**：面向企业级产品的成熟设计系统，适合学习数据密集界面、组件状态和设计 token 的组织方式。
+  - **[Atlassian Design System](https://atlassian.design/)**：面向协作和工作流产品的设计系统，适合参考复杂产品中的导航、表单、反馈和内容设计。
 
-## **4. 工程化与工具链 (Engineering)**
+## **4. 工程化与工具链（Engineering）**
 
 _提升开发效率与代码质量的利器。_
 
@@ -108,7 +108,7 @@ _提升开发效率与代码质量的利器。_
 - **安全实践**
   - **[OWASP Cheat Sheet Series](https://cheatsheetseries.owasp.org/)**：按 XSS、CSRF、CSP 等主题查询防护方法，适合处理不可信内容、设计认证交互或开展安全检查时阅读。
 
-## **5. AI 驱动开发 (AI-Native)**
+## **5. AI 驱动开发（AI-Native）**
 
 阅读这组资料时，先明确是改进开发流程，还是把 AI 能力集成到产品中。具体配置与 API 应以所用工具的官方文档为准。
 
@@ -122,7 +122,7 @@ _提升开发效率与代码质量的利器。_
   - **[Figma MCP Server](https://developers.figma.com/docs/figma-mcp-server/)**：了解如何向 Agent 提供布局、变量与组件等设计上下文，适合把设计稿约束带入界面实现时查阅。
   - **[Playwright MCP](https://github.com/microsoft/playwright-mcp)**：让 Agent 通过工具读取页面状态、操作浏览器并收集反馈，适合开发过程中复现交互与检查运行结果；需要长期回归的路径应另写为可重复运行的测试。
   - **[Modern Web Guidance](https://developer.chrome.com/docs/modern-web-guidance)**：参考将 Web 平台实践与兼容性知识组织为 Agent Skills 的方式，适合为团队整理可复用执行指引时阅读。
-- **AI 集成 (Integration & SDKs)**
+- **AI 集成（Integration & SDKs）**
   - **[LangChain JS](https://docs.langchain.com/oss/javascript/langchain/overview)**：学习模型调用、工具集成与 Agent 编排，适合需要组织多步骤 AI 处理流程时查阅。
   - **[AI SDK UI](https://ai-sdk.dev/docs/reference/ai-sdk-ui)**：查询聊天、流式消息和结构化结果相关的 UI 接口，适合把模型输出接入应用界面时阅读。
   - **[MCP (Model Context Protocol)](https://modelcontextprotocol.io/)**：了解资源、提示模板与工具等协议能力，适合设计 Agent 与外部系统的连接方式时阅读。
@@ -140,7 +140,7 @@ _提升开发效率与代码质量的利器。_
 - [LinkedIn Talent 2026](https://news.linkedin.com/en-us/2026/LinkedIn-Research-Talent-2026)：观察招聘流程和求职竞争的变化。
 - [BLS Web Developers and Digital Designers](https://www.bls.gov/ooh/computer-and-information-technology/web-developers.htm)：作为美国宽口径职业展望阅读；其他市场需要配合本地数据。
 
-## **6. 实战与练习平台 (Practice)**
+## **6. 实战与练习平台（Practice）**
 
 _眼过千遍不如手过一遍。_
 
@@ -151,10 +151,10 @@ _眼过千遍不如手过一遍。_
 - **[CodeSandbox](https://codesandbox.io/)** / **[StackBlitz](https://stackblitz.com/)**
   - 云端 IDE，快速验证想法，无需本地配环境。
 
-## **7. 资讯与社区 (Stay Updated)**
+## **7. 资讯与社区（Stay Updated）**
 
 _保持技术敏感度。_
 
-- **[Bytes](https://bytes.dev/)**: 幽默风趣的 JavaScript 每周简报。
+- **[Bytes](https://bytes.dev/)**：幽默风趣的 JavaScript 每周简报。
 - **[This Week In React](https://thisweekinreact.com/)**：汇集 React 生态文章与项目动态，适合每周挑选与工作相关的主题阅读。
 - **[Best of JS](https://bestofjs.org/)**：按项目和关注度变化发现 JavaScript 生态工具，适合寻找待调研的候选项目；采用前仍需检查文档、维护情况和项目适配性。

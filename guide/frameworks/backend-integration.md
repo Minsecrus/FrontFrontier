@@ -2,17 +2,17 @@
 title: "IV. 前端框架和库：构建现代 UI / IV.11 API 与数据契约：从 HTTP 到现代后端集成"
 ---
 
-# IV.11 API 与数据契约：从 HTTP 到现代后端集成 (*)
+# IV.11 API 与数据契约：从 HTTP 到现代后端集成（*）
 
-API 契约定义前端与服务端共同遵守的通信规则。它覆盖请求意图、数据结构、错误格式、缓存方式、并发行为和版本演进。契约越清楚，前端越容易生成稳定状态、定位失败并安全重试。
+API 契约定义前端与服务端共同遵守的通信规则。它覆盖请求意图、数据结构、错误格式、缓存方式、并发行为和版本演进。契约越清楚，前端越容易维持稳定的界面状态、定位失败原因并安全重试。
 
 一条数据从服务端进入界面，通常经过五层：
 
-> 传输方式 → 协议语义 → 数据结构 → 业务语义 → 界面状态
+> 传输 → 协议语义 → 数据结构 → 业务语义 → 界面状态
 
-GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基础契约后，工具选型会更容易说清。
+GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基础契约后，选型理由也更容易说清。
 
-在 SSR、流式渲染、Server Components 或 Server Functions 中，前端还必须明确**服务端/客户端运行边界**。服务端模块可能拥有数据库、密钥和用户身份上下文；客户端模块拥有 DOM、浏览器存储和用户交互。两者之间传递的内容需要经过序列化、校验、权限判断和错误处理，形成明确的数据契约。清晰的边界有助于保护密钥、控制数据量、验证输入并保持缓存结果正确。
+在 SSR、流式渲染、服务器组件（Server Components）或 Server Functions 中，前端还必须明确**服务端/客户端运行边界**。服务端模块可能拥有数据库、密钥和用户身份上下文；客户端模块拥有 DOM、浏览器存储和用户交互。两者之间传递的内容需要经过序列化、校验、权限判断和错误处理，形成明确的数据契约。清晰的边界有助于保护密钥、控制数据量、验证输入并保持缓存结果正确。
 
 ## **IV.11.1 契约包含哪些层次**
 
@@ -20,15 +20,15 @@ GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基�
 | :----------- | :----------------------------------- | :-------------------------------------------- | :------------------------------------------------------------ |
 | **传输**     | 数据通过什么通道到达，连接怎样恢复   | 请求响应、服务器推送、双向消息                | HTTP、SSE、WebSocket                                          |
 | **协议语义** | 这次操作想做什么，成功与失败怎样表达 | GET 读取、PATCH 更新、404 资源缺失、ETag 校验 | [HTTP Semantics](https://www.rfc-editor.org/rfc/rfc9110.html) |
-| **结构**     | 字段、类型、必填项和嵌套关系是什么   | 用户包含 id、name、role                       | TypeScript、JSON Schema、OpenAPI、GraphQL SDL、Protobuf       |
+| **数据结构** | 字段、类型、必填项和嵌套关系是什么   | 用户包含 id、name、role                       | TypeScript、JSON Schema、OpenAPI、GraphQL SDL、Protobuf       |
 | **业务语义** | 字段代表什么，允许哪些状态变化       | 金额的币种、订单状态转换、权限范围            | 领域文档、状态机、示例数据                                    |
-| **界面映射** | 前端如何呈现等待、空数据、冲突与失败 | loading、empty、validation error、conflict    | 组件状态、路由状态、服务器状态工具                            |
+| **界面状态** | 前端如何呈现等待、空数据、冲突与失败 | loading、empty、validation error、conflict    | 组件状态、路由状态、服务器状态工具                            |
 
 结构验证只能确认“数据长得对”。业务规则还需要回答“数据表达的事情是否成立”。例如，金额字段是数字属于结构规则；金额必须大于零且币种受支持属于业务规则。
 
 ## **IV.11.2 用 HTTP 语义表达操作意图**
 
-[RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) 定义了 HTTP 方法、状态码、条件请求和表示元数据。前端应根据这些语义决定缓存、重试和界面反馈。
+[RFC 9110](https://www.rfc-editor.org/rfc/rfc9110.html) 定义了 HTTP 方法、状态码、条件请求和资源表示（representation）的元数据。前端应根据这些语义决定缓存、重试和界面反馈。
 
 ### **方法、安全性与幂等性**
 
@@ -57,7 +57,7 @@ GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基�
 - **400 / 422**：请求格式或业务输入需要修正。
 - **401**：客户端需要恢复认证或重新登录。
 - **403**：当前身份缺少执行该操作的权限。
-- **404**：目标资源不存在或当前主体不可见。
+- **404**：目标资源不存在，或对当前用户不可见。
 - **409**：当前资源状态与操作发生冲突。
 - **412**：条件请求中的前置条件失败。
 - **429**：请求频率超过服务允许范围。
@@ -72,10 +72,10 @@ GraphQL、gRPC-Web 和 tRPC 等方案位于这条链的不同位置。理解基�
 - **max-age** 定义响应保持新鲜的时间。
 - **private** 限制响应只能由单个用户的私有缓存保存。
 - **no-cache** 允许保存响应，并要求复用前先向源站验证。
-- **no-store** 要求缓存避免保存请求或响应。
+- **no-store** 要求缓存不得保存请求或响应。
 - **ETag** 是响应头（定义于 RFC 9110），为资源表示提供验证器。
 
-客户端可以携带 **If-None-Match** 验证缓存；表示未变化时，服务端返回 304。更新操作可以携带 **If-Match** 表达“只修改我读到的版本”；资源已经变化时，服务端返回 412，前端再显示冲突并帮助用户合并。
+客户端可以携带 **If-None-Match** 验证缓存；资源表示未变化时，服务端返回 304。更新操作可以携带 **If-Match** 表达“只修改我读到的版本”；资源已经变化时，服务端返回 412，前端再显示冲突并帮助用户合并。
 
 ## **IV.11.3 静态类型与运行时验证共同守住边界**
 
@@ -85,14 +85,14 @@ TypeScript 会在编译后擦除类型。网络响应、URL 参数、本地存�
 | :------------------ | :----------------------------------- | :-------------------------------- | :-------------------------------------------------------------------- |
 | **代码内 Schema**   | 前端或共享包中的验证定义             | 运行时验证和类型推导可以放在一起  | Zod、Valibot 用 Schema 推导 TypeScript 类型                           |
 | **JSON Schema**     | 独立的 JSON 结构规范                 | 跨语言验证、文档和测试数据生成    | [JSON Schema](https://json-schema.org/) 描述 JSON 的结构约束          |
-| **OpenAPI**         | HTTP 路径、方法、参数、响应和 Schema | 文档、客户端生成、Mock 与契约检查 | [OpenAPI Specification](https://spec.openapis.org/oas/) 描述 HTTP API |
+| **OpenAPI**         | HTTP 路径、方法、参数、响应和 Schema | 文档、客户端代码生成、Mock 与契约检查 | [OpenAPI Specification](https://spec.openapis.org/oas/) 描述 HTTP API |
 | **GraphQL Schema**  | 服务端 SDL                           | 查询字段、变量和响应类型生成      | GraphQL Code Generator、Apollo、Relay                                 |
 | **Protobuf**        | 独立 IDL                             | 多语言代码生成和紧凑二进制消息    | gRPC、gRPC-Web                                                        |
 | **TypeScript 推断** | 同一 TypeScript 工程中的服务端路由   | 端到端编辑器提示和重构反馈        | tRPC 共享路由类型                                                     |
 
 生成的 TypeScript 类型负责开发期反馈，运行时验证负责处理真实输入。使用 OpenAPI、GraphQL 或 Protobuf 时，团队还要明确生成代码版本、兼容策略和部署顺序。
 
-::: details 启发式示例：统一验证成功与失败响应
+::: details 示例：统一验证成功与失败响应
 
 ```ts
 import { z } from "zod";
@@ -145,13 +145,13 @@ export async function getUser(userId: string, signal: AbortSignal) {
 }
 ```
 
-这个边界依次检查 HTTP 状态、错误结构和成功结构。组件只需要处理 ApiError、取消状态和已验证的 User 数据。
+`getUser` 在这条边界上依次检查 HTTP 状态、错误结构和成功结构。组件只需要处理 ApiError、取消状态和已验证的 User 数据。
 
 :::
 
 ## **IV.11.4 请求生命周期：取消、竞态与重试**
 
-稳定请求层需要覆盖整个生命周期：
+稳定的请求层需要覆盖请求的整个生命周期：
 
 - **取消**：页面离开、搜索条件变化或组件卸载时，通过 AbortSignal 结束已经失去价值的请求。
 - **超时**：由应用策略定义最大等待时间，并把超时与用户主动取消分开记录。
@@ -193,9 +193,9 @@ Content-Type: application/json
 | 分页方式          | 契约内容                                      | 适合场景                         | 需要处理的边界                        |
 | :---------------- | :-------------------------------------------- | :------------------------------- | :------------------------------------ |
 | **Offset / page** | offset、limit 或 page、pageSize，可选 total   | 数据变化较少、需要跳页的后台表格 | 插入和删除可能造成重复或跳项          |
-| **Cursor**        | opaque cursor、limit、nextCursor、hasNextPage | 持续变化的信息流和大数据集合     | 排序必须稳定，cursor 的有效期需要约定 |
+| **Cursor**        | 不透明 cursor、limit、nextCursor、hasNextPage | 持续变化的信息流和大数据集合     | 排序必须稳定，cursor 的有效期需要约定 |
 
-分页结果还应明确：
+表中的“不透明 cursor”（opaque cursor）指客户端只负责原样回传、不解析其内容的游标字符串。分页结果还应明确：
 
 - 排序字段和相同值时的稳定次序；
 - 筛选条件是否编码进 cursor；
@@ -212,9 +212,9 @@ Content-Type: application/json
 - 枚举扩展时，为客户端定义未知值的展示与记录策略。
 - 废弃字段需要公告、迁移窗口和调用量观测。
 - 破坏性语义变化可以使用新路径、媒体类型或明确版本策略。
-- OpenAPI diff、Schema 检查和 consumer contract test 可以在 CI 中阻止意外破坏。
+- OpenAPI diff、Schema 检查和消费者驱动的契约测试（consumer contract test，由调用方声明自己依赖的请求与响应，再由服务端在 CI 中验证）可以阻止意外的破坏性变更。
 
-客户端生成可以减少手写类型漂移；运行时 Schema、兼容测试和部署顺序共同保证真实系统的安全演进。
+从契约自动生成客户端代码，可以避免手写类型与真实接口逐渐脱节；运行时 Schema、兼容测试和部署顺序共同保证系统安全演进。
 
 ## **IV.11.7 现代后端集成模式**
 
@@ -224,7 +224,7 @@ Content-Type: application/json
 
 [GraphQL](https://graphql.org/) 通过 Schema 定义字段、参数和操作。客户端使用 query 读取数据、mutation 修改数据，并只声明当前界面需要的字段。
 
-[Apollo Client](https://www.apollographql.com/docs/react/) 展示了规范化缓存、错误处理和乐观更新等客户端能力；[Relay](https://relay.dev/) 展示了编译期数据依赖与片段组合。实际系统还要治理查询复杂度、字段权限、缓存键、错误数组和 Schema 废弃流程。
+[Apollo Client](https://www.apollographql.com/docs/react/) 提供规范化缓存、错误处理和乐观更新等客户端能力；[Relay](https://relay.dev/) 侧重编译期数据依赖与片段组合。实际系统还要治理查询复杂度、字段权限、缓存键、错误数组和 Schema 废弃流程。
 
 ### **gRPC-Web：以 Protobuf 作为跨语言契约**
 
@@ -241,8 +241,8 @@ Content-Type: application/json
 ### **实时通信：先确定消息方向**
 
 - **轮询**适合更新频率低、实现成本敏感的状态查询。
-- **SSE**使用 HTTP 向客户端持续发送文本事件，浏览器提供 EventSource 和自动重连语义。
-- **WebSocket**提供全双工文本或二进制消息，适合聊天、协作和高频双向交互。
+- **SSE** 使用 HTTP 向客户端持续发送文本事件，浏览器提供 EventSource 和自动重连语义。
+- **WebSocket** 提供全双工文本或二进制消息，适合聊天、协作和高频双向交互。
 
 实时消息契约还要定义消息类型、版本、顺序、重复处理、确认、心跳、重连恢复、背压和认证续期。
 
@@ -252,30 +252,30 @@ Headless CMS 通过 REST 或 GraphQL 提供内容，前端负责展示与交互�
 
 集成时需要确认内容模型、草稿预览、多语言字段、资源 URL、Webhook、缓存失效和发布回滚。Next.js、Nuxt、SvelteKit 等元框架可以在构建期或请求期读取内容，并按页面需求选择 SSG、SSR 或增量更新。
 
-**表格：API 通信模式对比 (GraphQL vs. REST)**
+**表格：API 通信模式对比（GraphQL vs. REST）**
 
-| 特性/模式           | REST (Representational State Transfer)                                                                           | [GraphQL](https://graphql.org/) (Graph Query Language)                                                               |
+| 特性/模式           | REST（Representational State Transfer）                                                                          | [GraphQL](https://graphql.org/)（Graph Query Language）                                                              |
 | :------------------ | :--------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------- |
-| **请求方式**        | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) 动词（GET, POST, PUT, DELETE），通过 URL 标识资源 | 通常通过 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) POST，使用 query, mutation, subscription 定义操作 |
-| **数据返回**        | 服务器定义的整个资源结构，可能存在过度或不足获取                                                                 | 客户端精确指定所需数据，只返回所需字段                                                                               |
-| **端点数量**        | 通常为每个资源或资源集合定义多个端点                                                                             | 单一端点（通常为/[graphql](https://graphql.org/)）处理所有查询                                                       |
-| **服务器端 Schema** | 可选，通常通过文档或约定定义                                                                                     | 强制要求，使用 SDL 定义强类型系统，自文档化                                                                          |
-| **版本化**          | 通常通过 URL 版本化（如/v1/），可能导致兼容性问题                                                                | 通过废弃字段实现向后兼容，通常无需版本化                                                                             |
+| **请求方式**        | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) 动词（GET、POST、PUT、DELETE），通过 URL 标识资源 | 通常通过 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) POST，使用 query、mutation、subscription 定义操作 |
+| **数据返回**        | 服务器定义的整个资源结构，可能获取过多或过少（over-fetching / under-fetching）                                                                 | 客户端精确指定所需数据，只返回所需字段                                                                               |
+| **端点数量**        | 通常为每个资源或资源集合定义多个端点                                                                             | 单一端点（通常为 `/graphql`）处理所有查询                                                       |
+| **服务端 Schema**   | 可选，通常通过文档或约定定义                                                                                     | 强制要求，使用 SDL 定义强类型系统，自文档化                                                                          |
+| **版本化**          | 通常通过 URL 版本化（如 `/v1/`），可能导致兼容性问题                                                                | 通过废弃字段实现向后兼容，通常无需版本化                                                                             |
 | **缓存**            | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) 缓存机制，易于实现                                | 复杂，因查询动态变化，难以做通用缓存                                                                                 |
-| **复杂性**          | 简单直观，易于上手                                                                                               | 学习曲线较陡峭，服务器端实现复杂                                                                                     |
+| **复杂性**          | 简单直观，易于上手                                                                                               | 学习曲线较陡峭，服务端实现复杂                                                                                       |
 | **适用场景**        | 资源明确、数据结构固定、简单 CRUD 操作                                                                           | 客户端数据需求多变、需要聚合多数据源、减少请求次数、移动端优化                                                       |
 
-**表格：实时通信方案对比 (WebSocket vs. Server-Sent Events)**
+**表格：实时通信方案对比（WebSocket vs. Server-Sent Events）**
 
-| 特性/方案        | WebSocket                              | [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events) (SSE)                                 |
+| 特性/方案        | WebSocket                              | [Server-Sent Events](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events)（SSE）                                |
 | :--------------- | :------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------ |
 | **通信方向**     | 全双工（双向：客户端⇄服务器）          | 单向（服务器→客户端）                                                                                                           |
-| **协议**         | WebSocket 协议 (ws://, wss://)         | 标准 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)/[HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS) |
+| **协议**         | WebSocket 协议（ws://、wss://）        | 标准 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)/[HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS) |
 | **连接维护**     | 保持持久连接，开销相对较大             | 视为常规 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) 流量，内置自动重连                                           |
 | **数据格式**     | 支持任意二进制数据和文本数据           | 仅支持 UTF-8 文本数据                                                                                                           |
 | **浏览器支持**   | 所有主流浏览器广泛支持                 | 主流浏览器支持，IE 等旧版浏览器不支持                                                                                           |
 | **实现复杂性**   | 协议相对底层，需手动处理重连等，略复杂 | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)，客户端实现相对简单                                              |
-| **并发连接限制** | 无明显限制（受限于服务器资源）         | 每个浏览器通常有 6 个并发连接限制                                                                                               |
+| **并发连接限制** | 无明显限制（受限于服务器资源）         | HTTP/1.x 下同一域名通常最多 6 个并发连接                                                                                        |
 | **防火墙兼容性** | 可能受企业防火墙影响                   | 基于 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)，通常无防火墙问题                                                |
 | **典型用例**     | 聊天、在线游戏、实时协作、高频数据更新 | 新闻订阅、股票行情、直播评论、进度条、通知                                                                                      |
 
@@ -299,11 +299,11 @@ Headless CMS 通过 REST 或 GraphQL 提供内容，前端负责展示与交互�
 12. 页面或组件的缓存失效是否与写操作、权限变化和数据更新事件一致。
 13. 如果使用 AI 生成或修改接口代码，是否仍然通过 Schema、测试、真实请求和安全审查验证。
 
-稳定的数据契约让协议、类型、业务和界面状态彼此对齐。前端由此可以把网络中的不确定输入，转换成可验证、可恢复、可演进的产品行为。现代框架把更多服务端能力带到前端工程中，也意味着缓存、权限、序列化和安全补丁属于前端需要理解的责任边界。具体的缓存生命周期，可以继续阅读[数据获取](/guide/frameworks/data-fetching)和[服务器状态与客户端状态](/guide/frameworks/server-client-state)。
+稳定的数据契约让协议、类型、业务和界面状态彼此对齐。前端由此可以把网络中的不确定输入转换成可验证、可恢复、可演进的产品行为。现代框架把更多服务端能力带进前端工程，缓存、权限、序列化和服务端依赖的安全更新也随之进入前端需要理解的责任范围。具体的缓存生命周期，可以继续阅读[数据获取](/guide/frameworks/data-fetching)和[服务器状态与客户端状态](/guide/frameworks/server-client-state)。
 
 ## **IV.11.9 服务端 DTO 到客户端状态的边界**
 
-服务端返回的数据进入组件前，应完成序列化、运行时验证和内部类型转换。下面用零依赖示例展示这条边界：
+DTO（Data Transfer Object，数据传输对象）指专门用于在服务端与客户端之间传递的数据结构。服务端返回的数据进入组件前，应完成序列化、运行时验证和内部类型转换。下面用零依赖示例展示这条边界：
 
 ```ts
 type Product = {

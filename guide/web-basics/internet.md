@@ -1,15 +1,15 @@
 ---
-title: "II. 基础 Web 技术：核心支柱 / II.1 关于互联网 (Internet) 的基础知识"
+title: "II. 基础 Web 技术：核心支柱 / II.1 关于互联网（Internet）的基础知识"
 ---
 
-# II.1 关于互联网 (Internet) 的基础知识
+# II.1 关于互联网（Internet）的基础知识
 
 ## **II.1.1 互联网如何运作？**
 
 互联网是一个巨大的网络，连接着全球无数计算机设备，常被称为“网络的网络”。它的基本工作原理如下：
 
 - 数据包交换：在互联网上发送或接收信息（如网页或电子邮件）时，数据会分解成许多小数据包。
-- 协议 ([TCP/IP](https://www.rfc-editor.org/rfc/rfc9293))：每个数据包都遵循一套称为“传输控制协议/网际协议”(TCP/IP) 的规则。TCP 负责确保所有数据包都能准确无误地到达目的地，并按正确顺序重新组装；IP 则负责为每个数据包贴上地址标签，指明目的地。HTTP/3 改用基于 UDP 的 QUIC，可靠传输由 QUIC 自己负责。
+- 协议（[TCP/IP](https://www.rfc-editor.org/rfc/rfc9293)）：每个数据包都遵循一套称为“传输控制协议/网际协议”（TCP/IP）的规则。TCP 负责确保所有数据包都能准确无误地到达目的地，并按正确顺序重新组装；IP 则负责为每个数据包贴上地址标签，指明目的地。例外是下一节介绍的 HTTP 的第 3 版（HTTP/3）：它不再基于 TCP，而是改用基于 UDP 的 QUIC 协议，由 QUIC 自己负责可靠传输。
 - 路由和传输：这些数据包在由路由器、交换机、光纤电缆、无线电波等组成的复杂物理网络中传输。路由器就像交通警察，读取每个数据包的 IP 地址，规划出到达最终目的地的最佳路径。
 - 客户端与服务器：在这个模型中，你的设备（如电脑或手机）通常是“客户端”，向“服务器”发出请求。服务器存储着网站的信息或服务，收到请求后，会将相应的数据包发回给客户端。
 
@@ -17,17 +17,17 @@ title: "II. 基础 Web 技术：核心支柱 / II.1 关于互联网 (Internet) �
 
 ## **II.1.2 什么是 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP)？**
 
-HTTP 指的是超文本传输协议 (Hypertext Transfer Protocol)。它是万维网 (World Wide Web) 上传输数据的核心协议，规定了浏览器（客户端）和服务器之间请求和响应的格式与规则。
+HTTP 指的是超文本传输协议（Hypertext Transfer Protocol）。它是万维网（World Wide Web）上传输数据的核心协议，规定了浏览器（客户端）和服务器之间请求和响应的格式与规则。
 
-你在浏览器中输入网址时，浏览器会向该网址所在的服务器发送一个 HTTP 请求。服务器收到请求后，会处理并返回一个 HTTP 响应，其中通常包含你请求的网页内容，如 HTML 文件、图片、CSS 样式表等。HTTP 本身是“无状态”协议，也就是说，服务器不会记录同一客户端之前的请求历史。为了实现跨页面的状态保持（如用户登录状态），通常会使用 Cookies 等技术。
+你在浏览器中输入网址时，浏览器会向该网址所在的服务器发送一个 HTTP 请求。服务器收到请求后，会处理并返回一个 HTTP 响应，其中通常包含你请求的网页内容，如 HTML 文件、图片、CSS 样式表等。HTTP 本身是“无状态”协议，也就是说，服务器不会记录同一客户端之前的请求历史。为了实现跨页面的状态保持（如用户登录状态），通常会使用 Cookie 等技术。
 
-[HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS) 是 HTTP 的安全版本 (Hypertext Transfer Protocol Secure)，通过加密保障数据传输过程中的安全，防止信息遭到窃取或篡改。
+[HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)（Hypertext Transfer Protocol Secure）是 HTTP 的安全版本，通过加密保障数据传输过程中的安全，防止信息遭到窃取或篡改。
 
 ## **II.1.3 什么是域名？**
 
-域名 (Domain Name) 是网站在互联网上的地址，易于记忆，相当于网站的“门牌号”。例如 google.com 或 wikipedia.org 就是域名。
+域名（Domain Name）是网站在互联网上的地址，易于记忆，相当于网站的“门牌号”。例如 google.com 或 wikipedia.org 就是域名。
 
-计算机在网络上相互通信时，使用的是由一长串数字组成的 IP 地址（例如 172.217.160.78）。但人类很难记住这种数字地址。域名的作用就是将这些复杂的 IP 地址转换成有意义且易于记忆的字符组合。你在浏览器中输入域名时，名为 DNS（域名系统）的系统会自动把这个域名“翻译”成对应的 IP 地址，浏览器便能找到并连接到正确的服务器。
+计算机在网络上相互通信时，使用的是由一长串数字组成的 IP 地址（例如 172.217.160.78）。但人类很难记住这种数字地址。域名的作用就是将这些复杂的 IP 地址转换成有意义且易于记忆的字符组合。你在浏览器中输入域名时，域名系统（DNS）会自动把这个域名“翻译”成对应的 IP 地址，浏览器便能找到并连接到正确的服务器。
 
 ## **II.1.4 什么是托管？**
 
@@ -39,7 +39,7 @@ HTTP 指的是超文本传输协议 (Hypertext Transfer Protocol)。它是万维
 
 ## **II.1.5 DNS 及其工作原理？**
 
-DNS 指的是域名系统 (Domain Name System)。它常被称为“互联网的电话簿”，核心功能是将人类易于记忆的域名（如 google.com）解析（或翻译）成计算机能够理解的 IP 地址（如 172.217.160.78）。
+DNS 指的是域名系统（Domain Name System）。它常被称为“互联网的电话簿”，核心功能是将人类易于记忆的域名（如 google.com）解析（或翻译）成计算机能够理解的 IP 地址（如 172.217.160.78）。
 
 DNS 的工作流程大致如下：
 
@@ -53,33 +53,33 @@ DNS 的工作流程大致如下：
 
 ## **II.1.6 浏览器及其工作原理？**
 
-浏览器（Browser）是安装在你电脑或手机上的软件应用程序，主要工作是向服务器请求、获取、解析网页内容，并最终在屏幕上显示出来。它是功能强大的“客户端”。
+浏览器（Browser）是安装在你电脑或手机上的应用程序，主要工作是向服务器请求、获取、解析网页内容，并最终在屏幕上显示出来。它是功能强大的“客户端”。
 
 浏览器的工作原理可以分为以下几个主要步骤：
 
 - 处理用户输入：你在地址栏输入 URL（网址）。
 - DNS 查询：浏览器首先通过 DNS 系统查询该 URL 中域名的 IP 地址（如上所述）。
 - 发送 HTTP 请求：浏览器使用获取到的 IP 地址，向目标服务器发送一个 [HTTP](https://developer.mozilla.org/en-US/docs/Web/HTTP) 请求，请求获取该页面的内容（通常是一个 HTML 文件）。
-- 接收服务器响应：服务器接收到请求后，会将包含 HTML、CSS、JavaScript 等内容的数据包打包成 HTTP 响应，发送回浏览器。
+- 接收服务器响应：服务器接收到请求后，把 HTML 文档放进 HTTP 响应发回浏览器；页面引用的 CSS、JavaScript、图片等资源，浏览器会在解析过程中再分别请求。
 - 渲染页面：这是最核心的一步。
-  - 浏览器首先解析 HTML 文件，构建代表页面结构的“文档对象模型”([DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) 树)。
-  - 接着解析 CSS 文件，构建代表页面样式的“CSS 对象模型”(CSSOM 树)。
-  - 然后，浏览器将 DOM 树和 CSSOM 树结合起来，生成“渲染树”(Render Tree)，确定哪些元素需要显示以及它们的最终样式。
+  - 浏览器首先解析 HTML 文件，构建代表页面结构的“文档对象模型”（[DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model) 树）。
+  - 接着解析 CSS 文件，构建代表页面样式的“CSS 对象模型”（CSSOM 树）。
+  - 然后，浏览器将 DOM 树和 CSSOM 树结合起来，生成“渲染树”（Render Tree），确定哪些元素需要显示以及它们的最终样式。
   - 随后进行布局（Layout），根据视口和内容计算每个元素的尺寸与位置。
   - 最后，浏览器把布局结果“绘制”并合成到屏幕上，呈现出你看到的视觉效果（详见 [浏览器运行时与渲染管线](/guide/web-basics/browser-runtime)）。
 - 执行 JavaScript：在渲染过程中或渲染完成后，浏览器会执行页面中包含的 JavaScript 代码。这些代码可以动态地修改页面的内容和样式，或响应用户的交互操作（如点击、滚动等），使网页具有交互性。
 
-## **II.1.7 Web 平台兼容性心智：Baseline 与 Interop** (*)
+## **II.1.7 Web 平台兼容性判断：Baseline 与 Interop** (*)
 
 过去，前端开发者判断“一个新特性是否适合生产使用”，通常要在 [Can I Use](https://caniuse.com/) 和浏览器版本表里反复比对。  
 现在，更实用的心智模型已经逐渐变成：**先看它是否进入 Baseline，再结合自己的用户分布决定是否直接采用。**
 
-- **Baseline**：由 WebDX 社区维护，用来描述 Web 平台特性是否已经在核心浏览器集合中形成稳定可用的交集。
-- **Newly available**：该特性已经在核心浏览器中形成互通，可以开始作为现代项目的候选能力。
-- **Widely available**：该特性距离首次形成互通已过去较长时间，通常可以更放心地作为通用能力使用。
-- **Interop**：浏览器厂商围绕一组重点特性共同推进互通性，让“理论支持”更接近“实际可用”。
+- **Baseline**：由 WebDX 社区小组维护的兼容性标识，表示某个 Web 平台特性是否已在全部核心浏览器（Chrome、Edge、Firefox、Safari 的桌面版和移动版）中可用。
+- **Newly available（新近可用）**：该特性刚在全部核心浏览器的最新版本中可用，可以开始作为现代项目的候选能力。
+- **Widely available（广泛可用）**：该特性在全部核心浏览器中可用已满 30 个月，通常可以放心地作为通用能力使用。
+- **Interop**：浏览器厂商每年选定一组重点特性，共同消除各家实现之间的差异，让“理论支持”更接近“实际可用”。
 
-截至 2026 年 10 月，容器样式查询（`@container style()`）、`contrast-color()`、`@scope` 等能力已进入 Baseline 2026 Newly available；同文档 View Transitions 在 2025 年进入 Baseline，跨文档 View Transitions 尚未进入。具体特性可在 [Web Platform Status](https://webstatus.dev/) 或 MDN 兼容性表中查询。Baseline 提供兼容性决策信号；项目仍需结合目标浏览器、设备性能、辅助技术和降级路径验证。
+截至 2026 年 10 月，容器样式查询（`@container style()`）、`contrast-color()`、`@scope` 等能力已进入 Baseline 2026 新近可用；同文档 View Transitions 在 2025 年进入 Baseline，跨文档 View Transitions 尚未进入。具体特性可在 [Web Platform Status](https://webstatus.dev/) 或 MDN 兼容性表中查询。Baseline 提供兼容性决策信号；项目仍需结合目标浏览器、设备性能、辅助技术和降级路径验证。
 
 这意味着今天讨论浏览器兼容性时，应同时关注：
 
@@ -93,7 +93,7 @@ DNS 的工作流程大致如下：
 
 ## **II.1.8 用一条请求观察 HTTP 证据**
 
-阅读 HTTP 时，先从一次真实请求开始。下面的命令适合在 Windows PowerShell 中执行；`curl.exe` 用来调用系统的 curl 程序，避免与 PowerShell 的别名混淆。
+学习 HTTP 时，先从一次真实请求开始。下面的命令适合在 Windows PowerShell 中执行；`curl.exe` 用来调用系统的 curl 程序，避免与 PowerShell 的别名混淆。
 
 ```powershell
 curl.exe -I https://example.com

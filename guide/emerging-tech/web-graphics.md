@@ -6,26 +6,26 @@ title: "VI. 新兴技术和专业领域 / VI.4 Web 图形和沉浸式体验"
 
 **目的**：直接在浏览器中创建丰富的 2D 和 3D 视觉内容、动画和沉浸式（AR/VR）体验。
 
-## **VI.4.1 核心图形技术 (Core Graphics Technologies)**
+## **VI.4.1 核心图形技术（Core Graphics Technologies）**
 ### **2D 图形**
 
 - [**Canvas 2D Context**](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D)：JavaScript API，用于在 HTML `<canvas>` 元素上绘制 2D 图形（形状、文本、图像）。提供像素级控制。
-- **SVG (Scalable Vector Graphics)**：基于 XML 的语言，用于描述矢量图像。可伸缩、可访问，并且易于用 CSS/JS 设置样式和编写脚本。
-- **基于节点的编辑器 ([React Flow](https://reactflow.dev/), [Vue Flow](https://vueflow.dev/), [Svelte Flow](https://svelteflow.dev/))**：用于构建交互式基于节点的编辑器和图表的库。
+- **SVG（Scalable Vector Graphics）**：基于 XML 的矢量图像描述语言。可无损缩放、能承载无障碍语义，并且易于用 CSS/JS 设置样式和编写脚本。
+- **节点编辑器（[React Flow](https://reactflow.dev/)、[Vue Flow](https://vueflow.dev/)、[Svelte Flow](https://svelteflow.dev/)）**：用于构建可交互的节点编辑器和流程图的库。
 
-### **3D 图形与通用 GPU 计算 (GPGPU)**
+### **3D 图形与通用 GPU 计算（GPGPU）**
 
 - [**WebGL**](https://www.khronos.org/webgl/)：经典的 JavaScript 3D 图形 API，基于 OpenGL ES。状态机模型复杂，主要面向图形光栅化渲染。
-- [**WebGPU**](https://www.w3.org/TR/webgpu/)：现代浏览器的下一代底层图形与计算 API，底层直接映射 Vulkan、Metal 与 Direct3D 12：
-  - **显存与硬件控制**：极大降低 JavaScript 与 GPU 驱动之间的通信开销。
-  - **计算着色器 (Compute Shaders in WGSL)**：突破纯图形渲染范畴，允许开发者在 Web 页面中直接调度数千个 GPU 核心执行通用矩阵运算、粒子物理模拟以及**浏览器端大模型推理（如 WebLLM、Transformers.js v3 运行端侧 Llama/Whisper）**。
-- [**Three.js**](https://threejs.org/)：基于 JavaScript 的 3D 引擎事实标准，拥有完备的场景图、材质系统、加载器与着色器节点体系。
-- [**Babylon.js**](https://www.babylonjs.com/)：功能完备的企业级 Web 3D/游戏引擎，深度整合物理碰撞检测与复杂粒子系统。
+- [**WebGPU**](https://www.w3.org/TR/webgpu/)：现代浏览器的新一代底层图形与计算 API，设计上贴近 Vulkan、Metal 与 Direct3D 12，能高效映射到这些原生 API：
+  - **显式的资源与管线控制**：相比 WebGL，显著降低 JavaScript 与 GPU 驱动之间的通信开销。
+  - **计算着色器（Compute Shaders in WGSL）**：不再局限于图形渲染，开发者可以在网页中调度大量 GPU 并行线程，执行通用矩阵运算、粒子物理模拟以及**浏览器端大模型推理（如 WebLLM、Transformers.js v3 运行端侧 Llama/Whisper）**。
+- [**Three.js**](https://threejs.org/)：使用最广泛的 JavaScript 3D 库，提供场景图、材质系统、加载器与着色器节点体系。
+- [**Babylon.js**](https://www.babylonjs.com/)：功能全面的 Web 3D/游戏引擎，内置物理碰撞检测与粒子系统等能力。
 - [**TresJS**](https://tresjs.org/)：用于 Three.js 的 Vue 自定义渲染器，支持在 Vue 应用中声明式构建 3D 场景。
 - [**PixiJS**](https://pixijs.com/)：高性能 2D 渲染器，使用 WebGL/WebGPU 实现 GPU 加速渲染，常用于游戏和交互式体验。
-- **游戏引擎 ([Phaser](https://phaser.io/), [PlayCanvas](https://playcanvas.com/))**：用于构建 Web 游戏（2D/3D）的高级框架，抽象了图形和物理。
+- **游戏引擎（[Phaser](https://phaser.io/)、[PlayCanvas](https://playcanvas.com/)）**：用于构建 Web 游戏（2D/3D）的高级框架，抽象了图形和物理。
 
-Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进反映了行业对更丰富、更沉浸式 Web 体验（包括游戏和 AR/VR）的追求。Three.js、Babylon.js 等高级库以及 TresJS、[A-Frame](https://aframe.io/) 等声明式框架，封装了底层 API 的复杂性，让高级图形能力对前端开发者更加触手可及，有效扩展了浏览器中可直接构建的应用类型。
+从 SVG 到 WebGL/WebGPU，Web 图形技术不断演进，以支撑游戏、AR/VR 等更丰富的体验。Three.js、Babylon.js 等高层库以及 TresJS、[A-Frame](https://aframe.io/) 等声明式框架封装了底层 API 的复杂性，降低了前端开发者使用 3D 图形的门槛。
 
 ### **Web Animations API 和 Motion（原 Framer Motion）**
 
@@ -34,19 +34,20 @@ Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进�
 
 ### **表格：3D 图形/游戏引擎比较**
 
-| 引擎名称 | 抽象级别 | 主要用例（示例） | 核心技术 | 学习曲线 | 关键特性（示例） | 框架集成（示例） |
+| 引擎名称 | 抽象级别 | 主要场景（示例） | 核心技术 | 学习曲线 | 关键特性（示例） | 框架集成（示例） |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | [**WebGL**](https://www.khronos.org/webgl/) | 低级 API | 复杂 3D 渲染，高性能需求 | WebGL 2.0 | 陡峭 | 直接 GPU 访问，像素级控制 | 无 |
-| [**WebGPU**](https://www.w3.org/TR/webgpu/) | 低级现代 API | 高性能 3D、GPGPU 计算、端侧 AI 推理 | WebGPU / WGSL | 陡峭 | 原生现代 GPU 驱动对接，并行计算着色器 | 无 |
+| [**WebGPU**](https://www.w3.org/TR/webgpu/) | 低级现代 API | 高性能 3D、GPGPU 计算、端侧 AI 推理 | WebGPU / WGSL | 陡峭 | 贴近现代原生 GPU API，并行计算着色器 | 无 |
 | [**Three.js**](https://threejs.org/) | 3D 框架 | 通用 Web 动画，数据可视化，3D 产品展示 | WebGL / WebGPU | 较平缓 | 场景图，PBR 材质，几何体，动画系统 | 灵活 |
 | [**Babylon.js**](https://www.babylonjs.com/) | 3D 框架/游戏引擎 | Web 游戏开发，复杂 3D 场景，工业仿真 | WebGL / WebGPU | 中等 | 物理引擎，碰撞检测，粒子系统，GUI 工具箱 | 灵活 |
 | [**TresJS**](https://tresjs.org/) | Vue 3D 渲染器 | Vue 应用中的声明式 3D 场景 | Three.js | 较平缓 | Vue 组件化，类型安全，Vite 集成 | Vue |
 | [**PixiJS**](https://pixijs.com/) | 2D 渲染器 | 2D 游戏，交互式动效看板 | WebGL / WebGPU | 较平缓 | GPU 批处理加速，场景图，滤镜管线 | 灵活 |
 | [**Phaser**](https://phaser.io/) | 2D 游戏引擎 | 2D Web 游戏，H5 互动小游戏 | Canvas / WebGL | 较低 | 物理引擎，骨骼动画，音频与输入管理 | 无 |
 | [**PlayCanvas**](https://playcanvas.com/) | 3D 游戏引擎 | 3D Web 游戏，实时协作编辑器 | WebGL / WebGPU | 中等 | 云端协同编辑器，轻量运行时，物理系统 | 无 |
-## **VI.4.2 沉浸式 Web (Immersive Web): WebXR：AR/VR，A-Frame**
 
-- [**WebXR Device API**](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)：在 Web 应用中启用增强现实 (AR) 和虚拟现实 (VR) 体验，可对接混合现实硬件（如 Apple Vision Pro、Meta Quest）。
+## **VI.4.2 沉浸式 Web（Immersive Web）：WebXR、AR/VR 与 A-Frame**
+
+- [**WebXR Device API**](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)：在 Web 应用中启用增强现实（AR）和虚拟现实（VR）体验，可对接混合现实硬件（如 Apple Vision Pro、Meta Quest）。
 - [**A-Frame**](https://aframe.io/)：基于 WebGL 的 Web 框架，可用熟悉的 HTML 标记语言构建 VR 体验。
 
 ## **VI.4.3 相关专题**
@@ -55,7 +56,7 @@ Web 图形技术栈日益丰富——从 SVG 到 WebGL/WebGPU——这种演进�
 
 ## **VI.4.4 先用 SVG 表达语义，再检测 GPU 能力**
 
-图形功能可以从可访问、可缩放的 SVG 开始；需要大规模绘制或计算时，再检测 WebGPU 并提供 Canvas/SVG 回退。
+图形功能可以从支持无障碍、可缩放的 SVG 开始；需要大规模绘制或计算时，再检测 WebGPU 并提供 Canvas/SVG 回退。
 
 ```html
 <svg viewBox="0 0 240 80" role="img" aria-labelledby="chart-title">

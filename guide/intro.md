@@ -4,34 +4,40 @@ title: "I. 前端开发简介"
 
 # I. 前端开发简介
 
-**前端开发**指创建用户在应用中直接看到、感知和交互的界面部分，以**打造优雅、易用、快速、安全的界面，提升用户体验**为目标。在网络和软件行业愈加发达的当下，前端开发者这一角色不仅愈加不可或缺，更因“用户体验是产品核心竞争力”的共识而变得更加重要。
+**前端开发**指创建用户在应用中直接看到、感知和交互的界面部分，以**打造优雅、易用、快速、安全的界面，提升用户体验**为目标。在网络和软件行业愈加发达的当下，“用户体验是产品核心竞争力”已成为共识，前端开发者这一角色也因此愈加重要。
 
-当下的 Web 前端开发者，除了传统的原生应用或单页应用，已越来越多地涉及**渐进式 Web 应用 (PWA)** 和**跨平台应用**开发，甚至深入新兴领域，打造更加丰富多彩的软件世界：
+当下的 Web 前端开发者，除了传统的多页网站和单页应用，已越来越多地涉及**渐进式 Web 应用（PWA）** 和**跨平台应用**开发，甚至深入新兴领域，打造更加丰富多彩的软件世界：
 
-- **WASM + WebGPU** 在浏览器中实现近原生的密集计算与高强度 3D 渲染。
+- **Wasm + WebGPU** 在浏览器中实现近原生的密集计算与高强度 3D 渲染。
 - **TensorFlow.js / ONNX Runtime Web** 把 AI 模型直接跑在用户设备上。
-- **viem** 等现代库已成为去中心化应用（dApp）的常见选择。
+- **viem** 等以太坊 TypeScript 库让前端可以直接读写链上数据，已成为去中心化应用（dApp）的常见选择。
 - **AI-Native 工具链**（编辑器、终端 Agent、云端环境和 MCP 等）已经能够加快原型、重构、测试和文档工作流，但生成结果仍需要真实测试、浏览器观察、代码审查和权限治理。
 
-在架构层面，前端确实在向服务端优先、流式输出、边缘部署和跨端统一演进。选择这些方案时，应结合项目规模、团队能力、性能目标和部署环境判断。  
-例如，**RSC + 流式渲染** 适合部分 React 全栈应用，**微前端** 更多是组织规模驱动的架构选择，**Tauri / Electron** 则面向桌面应用场景。对大多数团队来说，先把信息架构、性能、可访问性和工程质量做好，优先级往往高于追逐最前沿架构。
+在架构层面，前端正在向服务端优先、流式输出、边缘部署和跨端统一演进。选择这些方案时，应结合项目规模、团队能力、性能目标和部署环境判断。  
+例如，**RSC + 流式渲染** 适合部分 React 全栈应用，**微前端** 更多是组织规模驱动的架构选择，**Tauri / Electron** 则面向桌面应用场景。对大多数团队来说，先把信息架构、性能、无障碍和工程质量做好，优先级往往高于追逐最前沿架构。
 
-截至 2026 年，前端开发者正在一人分饰多角——**性能工程师、架构设计师、可访问性专家、AI 协作设计者**，甚至偶尔客串设计师与产品经理。关键变化来自前端对代码运行位置、数据流动、结果验证以及用户和业务目标的综合理解。
+截至 2026 年，前端开发者正在一人分饰多角——**性能工程师、架构设计师、无障碍专家、AI 协作设计者**，甚至偶尔客串设计师与产品经理。这要求前端综合理解代码在哪里运行、数据如何流动、结果如何验证，以及用户和业务目标是什么。
 
 和其他任何领域的学习一样，前端开发的学习也是结构化、循序渐进的过程：
 
 1. 先打牢**计算机基础**（浏览器原理、HTTP/3、DNS、Cookie、CORS、基本数据结构与算法）。
-2. 扎实掌握**前端三剑客**——HTML（语义化与可访问性）、CSS（现代布局 + 设计系统）、JavaScript（运行时原理 + 现代标准），这是后续所有内容不可或缺的根基。
+2. 扎实掌握**前端三剑客**——HTML（语义化与无障碍）、CSS（现代布局 + 设计系统）、JavaScript（运行时原理 + 现代标准），这是后续所有内容不可或缺的根基。
 3. 学习现代框架与**元框架、下一代渲染架构**（React + RSC、Next.js App Router、SolidStart、Qwik Resumability、SvelteKit 等）。
-4. 最后深入高级主题：WebGPU、WASM 编译链、边缘计算、[第三方 Cookie 限制](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies)（CHIPS、FedCM、Storage Access API）与隐私合规、可访问性（a11y）、国际化（i18n）、测试策略（Vitest + Playwright + Testing Library）、监控与错误追踪（Sentry、[OpenTelemetry](https://opentelemetry.io/docs/languages/js/)）、AI 驱动开发等。Google 已于 2025 年宣布[退役 Topics、Protected Audience 等大部分 Privacy Sandbox 技术](https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies)，学习时不必再投入这些 API。
+4. 最后深入高级主题：
+   - 图形、计算与部署：WebGPU、Wasm 编译链、边缘计算；
+   - 隐私与合规：[第三方 Cookie 限制](https://developer.mozilla.org/en-US/docs/Web/Privacy/Guides/Third-party_cookies)（CHIPS、FedCM、Storage Access API）；
+   - 质量保障：无障碍（a11y）、国际化（i18n）、测试策略（Vitest + Playwright + Testing Library）、监控与错误追踪（Sentry、[OpenTelemetry](https://opentelemetry.io/docs/languages/js/)）；
+   - AI 驱动开发。
+
+Google 已于 2025 年宣布[退役 Topics、Protected Audience 等大部分 Privacy Sandbox 技术](https://privacysandbox.google.com/blog/update-on-plans-for-privacy-sandbox-technologies)，学习时不必再在这些 API 上投入精力。
 
 无论何时，**多读官方文档、多写项目、多看顶级开源库源码**，仍是前端能力提升的不二法门。
 
-随着生成式人工智能的迅猛发展，前端行业确实在深刻变革。AI 会压缩低复杂度、重复性实现所占的时间，但工程责任不会随之消失，反而更集中到以下能力：
+随着生成式人工智能的迅猛发展，前端行业正在深刻变革。AI 会压缩低复杂度、重复性实现所占的时间，但工程责任不会随之消失，反而更集中到以下能力：
 
-- 对用户体验与人机交互的深度洞察与同理心  
-- 对复杂业务逻辑的抽象与大型系统的架构能力  
-- 可访问性（a11y）、性能优化、国际化等专业领域知识  
+- 对用户体验与人机交互的深度洞察与同理心
+- 对复杂业务逻辑的抽象与大型系统的架构能力
+- 无障碍（a11y）、性能优化、国际化等专业领域知识
 - 跨团队协作、产品思维、沟通与文档能力  
 - 持续交付、测试策略、监控体系等工程化实践
 
@@ -39,12 +45,12 @@ title: "I. 前端开发简介"
 
 当今互联网上有丰富且多元的前端学习资源：
 
-- 基础 Web 技术：**MDN** 永远是最权威的宝典；
-- 框架与工具：优先看**官方教程与文档**（Next.js Docs、Solid Docs、Qwik Docs 等）；  
-- 理解原理：直接读 **Vite、esbuild、Million.js、Preact、TanStack、Zustand** 等明星开源库源码；  
+- 基础 Web 技术：**MDN** 是最权威、最常用的参考；
+- 框架与工具：优先看**官方教程与文档**（Next.js Docs、Solid Docs、Qwik Docs 等）；
+- 理解原理：直接读 **Vite、esbuild、Million.js、Preact、TanStack、Zustand** 等明星开源库源码；
 - 学习 AI 驱动开发：**Cursor、v0.app、Claude Projects、Lovable** 的官方示例与提示词工程案例是最佳起点；
-- 社区与系统课程：Frontend Masters、egghead.io、ByteDance FE 培训营、freeCodeCamp 等；
+- 社区与系统课程：Frontend Masters、egghead.io、字节跳动青训营、freeCodeCamp 等。
 
-除此之外，一些知名开发者（尤其中外顶尖工程师）的博客仍能带来启发，更适合作为官方资料之外的经验补充。
+除此之外，一些知名开发者的博客也能带来启发，适合作为官方资料之外的经验补充。
 
 欢迎来到不断演进的大前端时代——只有持续学习、拥抱变革的人，才能站稳脚跟。

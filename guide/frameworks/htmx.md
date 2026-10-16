@@ -6,7 +6,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.7 htmx：超媒体驱动�
 
 [**htmx**](https://htmx.org/) 让你用 HTML 构建交互丰富的 Web 界面，同时最大限度地减少 JavaScript 的使用。它借助 HTTP 方法和 hx-get、hx-target、hx-trigger、hx-swap 等属性，向服务器发送请求，再用返回的 HTML 片段部分更新页面。
 
-**htmx 的哲学**是：稳定性优先，谨慎扩展核心功能，专注通用超媒体控制，并支持辅助工具。
+**htmx 的哲学**是：稳定性优先，谨慎地为核心增加功能，专注通用的超媒体控制；更专门的需求交给扩展和周边工具。
 
 htmx 代表着对 JavaScript 密集型前端格局的一次理念反思。它聚焦超媒体驱动应用（[Hypermedia-Driven Application, HDA](https://htmx.org/essays/hypermedia-driven-applications/)），挑战了“复杂交互必须完全存在于客户端”这一假设，为更简单、更快速、JavaScript 开销更少的应用提供了替代方案；对特定类型的应用，还能有效缩短开发周期。
 
@@ -14,20 +14,20 @@ htmx 代表着对 JavaScript 密集型前端格局的一次理念反思。它聚
 
 htmx 将超媒体控制能力扩展到任意 HTML 元素：
 
-| 属性分类 | 常用指令 | 作用与工程含义 |
+| 属性分类 | 常用属性 | 作用与工程含义 |
 | :--- | :--- | :--- |
 | **HTTP 请求** | `hx-get`、`hx-post`、`hx-put`、`hx-delete`、`hx-patch` | 声明请求的目标 URL 与 HTTP 方法，任何元素均可触发。 |
 | **目标与替换** | `hx-target`、`hx-swap` | `hx-target` 指定响应替换的目标 DOM 元素（支持 CSS 选择器、`this`、`closest` 等）；`hx-swap` 定义替换行为（如 `innerHTML`、`outerHTML`、`beforebegin`、`afterend`、`delete` 等）。 |
 | **触发条件** | `hx-trigger` | 支持标准 DOM 事件（如 `click`、`change`）、修饰符（如 `delay:300ms` 防抖、`throttle:500ms` 节流）、轮询（`every 5s`）以及视口交叉（`revealed` 懒加载）。 |
 | **URL 与历史** | `hx-push-url` | 将请求 URL 推入浏览器历史记录并更新地址栏，原生支持前进/后退与深度链接。 |
 | **反馈与加载** | `hx-indicator`、`hx-confirm` | `hx-indicator` 在请求生命周期内自动为指定元素添加/移除加载中样式类；`hx-confirm` 在发送请求前弹出确认对话框。 |
-| **参数与上下文** | `hx-vals`、`hx-headers`、`hx-include` | 携带自定义 JSON 数据、额外表单字段或自定义请求头（如认证与 CSRF Token）。 |
+| **参数与上下文** | `hx-vals`、`hx-headers`、`hx-include` | `hx-vals` 以 JSON 形式携带额外参数；`hx-headers` 添加自定义请求头（如认证与 CSRF Token）；`hx-include` 把其他元素中的表单字段一并提交。 |
 
 ## **IV.7.2 扩展能力与实时通信**
 
-通过官方扩展机制（`hx-ext`），htmx 可以无缝扩展高级交互能力：
+通过官方扩展机制（`hx-ext`），htmx 可以补充更多交互能力：
 
-- **Server-Sent Events (SSE)**：通过 `hx-ext="sse"` 和 `sse-connect`，服务端可主动推送 HTML 片段并自动触发局部 DOM 刷新，非常适合消息流、监控看板等单向实时更新场景。
+- **Server-Sent Events（SSE）**：通过 `hx-ext="sse"` 和 `sse-connect`，服务端可主动推送 HTML 片段并自动触发局部 DOM 刷新，适合消息流、监控看板等单向实时更新场景。
 - **WebSocket**：通过 `hx-ext="ws"` 实现全双工通信，直接在 HTML 层面接收和发送消息片段。
 - **客户端模板与 JSON 桥接**：在必须对接第三方纯 JSON API 时，可通过扩展在浏览器端将 JSON 渲染为 HTML。
 
@@ -45,17 +45,17 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
 
 ## **IV.7.4 选型对比与边界考量**
 
-### **表格：htmx vs SPA (React/Vue) vs 现代全栈元框架 (Next.js/Nuxt)**
+### **表格：htmx vs. SPA（React/Vue）vs. 现代全栈元框架（Next.js/Nuxt）**
 
-| 评估维度 | [htmx](https://htmx.org/) | 传统客户端 SPA (React / Vue) | 现代全栈元框架 (Next.js / Nuxt) |
+| 评估维度 | [htmx](https://htmx.org/) | 传统客户端 SPA（React / Vue） | 现代全栈元框架（Next.js / Nuxt） |
 | :--- | :--- | :--- | :--- |
-| **核心机制** | 超媒体驱动，服务端返回 HTML 片段，客户端微内核直接替换 DOM | 客户端运行全量 JS 运行时，通过 JSON API 通信并在浏览器构建 VDOM/DOM | 服务端/边缘流式渲染，结合 Islands / RSC 与客户端混合 Hydration |
-| **客户端 JS 体积** | 极小（单一 gzipped JS 文件约 14KB，无打包构建依赖） | 较大（框架运行时 + 业务代码 + 状态库，数百 KB 至数 MB） | 中等到大（取决于 RSC / Islands 隔离程度与客户端组件数量） |
-| **状态归属** | 单一真实源（Single Source of Truth）全部在服务端 | 客户端复杂状态机 + 本地缓存 + 服务器状态同步 | 混合模型：Server State 与 Client State 显式分离 |
-| **适用场景** | 中后台管理系统、CRUD 数据密集型应用、服务端团队主导的全栈产品 | 强交互、高频离线体验、富编辑器、复杂画布等客户端状态密集型产品 | 面向公众的内容站、大型电商平台、高 SEO/高首屏要求的大型全栈 Web 应用 |
-| **选型禁忌 / 何时不选** | 极端依赖客户端毫秒级动画交互、离线 PWA、复杂游戏/Canvas 渲染、去中心化 Web3 纯客户端签名 | 纯静态展示页面、低交互 CRUD 系统（会导致无谓的打包与 Hydration 成本） | 开发资源极度受限的小型项目、无需 SEO 且对 Node 服务端基础设施无运维能力的场景 |
+| **核心机制** | 超媒体驱动，服务端返回 HTML 片段，客户端的 htmx 库直接替换 DOM | 客户端运行全量 JS 运行时，通过 JSON API 通信并在浏览器构建 VDOM/DOM | 服务端/边缘流式渲染，结合 Islands / RSC（React 服务器组件）与客户端混合 Hydration |
+| **客户端 JS 体积** | 极小（单个 JS 文件 gzip 后约 14 KB，无需打包构建） | 较大（框架运行时 + 业务代码 + 状态库，数百 KB 至数 MB） | 中等到大（取决于 RSC / Islands 隔离程度与客户端组件数量） |
+| **状态归属** | 单一事实来源（Single Source of Truth）全部在服务端 | 客户端复杂状态机 + 本地缓存 + 服务器状态同步 | 混合模型：Server State 与 Client State 显式分离 |
+| **适用场景** | 中后台管理系统、CRUD 数据密集型应用、服务端团队主导的全栈产品 | 强交互、需要离线使用、富编辑器、复杂画布等客户端状态密集型产品 | 面向公众的内容站、大型电商平台、高 SEO/高首屏要求的大型全栈 Web 应用 |
+| **选型禁忌 / 何时不选** | 极端依赖客户端毫秒级动画交互、离线 PWA、复杂游戏/Canvas 渲染、去中心化 Web3 纯客户端签名 | 纯静态展示页面、低交互 CRUD 系统（会导致无谓的打包与 Hydration 成本） | 开发资源非常有限的小型项目、无需 SEO 且对 Node 服务端基础设施无运维能力的场景 |
 
-::: details 启发式示例：不用 fetch 的局部更新
+::: details 示例：不用 fetch 的局部更新
 
 ```html
 <button hx-get="/notifications" hx-target="#notifications" hx-swap="innerHTML">
@@ -78,7 +78,7 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
 
 :::
 
-::: details 启发式示例：防抖实时搜索与加载状态反馈
+::: details 示例：防抖实时搜索与加载状态反馈
 
 ```html
 <div class="search-widget">
@@ -114,8 +114,14 @@ htmx 依赖服务端返回的 HTML 片段直接更新 DOM，因此必须建立�
 </ul>
 ```
 
-`hx-push-url="true"` 会把请求地址（如 `/products?q=键盘`）推入历史。用户可能刷新或分享这个地址，htmx 在历史缓存未命中时也会重新请求它，所以它必须能直接返回完整页面。因此 `hx-get` 指向页面地址而非 `/api/...` 片段接口：没有 `HX-Request` 头时渲染整页，并在响应中加上 `Vary: HX-Request`，避免缓存混用片段与整页；同时按 [htmx 文档](https://htmx.org/docs/#history) 把 `htmx.config.historyRestoreAsHxRequest` 设为 `false`，让历史恢复请求拿到整页。
+`hx-push-url="true"` 会把请求地址（如 `/products?q=键盘`）推入浏览器历史。用户可能刷新或分享这个地址；历史缓存未命中时，htmx 也会重新请求它。因此，这个地址必须能直接返回完整页面。
 
-这个示例展示了 htmx 的核心优势：无需引入状态管理库、无需在客户端解析 JSON 并拼接 DOM，通过声明式属性即可完整实现防抖搜索、历史记录更新与加载指示反馈。
+这也是示例中的 `hx-get` 指向页面地址、而不是 `/api/...` 这类片段接口的原因。要让同一个地址同时服务片段和整页，还需要做三件事：
+
+- 请求没有 `HX-Request` 头时，渲染整页；
+- 在响应中加上 `Vary: HX-Request`，避免缓存把片段和整页混在一起；
+- 按 [htmx 文档](https://htmx.org/docs/#history) 把 `htmx.config.historyRestoreAsHxRequest` 设为 `false`，让历史恢复请求拿到整页。
+
+这个示例展示了 htmx 的核心优势：无需引入状态管理库、无需在客户端解析 JSON 并拼接 DOM，通过声明式属性即可实现防抖搜索、历史记录更新与加载指示反馈。
 
 :::

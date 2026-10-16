@@ -6,14 +6,14 @@ title: "II. 基础 Web 技术：核心支柱 / II.5 JavaScript：赋予交互性
 
 ## **II.5.1 核心语言概念（ES6+）**
 
-JavaScript (JS) 是一种轻量级、解释型编程语言，为网站添加“交互行为”和功能，提高交互性，实现动态 UI 元素。
+JavaScript（JS）是一种轻量级、解释型编程语言，负责为网页添加交互行为和动态内容。
 
 - **变量（let/const）**：[ES6](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/6th-edition/) 引入的块级作用域变量声明，比 var 提供了更好的作用域控制。
   const 创建不可变引用，let 则允许重新赋值。
 - **基础类型与引用类型**：字符串、数字、布尔值、`null`、`undefined`、`symbol`、`bigint` 属于基础类型；对象、数组、函数等属于引用类型。理解值拷贝与引用共享，有助于解释状态更新和数据修改的结果。
 - **箭头函数**：简洁的函数语法，具有词法 this 绑定。
 - **数据结构（Array、Object、Map、Set）**：是组织与操作数据的关键。
-  Map 和 Set 面向集合场景，比普通对象性能更好、键也更灵活。
+  Map 适合频繁增删的键值对，键可以是任意类型；Set 用于存储不重复的值。
 - **控制流**：if-else、switch、循环（for、while、do-while、for-in、for-of）。
 - **作用域**：决定了变量和函数在代码哪些部分可访问。
 - **闭包**：与词法环境捆绑在一起的函数，即使外部函数执行完毕，仍可访问外部作用域中的变量。
@@ -22,18 +22,18 @@ JavaScript (JS) 是一种轻量级、解释型编程语言，为网站添加“�
 - **解构、展开与 rest 参数**：常用于读取对象/数组中的局部数据、复制浅层结构，以及定义参数数量可变的函数。
 - **可选链与空值合并**：`?.` 和 `??` 能让嵌套数据读取更清晰，适合处理接口响应中可能缺失的字段。
 
-JavaScript 围绕 ES6+ 特性（如 let/const、箭头函数和增强的数据结构 Map、Set）的演进，减少了 var 提升、this 绑定混淆等常见错误；用 rest 参数代替 arguments，也让函数签名更清晰。
+ES6 及之后引入的 let/const、箭头函数、Map、Set 等特性，减少了 var 提升、this 绑定混淆等常见错误；用 rest 参数代替 arguments，也让函数签名更清晰。
 
-## **II.5.2 异步 JavaScript：Promises、async/await、事件循环（宏任务/微任务）**
+## **II.5.2 异步 JavaScript：Promise、async/await、事件循环（宏任务/微任务）**
 
-- **Promises**：表示异步操作最终完成或失败的对象，简化了异步代码，并把多层回调整理成更线性的流程。
-- **async/await**：基于 Promises 的语法糖，可以用更同步、更可读的方式编写异步代码。
-- **事件循环**：JavaScript 的单线程并发模型，使用作业队列处理异步操作。
-- **宏任务/微任务**：事件循环中用于调度异步操作的两类队列，微任务优先级更高。
+- **Promise**：表示异步操作最终完成或失败的对象，简化了异步代码，并把多层回调整理成更线性的流程。
+- **async/await**：基于 Promise 的语法糖，让异步代码可以写得像同步代码一样直观。
+- **事件循环**：JavaScript 的单线程并发模型。主线程执行完当前代码后，由事件循环从队列中取出等待执行的回调。
+- **宏任务/微任务**：事件循环调度的两类队列。宏任务（task）包括 `setTimeout`、事件回调等；微任务（microtask）包括 Promise 回调和 `queueMicrotask`。每执行完一个宏任务，都会先清空微任务队列，再取下一个宏任务。ECMAScript 规范把 Promise 回调称为“作业”（job），它们在浏览器中就作为微任务执行。
 
-掌握异步 JavaScript（Promises、`async`/`await`、事件循环）对于构建响应式前端应用至关重要。缺乏深入理解，开发者可能会创建“卡顿”的 UI 或陷入“回调地狱”，直接影响用户体验和代码可维护性。宏任务与微任务的区别，解释了复杂异步流中微妙的时序差异。
+掌握异步 JavaScript（Promise、`async`/`await`、事件循环）对于构建流畅、不卡顿的前端应用至关重要。缺乏深入理解，开发者可能会创建“卡顿”的 UI 或陷入“回调地狱”，直接影响用户体验和代码可维护性。宏任务与微任务的区别，解释了复杂异步流中微妙的时序差异。
 
-::: details 启发式示例：先猜事件循环的输出顺序
+::: details 示例：先猜事件循环的输出顺序
 
 ```js
 console.log("A");
@@ -63,11 +63,11 @@ B: timeout
 
 ## **II.5.3 DOM 操作：与网页交互**
 
-响应用户操作或数据更改，直接修改文档对象模型 ([DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model))，更新内容、样式或结构。DOM 操作是 JavaScript 与 HTML 和 CSS 交互的核心机制。框架对此做了抽象，但底层概念仍是基础。
+JavaScript 可以在用户操作或数据变化时，直接修改文档对象模型（[DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)），更新内容、样式或结构。DOM 操作是 JavaScript 与 HTML 和 CSS 交互的核心机制。框架对此做了抽象，但底层概念仍是基础。
 
 DOM 操作通常包括查询元素、读取或修改文本和属性、增删节点、切换类名以及根据状态更新界面。即使使用 React、Vue 或 Svelte，也应理解这些框架最终仍是在协调 DOM 更新。
 
-常见 DOM scripting 能力包括：
+用脚本操作 DOM 的常见能力包括：
 
 - **查询元素**：用 `querySelector()` 和 `querySelectorAll()` 按 CSS 选择器查找节点，用 `closest()` 向上寻找符合条件的祖先节点。
 - **读取与更新内容**：用 `textContent` 写入纯文本，用 `innerHTML` 处理可信模板片段。用户输入和外部数据进入 HTML 时，应先经过安全处理。
@@ -113,7 +113,7 @@ DOM 更新会触发布局、样式计算和绘制。频繁读取布局尺寸并�
 - **错误处理**：网络失败、超时、非 2xx 响应和业务错误应分别处理，并给出对应的 UI 反馈。
 - **取消与竞态**：搜索联想、分页切换等场景可能出现旧请求晚于新请求返回的问题，需要借助 AbortController 或请求序号处理。
 
-网络请求把 JavaScript 从“页面脚本”带入“应用逻辑”。越早建立正确的数据交换心智，后续学习数据获取库和服务器状态管理就越顺。
+网络请求把 JavaScript 从“页面脚本”带入“应用逻辑”。越早正确理解数据交换，后续学习数据获取库和服务器状态管理就越顺。
 
 完整的数据请求流程通常包含：
 
@@ -143,7 +143,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 
 - 使用 `try...catch` 处理可预期的失败，例如 JSON 解析、网络请求、权限不足或用户输入异常。
 - 区分语法错误、运行时错误和逻辑错误。前两者通常由工具直接定位，逻辑错误则需要用断点和状态观察逐步推理。
-- 在 DevTools Sources 面板设置断点、条件断点和 logpoint，观察变量在每一步的变化。
+- 在 DevTools Sources 面板设置断点、条件断点和日志点（logpoint），观察变量在每一步的变化。
 - 关注 Promise rejection。未处理的异步错误可能不会像同步错误那样立刻暴露在当前调用栈中。
 
 好的调试习惯能直接提升开发速度，让你从“猜哪里错了”转向“观察事实，验证假设”。
@@ -154,7 +154,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 - **Elements**：确认事件绑定的目标元素、最终 DOM 结构和状态属性。
 - **Sources**：设置断点，单步观察变量、闭包、调用栈和异步回调。
 - **Network**：查看请求方法、状态码、请求头、响应体、缓存命中和 CORS 信息。
-- **Application**：检查 Cookie、LocalStorage、SessionStorage、IndexedDB、Cache Storage 和 Service Worker。
+- **Application**：检查 Cookie、localStorage、sessionStorage、IndexedDB、Cache Storage 和 Service Worker。
 
 调试 JavaScript 时，先复现问题，再用最小路径定位事实。对于交互问题，先确认事件是否触发；对于数据问题，先确认请求和响应；对于渲染问题，先确认状态数据和 DOM 输出是否一致。
 
@@ -165,7 +165,7 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 - **localStorage**：简单键值存储，容量有限，同步 API，适合少量偏好设置，不适合频繁写入或敏感数据。
 - **sessionStorage**：生命周期跟随标签页会话，适合临时状态。
 - **IndexedDB**：浏览器内置异步结构化数据库，适合较大规模对象存储、离线草稿和索引。
-- **[Origin Private File System (OPFS)](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：File System API 中按源（origin）隔离的私有文件系统，已进入 Baseline。在专用 Worker 中可通过 `createSyncAccessHandle()` 获得 **`FileSystemSyncAccessHandle`**，对文件做同步、原地读写，适合频繁的小块读写，是浏览器端运行 SQLite（如 SQLite Wasm 的 OPFS 后端）和存放大型二进制文件的常用基础设施。
+- **[Origin Private File System（OPFS）](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：File System API 中按源（origin）隔离的私有文件系统，已进入 Baseline。在专用 Worker 中可通过 `createSyncAccessHandle()` 获得 **`FileSystemSyncAccessHandle`**，对文件做同步、原地读写，适合频繁的小块读写，是浏览器端运行 SQLite（如 SQLite Wasm 的 OPFS 后端）和存放大型二进制文件的常用基础设施。
 - **Cache Storage**：常与 Service Worker 配合，用于缓存请求和响应，是离线能力的重要基础。
 
 客户端存储适合保存偏好设置、离线草稿和缓存数据。访问令牌、个人敏感信息和长期凭证应结合 HttpOnly Cookie、服务端会话、安全策略和业务风险综合设计。
@@ -181,13 +181,13 @@ JavaScript 调试可以从 `console.log` 开始，并逐步结合断点、调用
 | Cache Storage | 请求与响应缓存 | 由 Service Worker 或代码管理 | DevTools Application |
 | Cookie | 会话标识、服务端协作状态 | 由过期时间和服务端策略决定 | DevTools Application / Network |
 
-浏览器存储和应用状态是两层概念。React/Vue/Svelte 中的组件状态适合表达当前界面；服务端状态工具适合表达远端数据；浏览器存储适合跨刷新、跨会话或离线场景。把这三层分清楚，后续学习状态管理和 PWA 会顺很多。
+浏览器存储和应用状态是两层概念。React/Vue/Svelte 中的组件状态适合表达当前界面；服务器状态工具适合表达远端数据；浏览器存储适合跨刷新、跨会话或离线场景。把这三层分清楚，后续学习状态管理和 PWA 会顺很多。
 
 ## **II.5.8 模块系统：import/export**
 
 ES 模块（`import`/`export`）以标准化的方式将 JavaScript 代码组织成可重用模块，提高可维护性，防止全局命名空间污染。
 
-ES 模块的广泛采用，标志着从旧式、低效模块模式（[CommonJS](http://www.commonjs.org/)、[AMD](https://github.com/amdjs/amdjs-api/wiki/AMD)）的关键转变。这直接让打包工具的 tree-shaking 等功能成为可能，并改进了代码组织，从而减小包体积、提高性能。
+ES 模块的广泛采用，标志着 JavaScript 从 [CommonJS](http://www.commonjs.org/)、[AMD](https://github.com/amdjs/amdjs-api/wiki/AMD) 等社区方案转向语言内置的标准模块。ES 模块的导入导出可以在构建时静态分析，这让打包工具的 Tree Shaking 等功能成为可能，从而减小包体积、提高性能。
 
 在浏览器中，`<script type="module">` 会启用模块语义：模块有自己的作用域，默认按严格模式执行，并支持静态 `import`。现代构建工具会基于 ES 模块分析依赖图、拆分代码、移除未使用导出，并为生产环境生成更合适的资源结构。
 
@@ -209,7 +209,7 @@ JavaScript 标准（ECMAScript）每年持续迭代。以下前四项已进入�
   - `setA.difference(setB)`：求差集（存在于 A 但不存在于 B）；
   - `setA.symmetricDifference(setB)`：求对称差集；
   - `setA.isSubsetOf(setB)` / `setA.isSupersetOf(setB)`：判断子集/超集关系。
-- **`Promise.withResolvers()`**（ES2024 / Baseline）：直接解构返回 `{ promise, resolve, reject }`，彻底终结了为了在外部控制 Promise 状态而声明外部变量的样板代码：
+- **`Promise.withResolvers()`**（ES2024 / Baseline）：直接解构返回 `{ promise, resolve, reject }`，不必再为了在 Promise 外部调用 `resolve`/`reject` 而预先声明外部变量：
   ```ts
   const { promise, resolve, reject } = Promise.withResolvers<string>();
   ```
@@ -218,7 +218,7 @@ JavaScript 标准（ECMAScript）每年持续迭代。以下前四项已进入�
   const grouped = Object.groupBy(products, (item) => item.category);
   ```
 - **异步迭代收集：`Array.fromAsync()`**（ES2026 / Baseline）：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 等异步可迭代对象转换为普通数组。
-- **下一代时间日期标准：[Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal)**（已于 2026 年进入 TC39 Stage 4，预计纳入 ES2027）：旨在彻底替代设计缺陷众多的历史 `Date` 对象，提供不可变的日期时间对象、对纳秒级精度的支持、完整的时区计算与日历系统支持。截至 2026 年 10 月，Chrome 与 Firefox 已支持，Safari 尚未支持，因此还不是 Baseline；生产环境使用前应先检测 `typeof Temporal !== "undefined"`，或引入 polyfill。
+- **下一代时间日期标准：[Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal)**（已于 2026 年进入 TC39 Stage 4，预计纳入 ES2027）：旨在取代设计缺陷众多的 `Date` 对象，提供不可变的日期时间对象、纳秒级精度、完整的时区计算与日历系统支持。截至 2026 年 10 月，Chrome 与 Firefox 已支持，Safari 尚未支持，因此还不是 Baseline；生产环境使用前应先检测 `typeof Temporal !== "undefined"`，或引入 polyfill。
 
 ## **II.5.10 一个最小浏览器应用闭环**
 
@@ -235,7 +235,7 @@ JavaScript 标准（ECMAScript）每年持续迭代。以下前四项已进入�
 - 用 IndexedDB 保存较大的草稿或收藏数据。
 - 用 DevTools 的 Elements、Network、Sources 和 Application 面板观察真实运行结果。
 
-::: details 启发式示例：只让最后一次搜索更新界面
+::: details 示例：只让最后一次搜索更新界面
 
 下面只保留搜索请求最关键的竞态边界：
 

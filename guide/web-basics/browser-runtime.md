@@ -60,7 +60,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 
 浏览器根据刷新率、页面可见性和系统负载决定具体渲染时机。连续追加微任务会持续占用主线程，因此 Promise 链同样可能推迟下一帧。
 
-::: details 启发式示例：在一帧中先读取布局，再写入样式
+::: details 示例：在一帧中先读取布局，再写入样式
 
 ```js
 function updateTabIndicator(tab, tabList, indicator) {
@@ -90,7 +90,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 | **Style** | 哪些 CSS 规则匹配元素，最终属性值是什么 | 修改 class、CSS 自定义属性、媒体条件或 DOM 结构 | Performance 中的 Recalculate Style |
 | **Layout** | 元素尺寸、位置以及彼此的几何关系 | 修改宽高、字体、内容、网格轨道或可用空间 | Performance 中的 Layout、Layout Shift |
 | **Paint** | 需要绘制的文字、颜色、边框、阴影和图片 | 修改颜色、背景、阴影或绘制区域 | Rendering 中的 Paint flashing |
-| **Composite** | 图层的顺序、变换、裁剪与最终组合 | transform、opacity 和滚动常可主要进入合成阶段 | Layers、Performance 中的 Composite Layers |
+| **Composite** | 图层的顺序、变换、裁剪与最终组合 | 修改 transform、opacity 或滚动，通常只需经过合成阶段 | Layers、Performance 中的 Composite Layers |
 
 使用 **transform** 和 **opacity** 可以为动画提供更轻的执行路径，最终效果仍取决于浏览器的图层决策。大量图层会增加内存与管理成本，因此应结合 Performance 和 Layers 面板验证。
 
@@ -105,7 +105,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 
 ## **II.7.5 主线程响应与 Worker**
 
-浏览器通常把持续超过 50 毫秒的主线程任务标记为长任务。长任务会推迟输入事件处理和画面更新，并可能影响 INP。优化顺序通常是：
+浏览器通常把持续超过 50 毫秒的主线程任务标记为长任务。长任务会推迟输入事件处理和画面更新，并可能拉高 INP（Interaction to Next Paint，衡量交互响应速度的 Core Web Vitals 指标）。优化顺序通常是：
 
 1. 删除重复计算和无效工作。
 2. 把大任务拆成能让主线程恢复响应的小任务。
@@ -123,7 +123,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 
 Worker 的消息数据通常通过结构化克隆复制。[Transferable objects](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects) 可以把 ArrayBuffer 等资源的所有权移动到另一执行环境，适合传递大型二进制数据。
 
-::: details 启发式示例：把大型数值聚合交给 Worker
+::: details 示例：把大型数值聚合交给 Worker
 
 页面线程：
 
@@ -166,7 +166,7 @@ ArrayBuffer 的所有权已转移给 Worker，页面线程中的原缓冲区随�
 
 - **visibilitychange**：页面进入隐藏状态时保存草稿、暂停视觉更新或记录会话状态。
 - **pagehide**：页面离开当前会话历史位置时完成轻量清理。
-- **pageshow**：页面首次显示或从 bfcache 恢复时同步可能过期的数据。
+- **pageshow**：页面首次显示或从 bfcache（往返缓存，back/forward cache）恢复时同步可能过期的数据。
 - **beforeunload**：仅在确实存在未保存输入时注册，用于请求用户确认离开。
 
 [Page Lifecycle API](https://developer.chrome.com/docs/web-platform/page-lifecycle-api) 把这些状态放进同一条生命周期中。bfcache 会保存整个页面的运行状态，让前进、后退导航可以快速恢复；HTTP 缓存负责复用网络响应，两者解决不同层次的问题。
@@ -192,7 +192,7 @@ window.addEventListener("pageshow", (event) => {
 JavaScript 垃圾回收器会释放已失去引用的对象。前端内存问题通常来自仍然可达、但业务已经结束的对象：
 
 - 已卸载组件遗留的事件监听器、定时器和订阅；
-- 被 JavaScript 引用保留的 detached DOM；
+- 已从文档中移除、却仍被 JavaScript 引用的 DOM 节点（detached DOM）；
 - 无上限增长的 Map、数组、日志和客户端缓存；
 - 未释放的 Blob URL、Worker、媒体流和图形资源；
 - 闭包长期持有大型数据结构。
@@ -214,10 +214,10 @@ DevTools Memory 可以比较 Heap Snapshot、观察 Allocation timeline，并查
 
 | 用户现象 | 首先记录什么 | 重点寻找什么 |
 | :--- | :--- | :--- |
-| 首屏出现很慢 | Network + Performance 导航轨迹 | TTFB、关键请求、脚本长任务、LCP 资源和渲染延迟 |
+| 首屏出现很慢 | Network + Performance 导航轨迹 | TTFB（首字节时间）、关键请求、脚本长任务、LCP（最大内容绘制）资源和渲染延迟 |
 | 点击后迟迟无反馈 | 包含交互的 Performance 轨迹 | 事件处理、长任务、同步布局和下一次绘制 |
 | 滚动或动画卡顿 | Performance + Rendering | 每帧主线程工作、绘制区域、图层和事件监听器 |
-| 操作越多页面越慢 | Memory 快照与分配记录 | retained objects、detached DOM、持续增长的缓存 |
+| 操作越多页面越慢 | Memory 快照与分配记录 | 仍被保留的对象、detached DOM、持续增长的缓存 |
 | 返回上一页仍需完整加载 | Application / Lighthouse bfcache 检查 | 生命周期监听器、未关闭资源和缓存资格原因 |
 
 稳定的性能排查流程如下：

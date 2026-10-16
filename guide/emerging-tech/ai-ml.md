@@ -13,14 +13,14 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 ## **VI.8.1 先分清四条实现路线**
 
-| 实现路线 | 模型由谁管理 | 工具示例 | 更适合说明的场景 | 主要边界 |
+| 实现路线 | 模型由谁管理 | 工具示例 | 适用场景 | 主要边界 |
 | :--- | :--- | :--- | :--- | :--- |
 | **浏览器内建 AI** | 浏览器负责模型下载、更新和生命周期 | [Chrome Built-in AI APIs](https://developer.chrome.com/docs/ai/built-in-apis) 中的翻译、语言检测、摘要等任务 API | 希望用高层 API 完成常见文本任务，并能接受渐进增强 | API 阶段、设备要求和浏览器支持不一致，模型可能尚未下载 |
 | **应用自带模型** | 应用选择模型、格式、缓存和执行后端 | [MediaPipe](https://developers.google.com/mediapipe)、[ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/)、[Transformers.js](https://huggingface.co/docs/transformers.js/en/index)、[TensorFlow.js](https://www.tensorflow.org/js) | 本地视觉、音频、文本或定制模型推理 | 应用需自行承担下载体积、内存、功耗、算子支持和设备性能 |
 | **服务器模型** | 服务端或模型平台负责部署与更新 | 托管推理 API，以及 [LangChain](https://www.langchain.com/)、[LlamaIndex](https://www.llamaindex.ai/)、[Pinecone](https://www.pinecone.io/) 等 RAG 相关工具 | 大模型、集中更新、复杂推理和共享知识库 | 网络延迟、持续成本、数据传输、认证与合规 |
 | **混合架构** | 浏览器与服务端各负责一部分 | 本地轻量模型 + 远端复杂模型，或本地优先 + 服务端回退 | 同时需要低延迟、隐私和稳定覆盖的产品 | 路由、结果一致性、回退策略和可观测性更复杂 |
 
-表里的工具分别示例了四种责任划分。比较时先按层次分组：浏览器内建 API 与 ONNX Runtime Web 管理不同层次，LangChain 与 Pinecone 位于服务端编排和数据层。
+表中的工具只是各条路线的例子，彼此不在同一层次，不宜直接横向比较：Chrome 内建 AI 是浏览器提供的任务 API，模型由浏览器管理；MediaPipe、Transformers.js 是应用引入的任务级库，ONNX Runtime Web、TensorFlow.js 是更底层的推理运行时（见 VI.8.4）；LangChain、LlamaIndex 在服务端负责流程编排和数据接入，Pinecone 则是存放向量的数据层。
 
 ## **VI.8.2 用六个问题决定本地还是远端**
 
@@ -68,14 +68,14 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 下面的表说明每个工具替开发者承担了哪一层工作。
 
-| 工具 | 它封装的重点 | 常见执行位置与后端 | 适合用来解释的任务 | 需要自行验证的边界 |
+| 工具 | 它封装的重点 | 常见执行位置与后端 | 适用场景 | 需要自行验证的边界 |
 | :--- | :--- | :--- | :--- | :--- |
 | [**MediaPipe**](https://developers.google.com/mediapipe) | 把视觉、音频等常见感知任务封装成较高层接口 | 浏览器与其他端侧平台，具体后端由任务与环境决定 | 手势、姿态、目标检测等实时交互 | 支持的任务、模型定制范围、摄像头权限、帧率与功耗 |
 | [**ONNX Runtime Web**](https://onnxruntime.ai/docs/tutorials/web/) | 在 Web 中运行 ONNX 模型，并选择执行后端 | Wasm、WebGL、WebGPU、WebNN；各后端的算子覆盖不同 | 把其他训练生态导出的模型部署到浏览器 | 模型转换、算子兼容、包体、初始化时间和后端差异 |
 | [**Transformers.js**](https://huggingface.co/docs/transformers.js/en/index) | 用接近 Transformers 的高层 API 运行预训练模型 | 底层使用 ONNX Runtime；浏览器默认可走 Wasm，也可按环境尝试 WebGPU | 文本分类、特征提取、语音和视觉等 Transformer 任务 | 模型下载、量化精度、内存、WebGPU 兼容性与首次加载体验 |
-| [**TensorFlow.js**](https://www.tensorflow.org/js) | 在 JavaScript 中运行或训练 TensorFlow 模型 | 浏览器和 Node.js，可选择不同 backend | 已有 TensorFlow 模型、JS 内训练或定制交互实验 | 模型格式、后端支持、训练资源和目标设备性能 |
+| [**TensorFlow.js**](https://www.tensorflow.org/js) | 在 JavaScript 中运行或训练 TensorFlow 模型 | 浏览器和 Node.js，可选择不同后端 | 已有 TensorFlow 模型、JS 内训练或定制交互实验 | 模型格式、后端支持、训练资源和目标设备性能 |
 | [**浏览器内建 AI API**](https://developer.chrome.com/docs/ai/built-in-apis) | 浏览器管理模型，应用调用翻译、摘要等任务接口 | 支持该 API 且满足设备条件的浏览器 | 不想自行分发模型的常见文本增强 | API 生命周期、跨浏览器覆盖、下载状态和输出质量 |
-| [**LangChain**](https://www.langchain.com/)、[**LlamaIndex**](https://www.llamaindex.ai/)、[**Pinecone**](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、注入攻击、成本与凭据保护 |
+| [**LangChain**](https://www.langchain.com/)、[**LlamaIndex**](https://www.llamaindex.ai/)、[**Pinecone**](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、提示词注入、成本与凭据保护 |
 
 以 Transformers.js 为例，它给开发者的是高层任务 API，底层仍要依赖 ONNX Runtime 和具体计算后端。理解这层关系后，可以分别评估模型库、推理运行时和 GPU API。
 
@@ -88,13 +88,13 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.js runtime 负责加载模型与调度算子；Wasm、WebGPU、WebNN 则提供不同的底层执行路径。
 
 - **WebAssembly**（Wasm）兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
-- **WebGPU**向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
-- **WebNN**是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
-- **WebGL**原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
+- **WebGPU** 向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
+- **WebNN** 是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
+- **WebGL** 原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
 
 一个稳妥的选择方式是：先建立可工作的 Wasm 或服务端基线，再对支持的设备启用 WebGPU；只有在目标浏览器确实实现且模型算子受支持时才尝试 WebNN。每条路径都要测首次加载、预热、持续推理、峰值内存、功耗和结果一致性。
 
-## **VI.8.6 混合架构的启发式例子**
+## **VI.8.6 混合架构示例**
 
 假设产品要在浏览器里为用户照片生成辅助说明：
 
@@ -115,7 +115,7 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 - **回退**：本地失败、服务端失败、离线和低端设备分别怎样处理？
 - **评估**：是否有固定样本衡量正确性、偏差、安全性和版本变化？
 - **性能**：是否在真实目标设备上测首次加载、内存、耗电和交互响应？
-- **安全**：密钥是否留在服务端，上传与 RAG 是否有权限、隔离和注入防护？
+- **安全**：密钥是否留在服务端，上传与 RAG 是否有权限、隔离和提示词注入防护？
 - **可观测性**：能否区分下载失败、后端不支持、模型错误和服务端超时，同时避免把敏感输入写进日志？
 
 前端 AI/ML 的核心能力，是划清运行与数据边界，并为不同设备设计可检测、可降级、可评估的路径。
@@ -135,11 +135,11 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 - 工具名称、描述、输入 Schema 和错误状态；
 - 用户身份、来源权限、确认步骤和可撤销操作；
-- Prompt injection、越权调用、误导性描述和隐私泄露防护；
+- 提示词注入（prompt injection）、越权调用、误导性描述和隐私泄露防护；
 - 表单、焦点、键盘操作、错误提示和屏幕阅读器体验；
 - 当 Agent 不可用、模型输出不可信或工具调用失败时的普通 Web 回退。
 
-因此，Agent-facing UI 目前适合放在新兴技术和实验项目中学习。MCP Apps、A2UI 或 WebMCP 属于可选探索方向，权限、可访问性和审计要求继续保持在与普通 Web UI 相同或更高的标准。
+因此，Agent-facing UI 目前适合放在新兴技术和实验项目中学习。MCP Apps、A2UI 或 WebMCP 属于可选探索方向，权限、无障碍和审计要求继续保持在与普通 Web UI 相同或更高的标准。
 
 ### **WebMCP：把网页操作声明为工具**
 

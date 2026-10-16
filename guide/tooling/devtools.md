@@ -7,7 +7,7 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 **目的**：理解网页在真实浏览器中的结构、样式、网络、运行时行为和性能瓶颈，并把“感觉哪里不对”转化为可定位、可验证的问题。
 
 浏览器开发者工具内置于所有主流浏览器（Chrome、[Firefox](https://www.mozilla.org/en-US/firefox/new/)、[Edge](https://www.microsoft.com/en-us/edge)、[Safari](https://www.apple.com/safari/)）中，是前端开发者观察页面真实运行状态的主要界面。  
-它连接 HTML、CSS、JavaScript、网络请求、存储、渲染流水线和性能指标，是观察页面运行细节的综合调试环境。
+它把 HTML、CSS、JavaScript、网络请求、存储、渲染流水线和性能指标集中在同一套调试环境中。
 
 学习基础 Web 技术时，DevTools 应该和第二章一起使用：学 HTML 时看 Elements 里的真实 DOM；学 CSS 时看 Styles、Computed、Layout 和盒模型；学 JavaScript 时看 Console、Sources、Network 和 Application。这样可以把“代码写了什么”和“浏览器实际执行了什么”对应起来。
 
@@ -16,14 +16,14 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 - **Console**：查看运行时错误、警告、日志和临时表达式执行结果。  
   Console 适合快速验证假设；复杂问题应结合断点、调用栈和网络记录继续分析。
 - **Sources / Debugger**：通过断点、条件断点、调用栈、作用域变量和 source map 追踪 JavaScript 执行过程。  
-  对事件处理、异步逻辑、状态更新顺序和框架内部调用链的理解，往往离不开 Debugger。
+  要理解事件处理、异步逻辑、状态更新顺序和框架内部调用链，往往离不开 Debugger。
 - **Network**：分析请求是否发出、状态码是否正确、缓存是否生效、响应体是否符合预期、请求瀑布是否过长。  
   它尤其适合定位接口错误、CORS 问题、资源加载失败、重复请求和首屏阻塞资源。
 - **Performance**：记录页面加载和交互过程，观察主线程任务、渲染、样式计算、布局、绘制和长任务。  
   当页面“卡”或交互慢时，应结合 Performance 面板和 Core Web Vitals 指标定位具体瓶颈。
-- **Application / Storage**：检查 Cookie、LocalStorage、SessionStorage、IndexedDB、Cache Storage、Service Worker 和 Manifest。  
-  对 PWA、登录态、缓存策略和离线能力的调试，这一面板非常关键。
-- **Lighthouse / 性能审计**：自动化检查性能、可访问性、SEO 和最佳实践。  
+- **Application / Storage**：检查 Cookie、localStorage、sessionStorage、IndexedDB、Cache Storage、Service Worker 和 Manifest。  
+  调试 PWA、登录态、缓存策略和离线能力时，这个面板非常关键。
+- **Lighthouse / 性能审计**：自动化检查性能、无障碍、SEO 和最佳实践。  
   它适合发现问题线索，并应结合真实用户数据和手动分析使用。
 
 实用的调试顺序是：
@@ -49,7 +49,7 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 | 无障碍问题               | Elements / Lighthouse   | 语义结构、可访问名称、对比度、键盘可达性        |
 
 熟练使用 DevTools 的关键在于形成“观察事实、提出假设、定位证据、验证修复”的工作习惯。  
-现代前端应用的复杂度已经超出纯经验排查的范围，DevTools 提供的正是把复杂问题拆回浏览器真实行为的能力。
+现代前端应用的复杂度已经很难单靠经验排查，DevTools 让开发者能把复杂问题还原为浏览器中可观察的具体行为。
 
 ## **III.3.1 基础学习中的观察清单**
 
@@ -59,14 +59,14 @@ title: "III. 基本开发环境和工具 / III.3 浏览器开发者工具：调�
 | CSS 层叠与布局 | 在 Styles / Computed / Layout 中查看选择器命中、被覆盖规则、盒模型、Flex/Grid 轨道和媒体查询 |
 | JavaScript 事件 | 在 Sources 中给事件回调打断点，观察 `event.target`、`currentTarget`、默认行为和冒泡路径 |
 | 网络请求 | 在 Network 中查看请求方法、状态码、请求头、响应体、缓存和 CORS 信息 |
-| 客户端存储 | 在 Application 中查看 Cookie、LocalStorage、SessionStorage、IndexedDB 和 Cache Storage |
+| 客户端存储 | 在 Application 中查看 Cookie、localStorage、sessionStorage、IndexedDB 和 Cache Storage |
 | 性能体验 | 在 Performance 中录制页面加载或交互，观察长任务、布局、绘制和主线程占用 |
 
-把这些观察变成习惯后，学习 HTML、CSS 和 JavaScript 会同时进入语法、浏览器运行机制和真实界面行为。
+把这些观察变成习惯后，学习 HTML、CSS 和 JavaScript 时就能把语法、浏览器运行机制和真实界面表现联系起来。
 
 ## **III.3.2 用 Performance API 给交互打标**
 
-DevTools 适合观察单次运行；代码打标可以让同一段交互在实验室和真实用户监控中拥有稳定名称。
+DevTools 适合观察单次运行；在代码中给关键交互打上性能标记，可以让同一段交互在实验室测试（本地或 Lighthouse 等可控环境）和真实用户监控（RUM）中使用同一个名称。
 
 ```js
 async function submitSearch(query) {
@@ -93,6 +93,6 @@ console.table(
 );
 ```
 
-注意时序：`console.table` 必须在请求结束后读取。如果在函数定义后立即同步执行，此时还没有任何 measure 条目，只会打印空表。示例中的顶层 `await` 可以直接在 DevTools Console 或 ES 模块中运行。
+注意时序：`console.table` 必须在请求结束后读取。如果在调用 `submitSearch` 后不等待就立即执行 `console.table`，此时还没有任何 measure 条目，只会打印空表。示例中的顶层 `await` 可以直接在 DevTools Console 或 ES 模块中运行。
 
-练习时先在 Network 面板观察请求瀑布，再在 Performance 面板过滤 `search:request`。如果页面交互仍然卡顿，继续检查请求完成后的 JSON 解析、DOM 更新和长任务，形成“时间线证据 -> 假设 -> 修复 -> 再测量”的闭环。
+练习时先在 Network 面板观察请求瀑布，再在 Performance 面板过滤 `search:request`。如果页面交互仍然卡顿，继续检查请求完成后的 JSON 解析、DOM 更新和长任务，形成“时间线证据 → 假设 → 修复 → 再测量”的闭环。

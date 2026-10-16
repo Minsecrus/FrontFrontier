@@ -6,13 +6,13 @@ title: "VI. 新兴技术和专业领域 / VI.6 Web 音频和媒体流：实时�
 
 **目的**：在浏览器中实现高级音频处理、实时通信、底层音视频编解码和媒体捕获/录制。
 
-- [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)：强大的音频控制系统，支持模块化路由、添加效果、创建可视化和空间效果。作为 `<audio>` 元素的补充，用于复杂处理。在独立线程处理自定义信号处理（DSP）时，现代规范引入了 **[AudioWorklet](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet)** 替代主线程脚本。
+- [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API)：功能完整的音频处理系统，支持模块化路由、音效处理、可视化和空间音效，是 `<audio>` 元素的补充，用于复杂处理。需要在独立线程中运行自定义信号处理（DSP）代码时，使用 **[AudioWorklet](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet)**，它取代了已弃用、在主线程运行的 `ScriptProcessorNode`。
 - **[Media Streams API](https://developer.mozilla.org/en-US/docs/Web/API/Media_Capture_and_Streams_API)**：支持流式传输音频和视频数据，可访问用户摄像头/麦克风（`getUserMedia()`）或屏幕共享（`getDisplayMedia()`），并配合 **[MediaRecorder API](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder)** 在客户端录制音视频。
-- **[WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)**：提供对浏览器底层硬件加速编解码器（VideoEncoder/Decoder, AudioEncoder/Decoder）的直接访问，暴露原始 `VideoFrame` 与 `AudioData`，为 Web 端视频剪辑与低延迟推流奠定基础。
-- **Media Source Extensions (MSE)**：支持基于 Web 的无插件流媒体，可通过 JavaScript 为 `<audio>` 和 `<video>` 元素创建媒体流，并细粒度地控制获取。
-- **[WebRTC](https://webrtc.org/) 与 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API)**：WebRTC 支持浏览器间点对点实时音视频流与 DataChannel 数据交换；WebTransport 则基于 HTTP/3 QUIC 协议提供双向低延迟多路复用传输。
+- **[WebCodecs API](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API)**：直接访问浏览器底层的编解码器（VideoEncoder/Decoder、AudioEncoder/Decoder，可利用硬件加速），暴露原始 `VideoFrame` 与 `AudioData`，为 Web 端视频剪辑与低延迟推流奠定基础。
+- **Media Source Extensions（MSE）**：无需插件即可在网页中播放流媒体。JavaScript 可以为 `<audio>` 和 `<video>` 元素构造媒体流，并精细控制何时获取哪一段媒体数据。
+- **[WebRTC](https://webrtc.org/) 与 [WebTransport](https://developer.mozilla.org/en-US/docs/Web/API/WebTransport_API)**：WebRTC 支持浏览器间点对点实时音视频流与 DataChannel 数据交换；WebTransport 则基于 HTTP/3（QUIC）提供低延迟、支持多路复用的双向传输。
 
-这些多媒体 API 是在浏览器中构建复杂实时应用（例如视频会议、在线数字音频工作站、网页视频编辑器、云游戏）的核心技术支撑。
+在浏览器中构建视频会议、在线数字音频工作站、网页视频编辑器、云游戏等复杂实时应用，主要依靠这些 API。
 
 ## **VI.6.1 麦克风预览的权限、生命周期与清理**
 
@@ -48,17 +48,17 @@ export async function startMicrophonePreview(audioElement) {
 
 **表格：现代 Web 媒体技术体系与选型指南**
 
-| 技术方案 | 核心层级与机制 | 运行环境 / 线程 | 理想用例 | 注意事项与局限 |
+| 技术方案 | 核心层级与机制 | 运行环境 / 线程 | 适用场景 | 注意事项与局限 |
 | :--- | :--- | :--- | :--- | :--- |
-| [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | 基于节点图（Node Graph）的音频混合、过滤与频谱可视化 | 主线程调度 + 音频渲染线程执行 | 网页游戏音效、音乐播放器可视化、简单混音器 | 需由明确的用户手势（如点击）激活 `AudioContext` 以绕过自动播放策略限制 |
+| [**Web Audio API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API) | 基于节点图（Node Graph）的音频混合、过滤与频谱可视化 | 主线程调度 + 音频渲染线程执行 | 网页游戏音效、音乐播放器可视化、简单混音器 | 需在用户手势（如点击）后创建或恢复 `AudioContext`，以满足浏览器的自动播放策略 |
 | [**AudioWorklet**](https://developer.mozilla.org/en-US/docs/Web/API/AudioWorklet) | 独立线程执行自定义 PCM/DSP 算法 | 专属音频 Worklet 线程 | 在线数字音频工作站（DAW）、吉他效果器、自定义音频合成器 | 无法直接访问主线程 DOM，必须通过 `MessagePort` 异步传递参数 |
-| [**MediaRecorder**](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder) | 高层级媒体流录制器，自动封装为容器格式 | 浏览器内部编码线程 | 屏幕录制工具、麦克风语音留言、简单视频片段导出 | 导出的视频可能缺乏完整的 Duration 关键帧索引，需服务端或工具库进行容器修复 |
-| [**WebCodecs API**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) | 底层零拷贝音视频硬编/硬解，暴露原始 `VideoFrame` | 主线程或 Dedicated Worker 线程 | 在线视频剪辑编辑器、低延迟云桌面推流、结合 WebGPU 的实时特效渲染 | 属于底层原语，不包含容器解封装（Demuxing）与音画同步逻辑，需配合 MP4Box 等解复用库使用 |
-| [**WebRTC**](https://webrtc.org/) | P2P 实时流媒体通信与数据通道 | 浏览器专用网络与媒体管道 | 视频会议系统（如 Zoom 网页版）、P2P 文件传输、协同白板 | NAT 穿透需要部署 STUN/TURN 服务器基础设施，网状连接在多人场景下需 SFU/MCU 服务端支持 |
+| [**MediaRecorder**](https://developer.mozilla.org/en-US/docs/Web/API/MediaRecorder) | 高层级媒体流录制器，自动封装为容器格式 | 浏览器内部编码线程 | 屏幕录制工具、麦克风语音留言、简单视频片段导出 | 导出的文件（尤其是 WebM）常缺少时长（Duration）元数据和用于拖动定位的索引（Cues），需要在服务端或用工具库修复容器 |
+| [**WebCodecs API**](https://developer.mozilla.org/en-US/docs/Web/API/WebCodecs_API) | 底层音视频编解码（可利用硬件加速），暴露原始 `VideoFrame` | 主线程或 Dedicated Worker 线程 | 在线视频剪辑编辑器、低延迟云桌面推流、结合 WebGPU 的实时特效渲染 | 属于底层原语，不包含容器解封装（Demuxing）与音画同步逻辑，需配合 MP4Box 等解复用库使用 |
+| [**WebRTC**](https://webrtc.org/) | P2P 实时流媒体通信与数据通道 | 浏览器专用网络与媒体管道 | 视频会议系统（如 Zoom 网页版）、P2P 文件传输、协同白板 | NAT 穿透需要部署 STUN/TURN 服务器；多人场景下网状（Mesh）连接难以扩展，需改用 SFU（选择性转发单元，服务端只转发各路流）或 MCU（多点控制单元，服务端把多路流混合成一路） |
 
-::: details 启发式示例：屏幕捕获与 MediaRecorder 分片录制
+::: details 示例：屏幕捕获与 MediaRecorder 分片录制
 
-下面的示例演示了如何通过现代 Web API 请求屏幕共享、捕获音视频流、使用 `MediaRecorder` 进行内存分片录制，并安全管理资源释放与生命周期：
+下面的示例请求屏幕共享、捕获音视频流，用 `MediaRecorder` 在内存中分片录制，并在结束时释放资源：
 
 ```ts
 export async function recordScreenStream(
@@ -82,7 +82,7 @@ export async function recordScreenStream(
 
   const recorder = new MediaRecorder(mediaStream, {
     mimeType,
-    videoBitsPerSecond: 2_500_000, // 2.5 Mbps 码率控制
+    videoBitsPerSecond: 2_500_000, // 目标码率 2.5 Mbps
   });
 
   return new Promise<Blob>((resolve, reject) => {
@@ -130,6 +130,6 @@ export async function recordScreenStream(
 }
 ```
 
-该示例展示了媒体捕获与录制的工程标准实践：类型嗅探优先、码率控制、分片流式回调、原生“停止共享”事件联动，以及通过 `track.stop()` 彻底关闭硬件占用的生命周期清理。
+这个示例包含了媒体捕获与录制的几项常见做法：先检测浏览器支持的 MIME 类型、设定码率、分片回调、响应浏览器原生的“停止共享”操作，以及用 `track.stop()` 释放采集设备。
 
 :::

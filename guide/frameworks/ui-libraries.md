@@ -18,20 +18,20 @@ title: "IV. 前端框架和库：构建现代 UI / IV.3 UI 组件库：加速开
 
 组件库大致可以放在一条连续光谱上：
 
-1. **完整设计系统**：带有明确视觉语言、主题系统和大量组件，适合希望快速得到一致界面的项目。MUI、Ant Design、Vuetify 和 Angular Material 都能说明这种模式。
-2. **可组合组件系统**：提供可访问的结构和样式能力，但鼓励团队组合出自己的界面语言。Chakra UI、Mantine 等更接近这种思路。
-3. **复杂业务套件**：除基础组件外，还重视 DataTable、Tree、Upload、Scheduler 等企业功能。Prime 系列和部分中后台组件库体现了这一重点。
+1. **完整设计系统**：带有明确视觉语言、主题系统和大量组件，适合希望快速得到一致界面的项目。MUI、Ant Design、Vuetify 和 Angular Material 属于这一类。
+2. **可组合组件系统**：提供符合无障碍要求的结构和样式能力，但鼓励团队组合出自己的界面语言。Chakra UI、Mantine 等更接近这种思路。
+3. **复杂业务套件**：除基础组件外，还重视 DataTable、Tree、Upload、Scheduler 等企业功能。Prime 系列和部分中后台组件库属于这一类。
 4. **多端应用框架**：不仅提供组件，还负责 SPA、SSR、PWA、移动端或桌面端的构建方式。Quasar 是这种取向的代表。
 
 这条光谱上的每个位置对应不同责任。完整系统能加快起步，却可能更难做出强品牌差异；更轻、更自由的系统便于定制，但团队要自己补齐更多设计和测试工作。
 
-如果项目需要完全掌控标记、样式或组件源码，可以继续阅读 [无头组件与组件代码所有权](/guide/frameworks/headless-ui)。它对应逻辑、样式与代码所有权的另一类责任边界。
+如果项目需要完全掌控标记、样式或组件源码，可以继续阅读 [无头组件与组件代码所有权](/guide/frameworks/headless-ui)。那一章讨论另一种分工：库只提供交互逻辑，样式和组件源码由团队掌控。
 
 ## **IV.3.2 用六个问题完成筛选**
 
 ### **1. 框架是否匹配**
 
-组件库必须匹配当前框架、版本和渲染模式。满足这项硬约束后，再比较其他能力。对于 SSR 或 React Server Components，还要确认组件是否依赖浏览器环境，以及客户端边界会扩大多少。
+组件库必须匹配当前框架、版本和渲染模式。满足这项硬约束后，再比较其他能力。对于 SSR 或 React 服务器组件（React Server Components），还要确认组件是否依赖浏览器环境，以及引入后有多少组件必须改为客户端组件。
 
 ### **2. 关键组件是否真的够用**
 
@@ -42,7 +42,7 @@ title: "IV. 前端框架和库：构建现代 UI / IV.3 UI 组件库：加速开
 - 带焦点陷阱和嵌套操作的 Dialog；
 - 树、日期区间、文件上传或国际化输入。
 
-这些关键组件仍需大量自行补写时，该候选库对项目的实际覆盖度较低。
+如果这些关键组件仍需大量自行补写，说明该候选库对项目的实际覆盖度较低。
 
 ### **3. 设计语言是否合适**
 
@@ -65,7 +65,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **6. 按需使用和升级成本是否可控**
 
-现代库通常提供 ESM、tree-shaking 或独立组件入口，最终产物还取决于导入方式、样式文件、图标包和构建器。用生产构建验证按需引入：
+现代库通常提供 ESM、Tree Shaking 或独立组件入口，最终产物还取决于导入方式、样式文件、图标包和构建器。用生产构建验证按需引入：
 
 1. 只引入试验页面需要的组件；
 2. 构建生产包并查看依赖分析；
@@ -80,22 +80,22 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ### **React：设计系统与组合自由并存**
 
-- [**MUI**](https://mui.com/material-ui/) 是 Material Design 的完整实现，主题和定制层次较清楚；[MUI X](https://mui.com/x/) 延伸到数据网格等复杂场景，[Toolpad](https://mui.com/toolpad/) 则面向内部工具。这说明组件生态可以按复杂度继续分层。
+- [**MUI**](https://mui.com/material-ui/) 是 Material Design 的完整实现，主题和定制层次较清楚；[MUI X](https://mui.com/x/) 延伸到数据网格等复杂场景，[Toolpad](https://mui.com/toolpad/) 则面向内部工具。可见同一生态内部也会按复杂度继续分层。
 - [**Ant Design**](https://ant.design/) 用统一的企业设计语言覆盖布局、导航、数据录入、数据显示和反馈，适合流程与信息密度较高的中后台。
-- [**Chakra UI**](https://chakra-ui.com/docs/components/concepts/overview) 强调可访问组件、组合方式和 style props，适合希望在现成行为之上建立自有主题的团队。
-- [**Fluent UI**](https://react.fluentui.dev/) 体现了组件库与产品生态的结合，常用于希望接近 Microsoft 生产力产品语言的项目。
-- [**PrimeReact**](https://primereact.org/) 强调复杂组件广度；[Mantine](https://mantine.dev/) 同时提供组件与 Hooks；[Flowbite React](https://flowbite-react.com/) 展示了组件库与 Tailwind CSS 体系结合的方式。
+- [**Chakra UI**](https://chakra-ui.com/docs/components/concepts/overview) 强调无障碍组件、组合方式和 style props，适合希望在现成行为之上建立自有主题的团队。
+- [**Fluent UI**](https://react.fluentui.dev/) 是微软自家产品使用的组件库，常用于希望接近微软生产力产品风格的项目。
+- [**PrimeReact**](https://primereact.org/) 强调复杂组件广度；[Mantine](https://mantine.dev/) 同时提供组件与 Hooks；[Flowbite React](https://flowbite-react.com/) 则是基于 Tailwind CSS 的组件库。
 
 ### **Vue：从现成后台到多端交付**
 
 - [**Vuetify**](https://vuetifyjs.com/) 把 Material Design 带进 Vue 生态，适合需要一致视觉语言和大量现成组件的应用。
 - [**Element Plus**](https://element-plus.org/) 常见于 Vue 3 中后台项目，表单、数据展示和主题变量是其主要使用入口。
-- [**Quasar**](https://quasar.dev/introduction-to-quasar/) 不只提供组件，还把 SPA、SSR、PWA、移动端、桌面端和浏览器扩展纳入同一套构建模式。它解释了“组件库”和“应用框架”的边界如何重叠。
+- [**Quasar**](https://quasar.dev/introduction-to-quasar/) 不只提供组件，还把 SPA、SSR、PWA、移动端、桌面端和浏览器扩展纳入同一套构建模式。在 Quasar 身上，“组件库”和“应用框架”的边界是重叠的。
 - [**Ant Design Vue**](https://antdv.com/) 适合希望在 Vue 中沿用 Ant Design 语言的团队；[Naive UI](https://www.naiveui.com/) 强调 TypeScript 与主题配置；[PrimeVue](https://primevue.org/) 则强调广泛组件和复杂数据场景。
 
 ### **Angular：官方基础与企业套件并重**
 
-- [**Angular Material**](https://material.angular.dev/) 提供 Material 组件；[Angular CDK](https://material.angular.dev/cdk) 提供 overlay、a11y、drag-drop 等更底层能力。二者的区别说明“直接使用成品”和“自己搭建组件”可以共存。
+- [**Angular Material**](https://material.angular.dev/) 提供 Material 组件；[Angular CDK](https://material.angular.dev/cdk) 提供 overlay、a11y、drag-drop 等更底层能力。前者是成品组件，后者用于自己搭建组件，两种用法可以在同一项目中共存。
 - [**PrimeNG**](https://primeng.org/) 适合需要复杂表格、树、上传和模板生态的企业应用。
 - [**NG-ZORRO**](https://ng.ant.design/) 把 Ant Design 的企业产品语言带入 Angular，适合已有相同设计体系的团队。
 
@@ -117,23 +117,23 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 | 库名称                                           | 所属框架                        | 设计风格/理念                              | 无障碍支持   | 定制化模式                                        | 主要适用场景                 |
 | :----------------------------------------------- | :------------------------------ | :----------------------------------------- | :----------- | :------------------------------------------------ | :--------------------------- |
-| [MUI](https://mui.com/)                          | [React](https://react.dev/)     | [Material Design](https://m3.material.io/) | 优秀         | CSS-in-JS, 强大主题系统                           | 通用 Web 应用，内部工具      |
-| [Ant Design](https://ant.design/)                | [React](https://react.dev/)     | [Ant Design](https://ant.design/)          | 优秀         | CSS-in-JS + [Design Token](https://ant.design/docs/react/customize-theme)，可选 CSS 变量 | 企业级中后台，管理系统       |
-| [Chakra UI](https://chakra-ui.com/)              | [React](https://react.dev/)     | 实用至上/无障碍                            | 核心设计原则 | Style Props, 主题系统                             | 通用 Web 应用，设计系统      |
-| [Vuetify](https://vuetifyjs.com/)                | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/)/CSS 变量，预设主题 | 通用 Web 应用                 |
-| [Element Plus](https://element-plus.org/)        | [Vue](https://vuejs.org/)       | Element Design                             | 良好         | [BEM](https://getbem.com/)-styled CSS, Sass 变量  | 企业级中后台，管理系统       |
-| [Quasar](https://quasar.dev/)                    | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 良好         | [Sass](https://sass-lang.com/)/CSS 变量，主题定制 | 多端（Web, Mobile, Desktop） |
-| [Angular Material](https://material.angular.dev/) | [Angular](https://angular.dev/) | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/) 变量，主题定制     | 通用 Web 应用，Google 官方   |
-| [PrimeNG](https://primeng.org/)                  | [Angular](https://angular.dev/) | 设计无关                                   | 优秀         | 主题设计师，CSS 变量                              | 企业级应用，复杂界面         |
-| [NG-ZORRO](https://ng.ant.design/)               | [Angular](https://angular.dev/) | [Ant Design](https://ant.design/)          | 优秀         | CSS 变量，主题定制                                | 企业级中后台，管理系统       |
+| [MUI](https://mui.com/)                          | [React](https://react.dev/)     | [Material Design](https://m3.material.io/) | 优秀         | CSS-in-JS、主题系统                               | 通用 Web 应用、内部工具      |
+| [Ant Design](https://ant.design/)                | [React](https://react.dev/)     | [Ant Design](https://ant.design/)          | 优秀         | CSS-in-JS + [Design Token](https://ant.design/docs/react/customize-theme)，可选 CSS 变量 | 企业级中后台、管理系统       |
+| [Chakra UI](https://chakra-ui.com/)              | [React](https://react.dev/)     | 可组合/无障碍优先                          | 核心设计原则 | Style Props、主题系统                             | 通用 Web 应用、设计系统      |
+| [Vuetify](https://vuetifyjs.com/)                | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/)/CSS 变量、预设主题 | 通用 Web 应用                 |
+| [Element Plus](https://element-plus.org/)        | [Vue](https://vuejs.org/)       | Element Design                             | 良好         | [BEM](https://getbem.com/) 命名的 CSS、Sass 变量  | 企业级中后台、管理系统       |
+| [Quasar](https://quasar.dev/)                    | [Vue](https://vuejs.org/)       | [Material Design](https://m3.material.io/) | 良好         | [Sass](https://sass-lang.com/)/CSS 变量、主题定制 | 多端（Web、Mobile、Desktop） |
+| [Angular Material](https://material.angular.dev/) | [Angular](https://angular.dev/) | [Material Design](https://m3.material.io/) | 优秀         | [Sass](https://sass-lang.com/) 变量、主题定制     | 通用 Web 应用（Google 官方维护） |
+| [PrimeNG](https://primeng.org/)                  | [Angular](https://angular.dev/) | 设计无关                                   | 优秀         | Theme Designer 主题编辑器、CSS 变量               | 企业级应用、复杂界面         |
+| [NG-ZORRO](https://ng.ant.design/)               | [Angular](https://angular.dev/) | [Ant Design](https://ant.design/)          | 优秀         | CSS 变量、主题定制                                | 企业级中后台、管理系统       |
 
 表格中的工具还可以帮助理解几种典型取舍：
 
-- MUI 与 Angular Material 说明“采用一套完整设计系统”意味着什么。
-- Ant Design、Element Plus 与 NG-ZORRO 说明企业中后台为何重视表单、数据和统一交互。
-- Chakra UI 说明可组合 API 与主题系统如何给品牌定制留出空间。
-- Quasar 说明选型范围可以同时包含组件和多端交付方式。
-- PrimeNG 说明复杂数据组件的广度本身也可能成为主要决策因素。
+- 从 MUI 与 Angular Material 可以看到“采用一套完整设计系统”意味着什么。
+- 从 Ant Design、Element Plus 与 NG-ZORRO 可以看到企业中后台为何重视表单、数据和统一交互。
+- 从 Chakra UI 可以看到可组合 API 与主题系统如何给品牌定制留出空间。
+- Quasar 的例子表明，选型范围可以同时包含组件和多端交付方式。
+- PrimeNG 的例子表明，复杂数据组件的广度本身也可能成为主要决策因素。
 
 ## **IV.3.5 用小型试验做最终选择**
 
@@ -148,8 +148,8 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 不同场景可以有不同优先级：
 
 - **快速原型或小型项目**：MUI、Vuetify、Element Plus 等现成视觉系统可以缩短起步时间。
-- **企业级中后台**：Ant Design、NG-ZORRO、PrimeNG 等能用复杂表单和数据组件解释自身价值。
-- **高度定制的品牌产品**：应重点验证主题上限；如果持续与默认样式对抗，转向无头组件或源码所有权可能更合适。
+- **企业级中后台**：Ant Design、NG-ZORRO、PrimeNG 等的价值主要体现在复杂表单和数据组件上。
+- **高度定制的品牌产品**：应重点验证主题上限；如果持续与默认样式对抗，改用无头组件或自持组件源码的方案可能更合适。
 - **数据驱动应用或仪表盘**：先分清通用 UI 与图表库的责任，再查看 [数据可视化组件库](/guide/frameworks/data-visualization-libraries)。
 - **多端部署**：Quasar 这类应用框架值得进入候选，但要同时评估平台插件、发布流程和团队经验。
 
@@ -157,7 +157,7 @@ MUI 对应 Material Design，Ant Design 面向企业级产品语言，Fluent UI 
 
 ## **IV.3.6 把组件库边界写进业务代码**
 
-组件库负责视觉和交互基础，业务组件负责语义、数据和状态组合。下面的结构让升级组件库时，业务 API 保持稳定：
+组件库负责视觉和交互基础，业务组件负责语义、数据和状态组合。按下面的结构封装后，升级组件库时业务 API 可以保持不变：
 
 ```tsx
 type ProductActionProps = {
@@ -174,4 +174,4 @@ export function ProductAction({ disabled = false, onAdd }: ProductActionProps) {
 }
 ```
 
-实践时为这个业务组件补充 loading、错误、禁用、键盘操作和埋点状态，再比较底层 UI 库提供的 Button、Tooltip、Form 与团队设计 token 的映射关系。
+实践时为这个业务组件补充加载、错误、禁用、键盘操作和埋点状态，再比较底层 UI 库提供的 Button、Tooltip、Form 与团队设计 token 的映射关系。

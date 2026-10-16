@@ -14,12 +14,12 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 
 1. **内容层级是什么？** 哪些是页面标题、主要操作、辅助信息和重复列表？这决定 HTML 语义和组件边界。
 2. **布局约束是什么？** 元素是固定宽度、随容器伸缩，还是在断点处换行？这决定 Flexbox、Grid、流式布局和容器查询的选择。
-3. **哪些规则可以复用？** 颜色、字号、间距、圆角、组件和图标是否来自已有系统？这决定 token 与组件的复用方式，并减少页面内的重复定义。
+3. **哪些规则可以复用？** 颜色、字号、间距、圆角、组件和图标是否来自已有系统？这决定设计 token（把颜色、间距等设计决策命名为可复用的变量）与组件的复用方式，并减少页面内的重复定义。
 4. **界面会怎样变化？** 输入、等待、失败、空数据、权限不足、移动端和键盘操作时会发生什么？这决定状态、路由、动画和无障碍实现。
 
 [Figma Dev Mode](https://help.figma.com/hc/en-us/articles/15023124644247-Guide-to-Dev-Mode) 可以查看尺寸、间距、变量、组件属性、版本差异和交付状态；Sketch 的 Inspect 能提供类似的检查入口。开发者以这些约束为依据，把自动生成的 CSS 当作参考。
 
-例如，设计稿中一张宽 320px 的卡片，可能表示“桌面稿里的当前结果”，也可能表示“组件最大宽度为 320px”。不先确认约束就照抄像素，到另一种屏幕上就会失效。
+例如，设计稿中一张宽 320px 的卡片，可能只是这张桌面稿画布下的实际宽度，也可能表示“组件最大宽度为 320px”。不先确认约束就照抄像素，换一种屏幕尺寸就会出问题。
 
 ## **III.10.2 把设计语言映射成代码语言**
 
@@ -28,19 +28,19 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 | 设计中的信息 | 代码中的表达 | 工具示例说明 | 实现时要确认 |
 | :--- | :--- | :--- | :--- |
 | **Auto Layout、对齐与间距** | Flexbox、Grid、gap、padding、换行和尺寸约束 | Figma Auto Layout 或 Sketch Smart Layout 显示元素之间的关系 | 是固定结果还是响应式规则；内容变长后是否仍成立 |
-| **Variables、Styles 与 Modes** | CSS 自定义属性、主题对象、Tailwind theme、Style Dictionary token | [Figma Variables](https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma) 可复用颜色、尺寸等值，并用 mode 表达主题或环境差异 | token 的语义名称、作用域、别名和默认模式 |
+| **Variables、Styles 与 Modes** | CSS 自定义属性、主题对象、Tailwind theme、Style Dictionary 管理的设计 token | [Figma Variables](https://help.figma.com/hc/en-us/articles/15339657135383-Guide-to-variables-in-Figma) 可复用颜色、尺寸等值，并用 mode 表达主题或环境差异 | 设计 token 的语义名称、作用域、别名和默认模式 |
 | **Components 与 Variants** | 组件、props、slots 和组合关系 | Button 的 size、tone、disabled、loading 等设计变体可以映射为组件 API | 哪些组合有效，哪些状态互斥，是否已有代码组件 |
 | **Prototype 与交互连线** | 路由、事件、状态机、焦点管理和动画 | Figma Present 或 Sketch Prototype 用来说明流程和状态转换 | 失败、返回、重复操作、减少动态效果等边界是否定义 |
 | **设计组件与真实实现的关联** | Story、文档、源码路径和版本 | [Figma Code Connect](https://developers.figma.com/docs/code-connect/) 可以把设计组件映射到代码库中的真实组件，并在 Dev Mode 展示更贴近项目的用法 | 映射是否指向当前版本，示例是否符合团队约定 |
 
-这张表提醒开发者：每读到一个视觉值，都要判断它属于哪一层；团队可按自身流程选用工具。
+这张表提醒开发者：每读到一个视觉值，都要判断它属于哪一层。表中的工具只是示例，团队可按自身流程选用。
 
 - 只在当前页面出现的一次性偏移，可以是局部样式。
-- 多处重复的品牌色和间距，应优先成为 token。
+- 多处重复的品牌色和间距，应优先成为设计 token。
 - 反复出现且有状态变化的结构，应优先成为组件。
 - 完整组件规格同时包含视觉效果和交互边界。
 
-设计稿中的 Variables 和组件变体有助于发现规律，但 token 命名、组件 API 和兼容策略最终仍要在代码侧确定。
+设计稿中的 Variables 和组件变体有助于发现规律，但设计 token 命名、组件 API 和兼容策略最终仍要在代码侧确定。
 
 ## **III.10.3 用一个表单检查完整状态**
 
@@ -88,11 +88,11 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
 
 ## **III.10.6 设计系统工程化：Design Tokens 标准与自动化编译管线**
 
-设计系统在工程落地的关键在于将设计常量（颜色、字号、间距、阴影）转化为单一事实来源（Single Source of Truth）的自动化代码管线：
+设计系统工程落地的关键，是把设计常量（颜色、字号、间距、阴影）集中维护在单一事实来源（Single Source of Truth）中，再由自动化管线生成各端代码：
 
-1. **[W3C DTCG (Design Tokens Community Group)](https://www.designtokens.org/TR/2025.10/format/) 格式规范**：
-   - 该格式由 W3C 设计令牌社区组发布，2025 年 10 月推出首个稳定版（2025.10）。它属于社区组报告，并非 W3C 正式标准。
-   - 采用标准 JSON 格式定义设计 Token，彻底消除 Figma Variables 与代码硬编码之间的语义鸿沟：
+1. **[W3C DTCG（Design Tokens Community Group）](https://www.designtokens.org/TR/2025.10/format/) 格式规范**：
+   - 该格式由 W3C 设计 token 社区组发布，2025 年 10 月推出首个稳定版（2025.10）。它属于社区组报告，并非 W3C 正式标准。
+   - 用标准 JSON 格式定义设计 token，让 Figma Variables 与代码共用同一套语义命名，减少两侧各自硬编码造成的不一致：
    ```json
    {
      "color": {
@@ -106,10 +106,10 @@ title: "III. 基本开发环境和工具 / III.10 设计协作能力：从设计
      }
    }
    ```
-2. **自动化 Token 编译与分发管线 ([Style Dictionary](https://styledictionary.com/))**：
-   - 统一由 CI 监听 Token 仓库变更，通过 Style Dictionary 自动化编译输出为多端产物：
-     - **Web 产物**：CSS 自定义属性 (`:root { --color-brand-primary: #2563eb; }`)、Tailwind CSS 主题配置文件、TypeScript 强类型常量对象；
+2. **设计 token 的自动化编译与分发管线（[Style Dictionary](https://styledictionary.com/)）**：
+   - 由 CI 监听设计 token 仓库的变更，用 Style Dictionary 自动编译为多端产物：
+     - **Web 产物**：CSS 自定义属性（`:root { --color-brand-primary: #2563eb; }`）、Tailwind CSS 主题配置文件、TypeScript 强类型常量对象；
      - **移动端产物**：iOS Swift 结构体 / Android XML 资源。
 3. **色彩对比度检查：WCAG 2.2 基线与 APCA 补充参考**：
-   - [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 的对比度要求（正文 4.5:1、大字号 3:1）仍是当前无障碍合规的基线，Token 中的前景/背景组合应先满足它。
-   - [APCA (Accessible Perceptual Contrast Algorithm)](https://github.com/Myndex/SAPC-APCA) 是候选的感知对比度算法，会考虑字号、字重和前景/背景极性（如暗色模式下的浅字深底），用 Lc 值表示明度对比。它尚未成为正式标准，可在暗色主题、细字号等场景作为补充参考，不能替代 WCAG 2.2 检查。
+   - [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 的对比度要求（正文 4.5:1、大字号 3:1）仍是当前无障碍合规的基线，设计 token 中的前景/背景组合应先满足它。
+   - [APCA（Accessible Perceptual Contrast Algorithm）](https://github.com/Myndex/SAPC-APCA) 是候选的感知对比度算法，会考虑字号、字重和前景/背景极性（如暗色模式下的浅字深底），用 Lc 值（Lightness Contrast，明度对比值）表示明度对比。它尚未成为正式标准，可在暗色主题、细字号等场景作为补充参考，不能替代 WCAG 2.2 检查。
