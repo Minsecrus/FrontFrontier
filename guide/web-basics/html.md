@@ -6,7 +6,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.2 HTML：构建网页结构"
 
 HTML（Hypertext Markup Language，超文本标记语言）负责定义网页的文档结构与内容语义，如标题、段落、链接、图像、列表和表单控件。大多数 HTML 元素由起始标签、内容和结束标签组成；`<img>`、`<input>`、`<meta>`、`<br>` 等空元素（void element）只有起始标签，不包含内容和结束标签。标准文档由承载元数据（标题、样式链接、图标、字符集等）的 `<head>` 与承载可见内容的 `<body>` 组成，元素还可通过属性声明附加行为与语义信息。
 
-## **II.2.1 文档结构与元数据**
+## II.2.1 文档结构与元数据
 
 完整的 HTML 文档以 `<!doctype html>` 声明标准模式，随后是根元素 `<html>`、`<head>` 和 `<body>`。`<head>` 中的元数据虽然不直接渲染在页面正文中，却直接决定浏览器解析方式、搜索引擎索引、社交卡片预览和移动端视口行为：
 
@@ -15,11 +15,11 @@ HTML（Hypertext Markup Language，超文本标记语言）负责定义网页的
 - **标题与描述**：`<title>` 和 `<meta name="description">` 决定浏览器标签页标题、搜索结果摘要以及社交分享预览。
 - **资源关系**：`<link rel="stylesheet">`、`<link rel="icon">` 以及 `preload`、`preconnect` 等资源提示，用于声明样式依赖、站点图标与关键资源的加载时机。
 
-## **II.2.2 语义化 HTML：赋予意义，改善无障碍体验**（*）
+## II.2.2 语义化 HTML：赋予意义，改善无障碍体验（*）
 
 语义化 HTML 指根据内容的实际角色选择 `<header>`、`<footer>`、`<nav>`、`<article>`、`<section>`、`<main>`、`<aside>` 等具有明确语义的标签，而非一律使用无语义的 `<div>` 和 `<span>` 堆砌视觉样式。语义标签能直接向屏幕阅读器等辅助技术暴露页面地标（Landmark）以便快速跳转，帮助搜索引擎识别正文与导航层级，并供浏览器阅读模式提取核心内容。
 
-## **II.2.3 链接、媒体与表格**
+## II.2.3 链接、媒体与表格
 
 HTML 将文本与媒体组织成可导航、可引用、可感知的信息结构，各类元素在使用时有明确的语义边界：
 
@@ -28,7 +28,7 @@ HTML 将文本与媒体组织成可导航、可引用、可感知的信息结构
 - **音视频**：`<audio>` 和 `<video>` 应提供 `controls` 控制条，并按需配置 `<track>` 字幕、替代文本或下载入口，保证用户在静音或听障场景下仍能获取信息。
 - **表格**：`<table>` 专用于展示二维结构化数据，页面布局应交由 CSS 处理。数据表格应配合 `<caption>`、`<thead>`、`<tbody>`、`<th>` 及 `scope` 属性，显式声明表头与数据单元格的行列对应关系。
 
-## **II.2.4 表单：用户输入和交互**
+## II.2.4 表单：用户输入和交互
 
 HTML 表单（`<form>`）配合 `<input>`、`<button>` 等控件收集用户输入，将文档结构、客户端脚本校验与服务端数据处理连接起来。完整的表单实现涵盖输入语义、校验规则、错误反馈与提交行为：
 
@@ -71,7 +71,17 @@ HTML 表单（`<form>`）配合 `<input>`、`<button>` 等控件收集用户输�
 
 :::
 
-## **II.2.5 调试 HTML**
+## II.2.5 原生声明式交互与可定制控件
+
+现代 HTML 持续吸收常见交互组件的原生语义，使基础显隐切换、提示浮层和表单选择器能够在文档层直接表达：
+
+- [Invoker Commands（`commandfor` 与 `command`）](https://developer.mozilla.org/docs/Web/API/Invoker_Commands_API)：通过在 `<button>` 上声明目标元素的 `id` 与内置动作（如 `command="show-modal"`、`command="close"` 或 `command="toggle-popover"`），即可直接把按钮与 `<dialog>`、Popover 等原生容器绑定在一起，保持语义清晰与触发关系可追溯。
+- Interest Invokers（`interestfor`）：让按钮或链接在用户悬停、键盘聚焦或长按时声明式唤起关联的信息浮层，并可配合 CSS 的 `interest-delay` 调整触发延迟，适合构建工具提示与预览卡片。
+- [可定制 `<select>`（Customizable Select）](https://developer.mozilla.org/docs/Learn/Forms/Customizable_select_elements)：结合 CSS 的 `appearance: base-select` 与 `::picker(select)`、`::checkmark` 等标准化伪元素，开发者可以在 `<option>` 内放置图标、副标题等富内容并定制下拉面板布局，同时继续复用原生 `<select>` 的键盘操作、表单提交与移动端控件支持。
+
+这些交互增强能力在各浏览器引擎中的落地节奏不同，适合作为渐进增强路径引入，并通过特性检测确保目标用户在基础交互与可读性上拥有稳定体验。
+
+## II.2.6 调试 HTML
 
 HTML 解析器具有极强的容错性，遇到未闭合或错误嵌套的标签时会尝试自动修复并继续渲染。因此“页面看起来正常”不代表 DOM 结构正确，排查时可通过以下步骤验证：
 

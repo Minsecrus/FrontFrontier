@@ -12,7 +12,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 
 具体浏览器的进程和线程实现会持续演进，本章关注各浏览器共同呈现的 Web 平台行为。
 
-## **II.7.1 浏览器中的主要工作区域**
+## II.7.1 浏览器中的主要工作区域
 
 现代浏览器会把不同职责分配给多个进程或线程，以提升隔离性、响应能力和安全性。
 
@@ -26,7 +26,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 
 页面的大部分 DOM、样式和事件回调都由渲染器主线程管理。长任务持续占用主线程时，输入事件、样式计算和下一帧画面都会等待。
 
-## **II.7.2 从响应字节到第一帧**
+## II.7.2 从响应字节到第一帧
 
 一次普通页面导航通常经历以下过程：
 
@@ -48,7 +48,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.7 浏览器运行时与渲染�
 
 诊断首屏时，可以把 Network 中的请求瀑布与 Performance 中的主线程轨迹对齐。响应到达很早、画面出现很晚，通常需要继续查看脚本执行、样式计算、布局和绘制记录。
 
-## **II.7.3 事件循环与渲染时机**
+## II.7.3 事件循环与渲染时机
 
 渲染器主线程通过事件循环安排工作。一次简化的循环包含：
 
@@ -81,7 +81,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 
 `requestAnimationFrame` 适合安排下一帧之前的视觉更新。网络请求、复杂数据聚合和大规模解析各有调度方式，其中计算密集型工作可以进一步交给 Worker。
 
-## **II.7.4 样式、布局、绘制与合成**
+## II.7.4 样式、布局、绘制与合成
 
 [渲染性能资料](https://web.dev/articles/rendering-performance) 常用 JavaScript → Style → Layout → Paint → Composite 描述像素管线。一次视觉变化可能经过全部阶段，也可能复用已有布局或绘制结果。
 
@@ -103,7 +103,7 @@ function updateTabIndicator(tab, tabList, indicator) {
 - 动画是否持续触发布局或大面积绘制；
 - `contain`、`content-visibility` 等隔离能力是否适合长列表或独立区域。
 
-## **II.7.5 主线程响应与 Worker**
+## II.7.5 主线程响应与 Worker
 
 浏览器通常把持续超过 50 毫秒的主线程任务标记为长任务。长任务会推迟输入事件处理和画面更新，并可能拉高 INP（Interaction to Next Paint，衡量交互响应速度的 Core Web Vitals 指标）。优化顺序通常是：
 
@@ -158,16 +158,16 @@ ArrayBuffer 的所有权已转移给 Worker，页面线程中的原缓冲区随�
 
 :::
 
-## **II.7.6 页面生命周期与返回导航**
+## II.7.6 页面生命周期与返回导航
 
 页面会在 active、hidden、frozen、discarded 等状态之间变化。后台标签页的定时器可能被节流，系统也可能冻结或丢弃页面以节省 CPU、内存和电量。
 
 常用事件承担不同职责：
 
-- **`visibilitychange`**：页面进入隐藏状态时保存草稿、暂停视觉更新或记录会话状态。
-- **`pagehide`**：页面离开当前会话历史位置时完成轻量清理。
-- **`pageshow`**：页面首次显示或从 bfcache（往返缓存，back/forward cache）恢复时同步可能过期的数据。
-- **`beforeunload`**：仅在确实存在未保存输入时注册，用于请求用户确认离开。
+- `visibilitychange`：页面进入隐藏状态时保存草稿、暂停视觉更新或记录会话状态。
+- `pagehide`：页面离开当前会话历史位置时完成轻量清理。
+- `pageshow`：页面首次显示或从 bfcache（往返缓存，back/forward cache）恢复时同步可能过期的数据。
+- `beforeunload`：仅在确实存在未保存输入时注册，用于请求用户确认离开。
 
 [Page Lifecycle API](https://developer.chrome.com/docs/web-platform/page-lifecycle-api) 把这些状态放进同一条生命周期中。bfcache 会保存整个页面的运行状态，让前进、后退导航可以快速恢复；HTTP 缓存负责复用网络响应，两者解决不同层次的问题。
 
@@ -187,7 +187,7 @@ window.addEventListener("pageshow", (event) => {
 
 页面恢复时，内存中的 DOM 和 JavaScript 状态仍然存在，网络数据的有效期则由应用自行确认。
 
-## **II.7.7 内存与资源所有权**
+## II.7.7 内存与资源所有权
 
 JavaScript 垃圾回收器会释放已失去引用的对象。前端内存问题通常来自仍然可达、但业务已经结束的对象：
 
@@ -210,7 +210,7 @@ JavaScript 垃圾回收器会释放已失去引用的对象。前端内存问题
 
 DevTools Memory 可以比较 Heap Snapshot、观察 Allocation timeline，并查看对象的保留路径。可靠的检测方式是重复执行同一用户流程，主动触发垃圾回收后比较对象数量和内存基线。
 
-## **II.7.8 从现象到证据的诊断顺序**
+## II.7.8 从现象到证据的诊断顺序
 
 面对线上或本地的性能与异常现象时，可按以下映射表直接采集首批诊断证据：
 

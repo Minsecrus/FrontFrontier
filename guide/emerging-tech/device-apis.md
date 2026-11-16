@@ -6,21 +6,21 @@ title: "VI. 新兴技术和专业领域 / VI.10 设备集成：Web Bluetooth、W
 
 在安全上下文（HTTPS）与用户显式授权的前提下，现代浏览器支持跳过额外驱动或本地守护进程，直接与设备内置传感器及蓝牙、USB、HID 外设通信。Web 端的硬件交互主要由以下四组 API 构成：
 
-- [**Generic Sensor API**](https://developer.mozilla.org/en-US/docs/Web/API/Generic_Sensor_API)：以统一的事件与采样频率接口向网页暴露加速度计、陀螺仪、环境光、磁力计等板载传感器。
-- [**Web Bluetooth API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API)：扫描、连接低功耗蓝牙（BLE）外设并读写其 GATT 服务与特性。
-- [**WebUSB API**](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API)：直接访问非标准或厂商自定义的 USB 设备接口，免去用户为专用硬件单独安装系统驱动或桌面客户端的步骤。
-- [**WebHID API**](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API)：与游戏手柄、宏键盘、旋钮控制台等人机接口设备（HID）双向收发输入输出报告（Reports）。
+- [Generic Sensor API](https://developer.mozilla.org/en-US/docs/Web/API/Generic_Sensor_API)：以统一的事件与采样频率接口向网页暴露加速度计、陀螺仪、环境光、磁力计等板载传感器。
+- [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API)：扫描、连接低功耗蓝牙（BLE）外设并读写其 GATT 服务与特性。
+- [WebUSB API](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API)：直接访问非标准或厂商自定义的 USB 设备接口，免去用户为专用硬件单独安装系统驱动或桌面客户端的步骤。
+- [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API)：与游戏手柄、宏键盘、旋钮控制台等人机接口设备（HID）双向收发输入输出报告（Reports）。
 
 这四类 API 均要求运行在安全上下文（HTTPS）中，且外设连接必须由用户手势触发授权。下表对比了它们面向的硬件类型与当前浏览器兼容边界：
 
 | API 名称                                                                                      | 目的（设备类型）               | 关键功能（示例）                      | 安全要求（[HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限） | 浏览器支持（实验性/基线） |
 | :-------------------------------------------------------------------------------------------- | :----------------------------- | :------------------------------------ | :------------------------------------------------------------------------------------- | :------------------------ |
-| [**Generic Sensor API**](https://developer.mozilla.org/en-US/docs/Web/API/Generic_Sensor_API) | 设备传感器（加速度计、陀螺仪） | 读取传感器数据，事件监听              | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 有限（仅 Chromium 系）    |
-| [**Web Bluetooth API**](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API)   | 低功耗蓝牙设备                 | 连接 BLE 设备，读写 GATT 特性         | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
-| [**WebUSB API**](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API)                | 非标准 USB 设备                | 连接 USB 设备，读写数据，简化驱动安装 | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
-| [**WebHID API**](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API)                 | 人机接口设备（游戏手柄）       | 连接 HID 设备，发送/接收报告          | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
+| [Generic Sensor API](https://developer.mozilla.org/en-US/docs/Web/API/Generic_Sensor_API) | 设备传感器（加速度计、陀螺仪） | 读取传感器数据，事件监听              | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 有限（仅 Chromium 系）    |
+| [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API)   | 低功耗蓝牙设备                 | 连接 BLE 设备，读写 GATT 特性         | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
+| [WebUSB API](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API)                | 非标准 USB 设备                | 连接 USB 设备，读写数据，简化驱动安装 | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
+| [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API)                 | 人机接口设备（游戏手柄）       | 连接 HID 设备，发送/接收报告          | [HTTPS](https://developer.mozilla.org/en-US/docs/Web/HTTP/HTTPS)，用户权限             | 实验性                    |
 
-## **VI.10.1 Web Bluetooth API**
+## VI.10.1 Web Bluetooth API
 
 [Web Bluetooth API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API) 专门面向低功耗蓝牙（BLE，蓝牙 4.0 及以上）外设，不支持经典蓝牙（Bluetooth Classic）音频或串口传输：
 
@@ -29,7 +29,7 @@ title: "VI. 新兴技术和专业领域 / VI.10 设备集成：Web Bluetooth、W
 - **兼容范围**：目前仍属实验性能力，Chrome、Edge 和 Opera 在 Android、macOS、Windows 上默认启用（Linux 桌面端常需手动开启标志位）；Firefox 与 Safari 均不支持，上线前需核对 [MDN 兼容性表](https://developer.mozilla.org/en-US/docs/Web/API/Web_Bluetooth_API#browser_compatibility)。
 - **Electron 扩展控制**：在 Electron 中可通过 `webContents` 的 `select-bluetooth-device` 事件接管设备配对列表，并配合 `ses.setDevicePermissionHandler` 定制默认授权策略。
 
-## **VI.10.2 WebUSB API**
+## VI.10.2 WebUSB API
 
 [WebUSB API](https://developer.mozilla.org/en-US/docs/Web/API/WebUSB_API) 面向硬件开发板、科学仪器、工业控制器、热敏打印机等非标准 USB 设备，常用于在线固件烧录、硬件配置与串口调试：
 
@@ -37,7 +37,7 @@ title: "VI. 新兴技术和专业领域 / VI.10 设备集成：Web Bluetooth、W
 - **兼容范围**：仅 Chrome（自 61 版起）、Edge 和 Opera 的桌面端与 Android 端默认支持；iOS、Firefox 与 Safari 均不支持。
 - **Electron 扩展控制**：Electron 提供 `select-usb-device`、`usb-device-added`、`usb-device-removed` 与 `usb-device-revoked` 事件来管理设备热插拔与权限撤销，并允许通过 `ses.setUSBProtectedClassesHandler` 调整受保护 USB 设备类的拦截策略。
 
-## **VI.10.3 WebHID API**
+## VI.10.3 WebHID API
 
 [WebHID API](https://developer.mozilla.org/en-US/docs/Web/API/WebHID_API) 处于底层 WebUSB/Web Bluetooth 与高层输入事件（`KeyboardEvent`、Gamepad API）之间，专为采用 HID 协议但需要双向自定义报文的外设设计：
 
@@ -47,7 +47,7 @@ title: "VI. 新兴技术和专业领域 / VI.10 设备集成：Web Bluetooth、W
 
 综合来看，Web Bluetooth、WebUSB 与 WebHID 均属于**仅限 Chromium 系的实验性硬件接口**：在公网 Web 应用中应先做运行时能力检测并明确提示兼容的浏览器与操作系统；若业务强依赖静默连接、受保护设备类访问或跨平台一致的硬件管控，则更适合封装进 Electron 等桌面容器中交付。
 
-## **VI.10.4 Web Bluetooth 的授权与断开处理**
+## VI.10.4 Web Bluetooth 的授权与断开处理
 
 设备选择必须由用户手势触发，连接状态和异常状态也应显式反馈：
 

@@ -4,9 +4,9 @@ title: "VI. 新兴技术和专业领域 / VI.11 本地优先架构与实时协�
 
 # VI.11 本地优先架构与实时协同计算（Local-First & CRDTs）
 
-传统 Web 应用以云端数据库为唯一数据源：每次写操作都要等待网络请求往返（RTT）后才能确认状态，一旦离线或网络抖动，界面交互就会停滞。**本地优先（Local-First）** 架构将主数据源（SSOT，Single Source of Truth，即应用状态以哪份数据为准）移到客户端本地存储：**读写先在本地数据库中即时完成，随后在后台向云端增量同步，多设备与多人的并发修改则交由 CRDT 等算法自动合并**，从而兼顾零网络延迟的交互响应、离线可用性与实时协同。
+传统 Web 应用以云端数据库为唯一数据源：每次写操作都要等待网络请求往返（RTT）后才能确认状态，一旦离线或网络抖动，界面交互就会停滞。本地优先（Local-First） 架构将主数据源（SSOT，Single Source of Truth，即应用状态以哪份数据为准）移到客户端本地存储：读写先在本地数据库中即时完成，随后在后台向云端增量同步，多设备与多人的并发修改则交由 CRDT 等算法自动合并，从而兼顾零网络延迟的交互响应、离线可用性与实时协同。
 
-## **VI.11.1 本地优先的七项理想目标**
+## VI.11.1 本地优先的七项理想目标
 
 Martin Kleppmann 等人在 Ink & Switch 发表的 [*Local-first software*](https://www.inkandswitch.com/local-first/) 一文中，为本地优先软件提出了七项衡量标准：
 
@@ -18,22 +18,24 @@ Martin Kleppmann 等人在 Ink & Switch 发表的 [*Local-first software*](https
 6. **默认安全与隐私**：支持在客户端完成端到端加密（E2EE），云端同步节点只转发密文增量。
 7. **用户保有最终控制权**：本地数据可按开放格式自由导出、备份或迁移到其他工具。
 
-## **VI.11.2 冲突解决核心算法：CRDTs（无冲突复制数据类型）**
+## VI.11.2 冲突解决核心算法：CRDTs（无冲突复制数据类型）
 
-在没有中心服务器加锁仲裁的多端离线并发编辑场景下，简单的“最后写入获胜（Last-Write-Wins，LWW）”会让后到达的快照直接覆盖他人的并发修改。现代协同系统普遍采用 **[CRDTs (Conflict-free Replicated Data Types)](https://crdt.tech/)**：
+在没有中心服务器加锁仲裁的多端离线并发编辑场景下，简单的“最后写入获胜（Last-Write-Wins，LWW）”会让后到达的快照直接覆盖他人的并发修改。现代协同系统普遍采用 [CRDTs (Conflict-free Replicated Data Types)](https://crdt.tech/)：
 
-- **强最终一致性（Strong Eventual Consistency）**：各客户端对数据结构的操作满足交换律、结合律与幂等性。只要任意两个节点最终收到相同的变更操作集合（无论网络到达顺序如何），各自在本地独立合并出的最终文档状态**必定严格一致**，无需中心服务器串行仲裁。
+- **强最终一致性（Strong Eventual Consistency）**：各客户端对数据结构的操作满足交换律、结合律与幂等性。只要任意两个节点最终收到相同的变更操作集合（无论网络到达顺序如何），各自在本地独立合并出的最终文档状态必定严格一致，无需中心服务器串行仲裁。
 - **主流 CRDT 开源生态**：
-  - [**Yjs**](https://yjs.dev/)：JavaScript 生态中应用最广的基于状态的序列 CRDT 实现，内存与合并性能优异，提供现成的富文本编辑器绑定（ProseMirror、Quill、Slate、Monaco Editor）以及可插拔的传输与存储 Provider（WebSocket、WebRTC、IndexedDB）。
-  - [**Automerge**](https://automerge.org/)：面向 JSON 式嵌套文档树的 CRDT 实现，底层核心已用 Rust 重写并编译为 Wasm 以压缩历史体积与提升合并吞吐。
-  - [**Loro**](https://loro.dev/)：基于 Rust 与 Fugue 算法的现代 CRDT 库，针对富文本样式合并、树形节点移动、低开销历史版本回溯（Time Travel）做了专门优化。
+  - [Yjs](https://yjs.dev/)：JavaScript 生态中应用最广的基于状态的序列 CRDT 实现，内存与合并性能优异，提供现成的富文本编辑器绑定（ProseMirror、Quill、Slate、Monaco Editor）以及可插拔的传输与存储 Provider（WebSocket、WebRTC、IndexedDB）。
+  - [Automerge](https://automerge.org/)：面向 JSON 式嵌套文档树的 CRDT 实现，底层核心已用 Rust 重写并编译为 Wasm 以压缩历史体积与提升合并吞吐。
+  - [Loro](https://loro.dev/)：基于 Rust 与 Fugue 算法的现代 CRDT 库，针对富文本样式合并、树形节点移动、低开销历史版本回溯（Time Travel）做了专门优化。
 
-## **VI.11.3 协同状态感知：Awareness & Presence**
+## VI.11.3 协同状态感知：Awareness & Presence
 
 除了需要持久化落盘并严格合并的文档内容，实时协同界面还需要通过轻量广播通道同步只在当前会话存活的临时状态（Ephemeral State）：
 
 - **协同光标（Multiplayer Cursors）**：实时广播并渲染其他协作者当前的文本选区、画布视口框或鼠标坐标。
 - **在线状态（Presence）**：展示当前房间内的在线成员列表、头像以及各自聚焦的模块或字段。
+
+除专用的 CRDT 文档模型外，面向常规结构化业务数据的前端应用也可以采用 [TanStack DB](https://tanstack.com/db) 等客户端响应式数据库层：把接口数据映射为标准化本地集合，在客户端执行高速增量关联查询与即时乐观更新，再按需对接远端同步协议，从而在传统缓存与完整本地优先系统之间平滑演进（状态边界划分参见[服务器状态与客户端状态](/guide/frameworks/server-client-state)）。
 
 下表从主数据源位置、延迟感知、离线能力与冲突解决机制四个维度，对比了本地优先架构与传统前端状态模型：
 

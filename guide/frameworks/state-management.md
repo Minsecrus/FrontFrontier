@@ -12,17 +12,17 @@ title: "IV. 前端框架和库：构建现代 UI / IV.8 状态管理解决方案
 - **客户端共享状态**：主题配置、用户界面偏好、跨组件协同的业务草稿。
 - **服务器状态**：远端接口响应、缓存副本、后台重新验证与失效同步。
 
-许多前端项目的状态层之所以失控，根源在于把服务器状态与客户端状态塞进了同一个全局 Store。像 TanStack Query、SWR 这类工具专为管理服务器状态生命周期而生；本章讨论的状态管理库，则聚焦于**客户端共享状态**的建模与更新分发：
+许多前端项目的状态层之所以失控，根源在于把服务器状态与客户端状态塞进了同一个全局 Store。像 TanStack Query、SWR 这类工具专为管理服务器状态生命周期而生；本章讨论的状态管理库，则聚焦于客户端共享状态的建模与更新分发：
 
-- **[Redux](https://redux.js.org/)（[Redux Toolkit](https://redux-toolkit.js.org/)）**：遵循严格的单向数据流与集中式单一状态树（Single Store）。现代工程统一采用官方推荐的 Redux Toolkit（RTK）编写 slice，大幅消除了早期的模板代码，适合需要强架构约束与时间旅行调试的大型团队。
-- [**Zustand**](https://zustand-demo.pmnd.rs/)：基于发布-订阅模型的轻量级单一 Store 方案。无需在组件树外层包裹 Context Provider，通过 selector 按需订阅状态切片即可避免多余重渲染，兼顾了极简 API 与运行性能。
-- [**Jotai**](https://jotai.org/)：采用原子化（Atom，自下而上）设计。状态由细粒度的独立原子与派生原子组合而成，更新沿着原子依赖图精确触发重渲染，适合状态间派生关系密集的 React 组件树。
-- [**Pinia**](https://pinia.vuejs.org/)：Vue 官方默认的状态管理库。移除繁琐的 `mutations` 概念后，直接通过模块化 Store 提供完整的 TypeScript 类型推导与组合式 API 体验，是 Vue 3 新项目的标准起点。
-- [**Vuex**](https://vuex.vuejs.org/)：Vue 早期版本的官方集中式状态管理方案。在当前工程实践中主要作为维护存量 Vue 2 或早期 Vue 3 项目时的储备知识。
+- [Redux](https://redux.js.org/)（[Redux Toolkit](https://redux-toolkit.js.org/)）：遵循严格的单向数据流与集中式单一状态树（Single Store）。现代工程统一采用官方推荐的 Redux Toolkit（RTK）编写 slice，大幅消除了早期的模板代码，适合需要强架构约束与时间旅行调试的大型团队。
+- [Zustand](https://zustand-demo.pmnd.rs/)：基于发布-订阅模型的轻量级单一 Store 方案。无需在组件树外层包裹 Context Provider，通过 selector 按需订阅状态切片即可避免多余重渲染，兼顾了极简 API 与运行性能。
+- [Jotai](https://jotai.org/)：采用原子化（Atom，自下而上）设计。状态由细粒度的独立原子与派生原子组合而成，更新沿着原子依赖图精确触发重渲染，适合状态间派生关系密集的 React 组件树。
+- [Pinia](https://pinia.vuejs.org/)：Vue 官方默认的状态管理库。移除繁琐的 `mutations` 概念后，直接通过模块化 Store 提供完整的 TypeScript 类型推导与组合式 API 体验，是 Vue 3 新项目的标准起点。
+- [Vuex](https://vuex.vuejs.org/)：Vue 早期版本的官方集中式状态管理方案。在当前工程实践中主要作为维护存量 Vue 2 或早期 Vue 3 项目时的储备知识。
 
-如果在存量代码或早期技术文章中遇到 [**Recoil**](https://recoiljs.org/)，需要注意其官方 GitHub 仓库已归档停更；新项目若有原子化状态需求，应优先评估 Jotai 等仍在活跃演进的方案。整体而言，主流客户端状态库都在向**零样板代码、原生 TypeScript 推导与最小化重渲染范围**收敛，新项目通常直接在 **Redux Toolkit、Zustand、Jotai 与 Pinia** 之间按生态与状态拓扑选型。
+如果在存量代码或早期技术文章中遇到 [Recoil](https://recoiljs.org/)，需要注意其官方 GitHub 仓库已归档停更；新项目若有原子化状态需求，应优先评估 Jotai 等仍在活跃演进的方案。整体而言，主流客户端状态库都在向零样板代码、原生 TypeScript 推导与最小化重渲染范围收敛，新项目通常直接在 Redux Toolkit、Zustand、Jotai 与 Pinia 之间按生态与状态拓扑选型。
 
-## **IV.8.1 范式演进：Signals 细粒度响应式与 React 19 Actions**
+## IV.8.1 范式演进：Signals 细粒度响应式与 React 19 Actions
 
 除了独立的状态管理库，前端框架自身的状态原语也在经历两项关键演进：
 
@@ -35,12 +35,12 @@ title: "IV. 前端框架和库：构建现代 UI / IV.8 状态管理解决方案
 
 | 库名称 | 框架兼容性 | 设计哲学（示例） | 学习曲线 | 样板代码 | TypeScript 支持 | 推荐度 | 理想用例（示例） |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [**Redux Toolkit**](https://redux-toolkit.js.org/) | UI 无关；React 通过 [React-Redux](https://react-redux.js.org/) 绑定 | 集中式存储，可预测状态 | 中等偏高 | 中等 | 良好 | 高 | 大型复杂应用，需要强约束、可预测状态流 |
-| [**Zustand**](https://zustand-demo.pmnd.rs/) | [React](https://react.dev/) | 极简，单一存储 | 较低 | 极少 | 良好 | 很高 | 中小型应用，重视简单、灵活和性能 |
-| [**Jotai**](https://jotai.org/) | [React](https://react.dev/) | 原子，自下而上 | 较平缓 | 极少 | 良好 | 高 | 细粒度状态控制、组合性强的 React 项目 |
-| [**Pinia**](https://pinia.vuejs.org/) | [Vue](https://vuejs.org/) | 模块化，无 Mutations | 较低 | 极少 | 优秀 | 很高 | Vue 3 新项目，注重简单性和类型支持 |
-| [**Vuex**](https://vuex.vuejs.org/) | [Vue](https://vuejs.org/) | 集中式存储，严格结构 | 中等 | 较多 | 较弱 | 仅存量项目推荐 | 遗留 Vue 2/早期 Vue 3 项目，需要维护既有代码 |
-| [**Recoil（已归档）**](https://recoiljs.org/) | [React](https://react.dev/) | 原子，派生状态 | 中等 | 中等 | 良好 | 不建议新项目继续采用 | 仅在维护历史项目时需要理解 |
+| [Redux Toolkit](https://redux-toolkit.js.org/) | UI 无关；React 通过 [React-Redux](https://react-redux.js.org/) 绑定 | 集中式存储，可预测状态 | 中等偏高 | 中等 | 良好 | 高 | 大型复杂应用，需要强约束、可预测状态流 |
+| [Zustand](https://zustand-demo.pmnd.rs/) | [React](https://react.dev/) | 极简，单一存储 | 较低 | 极少 | 良好 | 很高 | 中小型应用，重视简单、灵活和性能 |
+| [Jotai](https://jotai.org/) | [React](https://react.dev/) | 原子，自下而上 | 较平缓 | 极少 | 良好 | 高 | 细粒度状态控制、组合性强的 React 项目 |
+| [Pinia](https://pinia.vuejs.org/) | [Vue](https://vuejs.org/) | 模块化，无 Mutations | 较低 | 极少 | 优秀 | 很高 | Vue 3 新项目，注重简单性和类型支持 |
+| [Vuex](https://vuex.vuejs.org/) | [Vue](https://vuejs.org/) | 集中式存储，严格结构 | 中等 | 较多 | 较弱 | 仅存量项目推荐 | 遗留 Vue 2/早期 Vue 3 项目，需要维护既有代码 |
+| [Recoil（已归档）](https://recoiljs.org/) | [React](https://react.dev/) | 原子，派生状态 | 中等 | 中等 | 良好 | 不建议新项目继续采用 | 仅在维护历史项目时需要理解 |
 
 实际落地时可遵循三条简明原则：
 

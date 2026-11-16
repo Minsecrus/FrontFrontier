@@ -6,23 +6,23 @@ title: "V. 高级主题和专业开发最佳实践 / V.16 法律、合规与隐�
 
 前端直接运行在用户终端设备上，是个人数据采集、Cookie 读写、第三方追踪脚本注入以及 AI 生成内容呈现的第一现场。任何未经授权的脚本加载、默认勾选的隐私弹窗或违规打包的传染性开源许可证，都可能直接触发监管处罚或商业法律风险。
 
-## **V.16.1 GDPR、CCPA 等隐私法规对前端的要求**
+## V.16.1 GDPR、CCPA 等隐私法规对前端的要求
 
-欧盟的 [**GDPR（General Data Protection Regulation）**](https://gdpr.eu/) 与美国加州的 [**CCPA（California Consumer Privacy Act）**](https://oag.ca.gov/privacy/ccpa) 均具备域外管辖效力：只要产品面向对应地区居民提供服务或处理其个人数据，就必须遵守相关约束。落到前端工程层面，核心要求包括：
+欧盟的 [GDPR（General Data Protection Regulation）](https://gdpr.eu/) 与美国加州的 [CCPA（California Consumer Privacy Act）](https://oag.ca.gov/privacy/ccpa) 均具备域外管辖效力：只要产品面向对应地区居民提供服务或处理其个人数据，就必须遵守相关约束。落到前端工程层面，核心要求包括：
 
 - **用户同意（Consent）与选择退出（Opt-out）**：GDPR 要求处理个人数据具备合法基础（同意是第 6 条列出的六种合法基础之一）；而在终端设备上存储或读取非必要信息（如分析、广告 Cookie 和各类追踪器），在欧盟通常需依据 ePrivacy 指令事先获得用户明确、知情的同意（Opt-in）。CCPA 则以清晰告知和“选择退出（Opt-out）”为主，例如在页面显著位置提供“不出售或共享我的个人信息”入口。前端需接入同意管理平台（Consent Management Platform，CMP），如实展示数据收集目的，并提供对等的同意与拒绝操作。
 - **数据最小化**：表单、埋点与日志只采集业务所必需的最小字段，避免在 URL 参数、报错堆栈或本地存储中顺带记录完整手机号、身份证号、邮箱等个人可识别信息（PII）。
 - **用户权利闭环**：用户依法享有查阅、导出、更正、删除个人数据及撤回同意的权利。前端需提供配套的自助设置界面与状态反馈，确保撤回或删除操作能同步清理客户端缓存。
 - **透明度与传输安全**：在收集点就近关联隐私政策与 Cookie 清单说明数据用途与保留周期；全站强制启用 HTTPS，并避免将敏感凭据写入前端可读存储。
 
-## **V.16.2 Cookie 管理与用户同意（Consent Management）的最佳实践**
+## V.16.2 Cookie 管理与用户同意（Consent Management）的最佳实践
 
 客户端存储（Cookie、`localStorage`、`IndexedDB`）与第三方追踪脚本是隐私合规审查的重灾区，工程落地需遵循以下边界：
 
 - **按用途严格分级 Cookie**：
   - **必要（Strictly Necessary）**：维持登录会话、CSRF 防护、购物车状态等核心功能所必需，通常无需事先征得同意，但仍需在隐私声明中披露。
   - **功能性（Functional）**：记忆语言、地区或界面偏好等增强体验项，视法域要求决定是否需要显式同意。
-  - **分析/性能（Analytics）** 与 **营销/追踪（Marketing）**：用于流量统计、跨站画像与个性化广告，在 GDPR 等严监管地区必须在获得明确同意后才能写入。
+  - **分析/性能（Analytics）与营销/追踪（Marketing）**：用于流量统计、跨站画像与个性化广告，在 GDPR 等严监管地区必须在获得明确同意后才能写入。
 - **实施严格的同意管理（CMP）交互**：
   - 首次访问时通过合规横幅或弹窗呈现分级选项，严禁将非必要类别设为默认勾选，且“拒绝非必要”与“全部接受”按钮必须在同一层级、具备对等的视觉权重。
   - 提供常驻入口（如页脚“Cookie 设置”），支持用户随时查看或撤回历史授权。
@@ -31,7 +31,7 @@ title: "V. 高级主题和专业开发最佳实践 / V.16 法律、合规与隐�
   - **Cookie 安全属性**：设置 Cookie 时显式指定 `SameSite` 与 `Secure` 属性；涉及会话凭据的 Cookie 应由服务端下发并附加 `HttpOnly`（客户端脚本无法设置该属性），防止被 XSS 脚本窃取。
   - **本地数据连带清理**：当用户触发账号注销、数据删除或撤回某类授权时，前端除调用服务端接口外，还必须同步清空 `localStorage`、`sessionStorage`、`IndexedDB` 及本站可控 Cookie 中的对应数据。
 
-## **V.16.3 用数据流和同意状态表达隐私边界**
+## V.16.3 用数据流和同意状态表达隐私边界
 
 ```mermaid
 flowchart LR
@@ -184,15 +184,15 @@ export const consentManager = new ConsentManager();
 
 :::
 
-## **V.16.4 EU AI Act 与前端人工智能功能透明度合规**
+## V.16.4 EU AI Act 与前端人工智能功能透明度合规
 
-随着 [**EU AI Act（欧盟人工智能法案）**](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) 分阶段生效，涉及 AI 交互的前端应用必须守住严格的透明度与反欺诈红线：
+随着 [EU AI Act（欧盟人工智能法案）](https://digital-strategy.ec.europa.eu/en/policies/regulatory-framework-ai) 分阶段生效，涉及 AI 交互的前端应用必须守住严格的透明度与反欺诈红线：
 
 1. **生成式内容显式披露（AI Content Disclosure）**：页面中由大模型生成的文本、图像、视频或合成语音，必须在 UI 层面提供明确的人类可读标识（如“由 AI 辅助生成”）与元数据水印。
 2. **AI 对话知情权**：当用户在与智能客服或 AI 助理交互时，界面必须在一开始明确告知用户“当前正在与 AI 系统对话”，严禁伪装为真人客服。
 3. **禁止操纵性暗黑模式（Dark Patterns）**：严禁利用 AI 个性化推荐诱导用户做出非理性的高危财务或隐私授权决策。
 
-## **V.16.5 开源软件供应链与许可证（License）治理**
+## V.16.5 开源软件供应链与许可证（License）治理
 
 现代前端项目平均依赖数百个 npm 模块，开源许可证合规与依赖安全直接关系到企业的商业法律风险：
 

@@ -4,7 +4,7 @@ title: "II. 基础 Web 技术：核心支柱 / II.5 JavaScript：赋予交互性
 
 # II.5 JavaScript：赋予交互性生命
 
-## **II.5.1 核心语言概念（ES6+）**
+## II.5.1 核心语言概念（ES6+）
 
 JavaScript（JS）负责处理网页的交互逻辑、状态更新与异步数据通信。现代前端开发以 [ES6（ECMAScript 2015）](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/6th-edition/) 及后续标准为基准：
 
@@ -18,7 +18,7 @@ JavaScript（JS）负责处理网页的交互逻辑、状态更新与异步数�
 - **解构、展开与剩余参数**：解构赋值与展开语法（`...`）常用于提取局部字段与浅拷贝对象/数组；剩余参数（rest parameters）将不定长参数收敛为真实数组，替代了早期的 `arguments` 对象。
 - **可选链与空值合并**：可选链 `?.` 在遇到 `null` 或 `undefined` 时短路返回 `undefined`，空值合并 `??` 仅在左侧为 `null` 或 `undefined` 时才回退到默认值（不会像 `||` 那样误伤 `0` 或空字符串 `""`），适合读取深层接口字段。
 
-## **II.5.2 异步 JavaScript：Promise、async/await、事件循环（宏任务/微任务）**
+## II.5.2 异步 JavaScript：Promise、async/await、事件循环（宏任务/微任务）
 
 JavaScript 在主线程上以单线程方式运行，耗时操作（网络请求、定时器、磁盘 I/O）若同步阻塞主线程，页面就会停止响应输入与渲染。浏览器与语言标准通过事件循环和异步原语协调并发：
 
@@ -55,7 +55,7 @@ B: timeout
 
 :::
 
-## **II.5.3 DOM 操作：与网页交互**
+## II.5.3 DOM 操作：与网页交互
 
 文档对象模型（[DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)）是浏览器将 HTML 文档解析后生成的树状内存表示。JavaScript 通过 DOM API 查询节点、修改内容与样式、增删结构并同步无障碍状态；React、Vue、Svelte 等声明式框架在底层同样是通过协调这些原生 DOM 操作来完成界面更新：
 
@@ -69,13 +69,13 @@ B: timeout
 
 DOM 修改会触发浏览器的样式重算（Style）、布局（Layout）与绘制（Paint）。若在循环中交替读取几何属性（如 `offsetHeight`、`getBoundingClientRect()`）并立即写入样式，会迫使浏览器反复提前执行同步布局（强制同步布局 / 布局抖动）。工程中应先集中读取所需尺寸，再统一写入变更；批量插入列表节点时可使用 `DocumentFragment` 或 `replaceChildren()` 合并提交。
 
-## **II.5.4 事件模型：从用户动作到程序响应**
+## II.5.4 事件模型：从用户动作到程序响应
 
 浏览器通过事件机制将用户输入、资源状态与生命周期变化通知给 JavaScript。排查“点击无响应”“点中子元素却误触外层逻辑”或“表单意外刷新页面”等问题，都需要回到事件传播机制与默认行为本身：
 
 - **事件监听与解绑**：使用 `addEventListener()` 注册回调，并可在第三个参数中传入 `AbortSignal`（`{ signal }`）以便在组件卸载时一键清理监听器。
 - **事件对象与默认行为**：区分 `event.target`（实际触发事件的最深层节点）与 `event.currentTarget`（当前绑定监听器的节点）；使用 `preventDefault()` 阻止浏览器默认动作（如链接跳转、表单原生提交），使用 `stopPropagation()` 阻止事件继续传播。
-- **捕获、目标与冒泡阶段**：DOM 事件依次经历从根向下传递的**捕获阶段**、到达目标节点的**目标阶段**，以及从目标向上回溯的**冒泡阶段**。
+- **捕获、目标与冒泡阶段**：DOM 事件依次经历从根向下传递的捕获阶段、到达目标节点的目标阶段，以及从目标向上回溯的冒泡阶段。
 - **表单提交语义**：监听表单应绑定 `<form>` 的 `submit` 事件，而非提交按钮的 `click` 事件，这样才能同时覆盖按回车提交、原生校验拦截与脚本触发提交等路径。
 
 日常交互中常见的事件类别：
@@ -85,10 +85,11 @@ DOM 修改会触发浏览器的样式重算（Style）、布局（Layout）与�
 - **表单事件**：`input` 在值每次变化时立即触发（适合实时搜索或字数统计），`change` 在控件失焦或选择确认后触发，`submit` 在表单提交时触发。
 - **文档与视图生命周期事件**：`DOMContentLoaded` 在 HTML 解析完成且延迟脚本执行后触发；`load` 在图片、样式等外部子资源全部加载完毕后触发；`visibilitychange` 在用户切换标签页或最小化窗口时触发。
 - **网络状态事件**：`window` 上的 `online` 与 `offline` 事件可反映设备网络连接状态的切换。
+- **单页应用导航接口**（[Navigation API](https://developer.mozilla.org/docs/Web/API/Navigation_API)）：集中管理客户端路由拦截（`navigate` 事件）、历史条目查询与导航过渡状态，并在 Interop 2025–2026 中持续推进跨引擎一致性。
 
-对于动态增删的列表、表格操作列或菜单项，推荐采用**事件委托（Event Delegation）**：只在稳定的父容器上绑定一次监听器，触发时通过 `event.target.closest('[data-action]')` 定位具体操作节点。这样既减少了监听器数量，也能让后续动态插入或筛选后的子节点自动生效。
+对于动态增删的列表、表格操作列或菜单项，推荐采用事件委托（Event Delegation）：只在稳定的父容器上绑定一次监听器，触发时通过 `event.target.closest('[data-action]')` 定位具体操作节点。这样既减少了监听器数量，也能让后续动态插入或筛选后的子节点自动生效。
 
-## **II.5.5 网络请求、JSON 与数据交换**
+## II.5.5 网络请求、JSON 与数据交换
 
 前端应用通过 `fetch()` API 与后端服务完成 HTTP 数据交换。处理网络请求不仅要拿到正常响应，还要覆盖状态码判别、序列化边界、异常分类与并发竞态：
 
@@ -107,7 +108,7 @@ DOM 修改会触发浏览器的样式重算（Style）、布局（Layout）与�
 6. 更新界面状态或本地缓存。
 7. 捕获异常或错误分支，展示错误反馈并恢复交互状态。
 
-使用 `fetch()` 时有两个高频陷阱：第一，只有 DNS 失败、断网、跨域拦截或主动取消等**网络层故障**才会使 `fetch()` 返回的 Promise reject；服务端返回 HTTP `404` 或 `500` 时 Promise 依然会 resolve，必须显式检查 `response.ok`。第二，`response.json()` 本身也是异步操作，当状态码为 `204 No Content`、响应体为空或网关返回了 HTML 错误页时，直接调用 `response.json()` 会抛出解析异常。
+使用 `fetch()` 时有两个高频陷阱：第一，只有 DNS 失败、断网、跨域拦截或主动取消等网络层故障才会使 `fetch()` 返回的 Promise reject；服务端返回 HTTP `404` 或 `500` 时 Promise 依然会 resolve，必须显式检查 `response.ok`。第二，`response.json()` 本身也是异步操作，当状态码为 `204 No Content`、响应体为空或网关返回了 HTML 错误页时，直接调用 `response.json()` 会抛出解析异常。
 
 当网络请求与表单提交结合时，还需核对以下工程边界：
 
@@ -118,7 +119,7 @@ DOM 修改会触发浏览器的样式重算（Style）、布局（Layout）与�
 
 在现代框架工程中，TanStack Query、SWR 等服务端状态库封装了缓存过期、后台重验证、自动重试与请求去重；Axios、ky 等 HTTP 客户端则封装了请求/响应拦截器、超时控制与非 2xx 自动抛错。理解上述原生机制，才能在这些上层库出现缓存不更新或竞态异常时快速定位根因。
 
-## **II.5.6 错误处理与调试**
+## II.5.6 错误处理与调试
 
 JavaScript 调试的目标是把模糊的“功能坏了”收敛为可复现的输入、可观察的中间状态与明确的异常调用栈：
 
@@ -135,15 +136,15 @@ JavaScript 调试的目标是把模糊的“功能坏了”收敛为可复现的
 - **Network**：核对请求 URL、方法、状态码、请求/响应头、载荷正文、缓存命中状态与 CORS 预检结果。
 - **Application**：检查并手动清理 Cookie、`localStorage`、`sessionStorage`、IndexedDB、Cache Storage 与 Service Worker 状态。
 
-## **II.5.7 客户端存储**
+## II.5.7 客户端存储
 
 浏览器提供了多种本地存储机制，各自在容量上限、同步/异步模型、生命周期与线程可用性上存在明确差异：
 
-- **localStorage**：同步键值存储，容量约 5MB，仅支持字符串，主线程直接读写过大数据会阻塞渲染；适合保存轻量级界面偏好（如主题、字号），切勿存放敏感凭证。
-- **sessionStorage**：API 与 `localStorage` 相同，但作用域与生命周期绑定到当前顶级标签页会话，关闭标签页后自动清除，适合分步表单等当前会话临时状态。
-- **IndexedDB**：浏览器内置的异步事务型对象数据库，支持索引查询与二进制数据（Blob / ArrayBuffer），可在主线程与 Worker 中访问，适合大容量离线数据与本地缓存表。
-- **[Origin Private File System（OPFS）](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)**：File System API 中按源（origin）隔离的私有虚拟文件系统，已进入 Baseline。在专用 Web Worker 中可通过 `createSyncAccessHandle()` 获取 **`FileSystemSyncAccessHandle`** 进行同步原地文件读写，I/O 吞吐远高于通用键值存储，常作为浏览器端运行 SQLite（如 SQLite Wasm）和读写大型媒体/模型文件的基础设施。
-- **Cache Storage**：面向 `Request` / `Response` 对象的异步缓存仓库，常配合 Service Worker 拦截并缓存静态资源与接口响应，支撑离线访问。
+- localStorage：同步键值存储，容量约 5MB，仅支持字符串，主线程直接读写过大数据会阻塞渲染；适合保存轻量级界面偏好（如主题、字号），切勿存放敏感凭证。
+- sessionStorage：API 与 `localStorage` 相同，但作用域与生命周期绑定到当前顶级标签页会话，关闭标签页后自动清除，适合分步表单等当前会话临时状态。
+- IndexedDB：浏览器内置的异步事务型对象数据库，支持索引查询与二进制数据（Blob / ArrayBuffer），可在主线程与 Worker 中访问，适合大容量离线数据与本地缓存表。
+- [Origin Private File System（OPFS）](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system)：File System API 中按源（origin）隔离的私有虚拟文件系统，已进入 Baseline。在专用 Web Worker 中可通过 `createSyncAccessHandle()` 获取 `FileSystemSyncAccessHandle` 进行同步原地文件读写，I/O 吞吐远高于通用键值存储，常作为浏览器端运行 SQLite（如 SQLite Wasm）和读写大型媒体/模型文件的基础设施。
+- Cache Storage：面向 `Request` / `Response` 对象的异步缓存仓库，常配合 Service Worker 拦截并缓存静态资源与接口响应，支撑离线访问。
 
 客户端脚本可读的存储（`localStorage`、`sessionStorage`、IndexedDB 等）一旦遭遇 XSS 攻击即可被恶意脚本读取；因此会话令牌与高敏凭证应优先通过设置 `HttpOnly`、`Secure`、`SameSite` 属性的 Cookie 交由浏览器自动管理。
 
@@ -154,17 +155,17 @@ JavaScript 调试的目标是把模糊的“功能坏了”收敛为可复现的
 | localStorage | 主题、语言、轻量偏好 | 持久保存，用户或代码清理 | DevTools Application |
 | sessionStorage | 当前标签页临时状态 | 标签页会话结束后清理 | DevTools Application |
 | IndexedDB | 离线草稿、复杂对象列表、本地索引 | 持久保存，容量更大 | DevTools Application |
-| [**OPFS**](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) | 大型二进制文件、SQLite 数据库文件 | 持久保存，按源隔离，与 IndexedDB 共用存储配额 | DevTools Application / OPFS Explorer |
+| [OPFS](https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system) | 大型二进制文件、SQLite 数据库文件 | 持久保存，按源隔离，与 IndexedDB 共用存储配额 | DevTools Application / OPFS Explorer |
 | Cache Storage | 请求与响应缓存 | 由 Service Worker 或代码管理 | DevTools Application |
 | Cookie | 会话标识、服务端协作状态 | 由过期时间和服务端策略决定 | DevTools Application / Network |
 
-在实际架构中，应将**内存组件状态**（React/Vue/Svelte state，表达当前视图瞬态）、**服务端状态缓存**（TanStack Query/SWR，表达远端数据快照与同步状态）与**浏览器持久化存储**（跨页面刷新或离线恢复）划分为清晰的三个层次，避免把所有数据都不加区分地塞进本地存储或全局状态树。
+在实际架构中，应将内存组件状态（React/Vue/Svelte state，表达当前视图瞬态）、服务端状态缓存（TanStack Query/SWR，表达远端数据快照与同步状态）与浏览器持久化存储（跨页面刷新或离线恢复）划分为清晰的三个层次，避免把所有数据都不加区分地塞进本地存储或全局状态树。
 
-## **II.5.8 模块系统：import/export**
+## II.5.8 模块系统：import/export
 
 ES 模块（ES Modules，即 `import` / `export`）是语言内置的标准模块化机制，取代了早期社区自行约定的全局变量挂载、IIFE、[CommonJS](http://www.commonjs.org/) 和 [AMD](https://github.com/amdjs/amdjs-api/wiki/AMD)。
 
-由于 ES 模块的 `import` 和 `export` 声明位于模块顶层且结构静态确定，打包工具（Vite、Rollup、Webpack、esbuild、Rolldown）无需执行代码即可在编译期构建完整的依赖图，从而实现 **Tree Shaking**（自动剔除未被引用的导出代码）、按路由或交互边界做代码分割（Code Splitting），以及通过动态 `import()` 按需异步加载模块。
+由于 ES 模块的 `import` 和 `export` 声明位于模块顶层且结构静态确定，打包工具（Vite、Rollup、Webpack、esbuild、Rolldown）无需执行代码即可在编译期构建完整的依赖图，从而实现 Tree Shaking（自动剔除未被引用的导出代码）、按路由或交互边界做代码分割（Code Splitting），以及通过动态 `import()` 按需异步加载模块。
 
 在浏览器中，通过 `<script type="module">` 加载的脚本会自动开启模块语义：拥有独立模块作用域（顶层变量不会污染 `window`）、默认启用严格模式（`'use strict'`），且默认行为等同于 `defer`（异步下载、待 HTML 解析完成后按依赖顺序执行）。
 
@@ -174,28 +175,57 @@ ES 模块（ES Modules，即 `import` / `export`）是语言内置的标准模�
 - 该模块引入了哪些外部依赖，是否存在循环依赖或带有全局副作用（Side Effects）的导入？
 - 构建工具最终会将该模块合并进首屏主包，还是拆分为按需加载的独立 chunk？
 
-## **II.5.9 现代 ECMAScript 演进与标准新特性**
+在模块加载与执行时序上，除了立即求值的静态 `import` 与异步拉取的动态 `import()`，TC39 的 [`import defer`（延迟模块求值）](https://github.com/tc39/proposal-defer-import-eval) 提供了第三种设计思路——将“下载、解析与链接”留在准备阶段，把“执行顶层代码”推迟到首次访问导出属性的那一刻：
 
-JavaScript 标准（ECMAScript）每年按 TC39 流程持续迭代。以下前四项能力已进入现代浏览器 Baseline，可直接在工程中使用；Temporal API 已完成标准化，正处于跨浏览器落地阶段：
+| 导入方式 | 下载、解析与链接时机 | 顶层代码求值时机 | 调用形式 | 适用场景 |
+| :--- | :--- | :--- | :--- | :--- |
+| **静态 `import`** | 应用或父模块加载时 | 链接完成后立即同步执行 | 同步 | 首屏必需依赖与核心初始化逻辑 |
+| **动态 `import()`** | 首次调用 `import()` 时 | 下载完成后异步执行 | 异步（`Promise`） | 路由级拆分、低频弹窗或大体积按需资源 |
+| `import defer * as ns` | 提前下载、解析并链接 | 首次同步读取 `ns` 属性时执行 | 同步 | 希望提前就绪、同时把初始化 CPU 耗时延后到真实交互时 |
 
-- **原生 Set 集合运算方法**（ES2025 / Baseline）：无需引入 lodash 等第三方工具库，原生支持集合的数学运算：
+```js
+import defer * as chart from "./heavy-chart.js";
+
+// 此时 heavy-chart.js 已完成下载与链接，顶层初始化代码保持待命。
+button.addEventListener("click", () => {
+  // 首次访问命名空间属性时，触发一次性的同步求值并执行。
+  chart.render(container, data);
+});
+```
+
+理解和使用 `import defer` 时，需要把握四项设计边界：
+
+1. **命名空间形式**：语法限定为命名空间导入（`import defer * as ns`）或对应的动态调用（`await import.defer("./mod.js")`），使引擎能够返回一个带有延迟标记的命名空间对象，统一拦截首次属性读取。
+2. **与 Top-Level Await 的配合**：由于读取 `ns.xxx` 需要保持同步返回，当目标模块或其传递依赖包含 Top-Level Await（TLA）时，异步分支会在图加载阶段按常规异步流程提前完成求值，其余纯同步子图继续保留延迟执行语义。
+3. **副作用与异常时机顺延**：模块顶层的初始化代码与潜在求值异常都会延后到首次访问 `ns` 属性时才发生。具有明显调用入口的重型模块适合采用 `import defer`；需要在启动时立即生效的全局注册或 Polyfill 模块，保持静态 `import` 即可维持原有的即时执行顺序。
+4. **当前工程成熟度**：该提案目前处于 TC39 Stage 3。TypeScript 5.9 起已支持 `import defer` 的语法检查与类型推导（在 `module` 为 `preserve` 或 `esnext` 时原样透传语法）；Webpack 与 Rspack 1.6+ 已提供实验性配置支持（如 Rspack 的 `experiments.deferImport: true`），浏览器与运行时原生实现仍在持续推进中，实际项目引入前需先验证当前打包器与目标运行环境的支持状态。
+
+## II.5.9 现代 ECMAScript 演进与标准新特性
+
+JavaScript 标准（ECMAScript）每年按 TC39 流程持续迭代。下列特性按标准推进与跨浏览器成熟度划分：前几项已进入现代浏览器 Baseline 或新近可用阶段，可直接纳入日常工程工具箱；`Temporal` 与 `import defer` 则需结合目标运行环境与工具链配置评估引入：
+
+- 原生 Set 集合运算方法（ES2025 / Baseline）：直接通过语言原生方法完成集合运算：
   - `setA.union(setB)`：求并集；
   - `setA.intersection(setB)`：求交集；
   - `setA.difference(setB)`：求差集（存在于 A 但不存在于 B）；
   - `setA.symmetricDifference(setB)`：求对称差集；
   - `setA.isSubsetOf(setB)` / `setA.isSupersetOf(setB)`：判断子集/超集关系。
-- **`Promise.withResolvers()`**（ES2024 / Baseline）：直接解构返回 `{ promise, resolve, reject }`，不必再为了在 Promise 外部调用 `resolve`/`reject` 而预先声明外部变量：
+- `Promise.withResolvers()`（ES2024 / Baseline）：直接解构返回 `{ promise, resolve, reject }`，适合需要在构造器外部触发状态的异步封装：
   ```ts
   const { promise, resolve, reject } = Promise.withResolvers<string>();
   ```
-- **数据分组：`Object.groupBy()` 与 `Map.groupBy()`**（ES2024 / Baseline）：按照回调函数的返回值将可迭代对象分组为普通对象或 Map 实例：
+- 数据分组：`Object.groupBy()` 与 `Map.groupBy()`（ES2024 / Baseline）：按照回调函数的返回值将可迭代对象分组为普通对象或 Map 实例：
   ```ts
   const grouped = Object.groupBy(products, (item) => item.category);
   ```
-- **异步迭代收集：`Array.fromAsync()`**（ES2026 / Baseline）：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 等异步可迭代对象转换为普通数组。
-- **下一代时间日期标准：[Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal)**（已于 2026 年进入 TC39 Stage 4，预计纳入 ES2027）：旨在取代设计缺陷众多的 `Date` 对象，提供不可变的日期时间对象、纳秒级精度、完整的时区计算与日历系统支持。截至 2026 年 10 月，Chrome 与 Firefox 已支持，Safari 尚未支持，因此还不是 Baseline；生产环境使用前应先检测 `typeof Temporal !== "undefined"`，或引入 polyfill。
+- 迭代器辅助方法（Iterator Helpers）（ES2025 / Baseline）：在 `Iterator.prototype` 上原生提供 `.map()`、`.filter()`、`.take()`、`.drop()`、`.toArray()` 与 `Iterator.from()` 等方法，以惰性求值按需处理生成器或大型集合，减少中间数组分配。
+- 安全与诊断辅助：`RegExp.escape()` 与 `Error.isError()`（ES2025–2026 / 新近可用）：`RegExp.escape()` 用于安全转义用户输入中的正则元字符；`Error.isError()` 提供可靠的跨执行上下文（Realm）错误对象识别。
+- 异步迭代收集：`Array.fromAsync()`（ES2026 / Baseline）：直接将异步生成器（AsyncGenerator）或 `ReadableStream` 等异步可迭代对象转换为普通数组。
+- 显式资源管理（Explicit Resource Management：`using` / `await using`）（TC39 标准化推进中）：配合 `[Symbol.dispose]()`、`[Symbol.asyncDispose]()` 与 `DisposableStack`，在变量离开块级作用域时自动、确定性地清理文件句柄、事件监听、锁或订阅资源。
+- 下一代时间日期标准：[Temporal API](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal)（已于 2026 年进入 TC39 Stage 4，预计纳入 ES2027）：提供不可变的日期时间对象、纳秒级精度、完整的时区计算与日历系统支持。截至 2026 年 10 月，Chrome 与 Firefox 已支持，Safari 仍在推进中，生产环境使用前可先检测 `typeof Temporal !== "undefined"`，或引入 polyfill。
+- 延迟模块求值：`import defer`（TC39 Stage 3）：提前加载与链接模块图，并将顶层代码求值延后到首次访问命名空间属性时，具体规则与生态支持见上节 `II.5.8`。
 
-## **II.5.10 一个最小浏览器应用闭环**
+## II.5.10 一个最小浏览器应用闭环
 
 要验证自己是否真正掌握了前五节的 Web 基础能力，可以不借助任何前端框架，独立实现一个“可搜索、可收藏、可离线保留草稿”的商品列表页：
 

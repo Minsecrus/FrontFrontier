@@ -10,8 +10,8 @@ Web 应用的用户并不总是使用鼠标和高分辨率显示器：视障用�
 
 - **WCAG 2.2**：本节以 [WCAG 2.2](https://www.w3.org/TR/WCAG22/) 为主要参照。它补充了焦点不被遮挡、焦点外观、拖拽替代、目标尺寸、重复输入和可访问身份验证等成功标准。
 - **法律合规要求**：
-  - **[欧洲无障碍法案（EAA - Directive 2019/882）](https://commission.europa.eu/news-and-media/news/eu-becomes-more-accessible-all-2025-07-31_en)**：自 **2025 年 6 月 28 日起已在全欧盟范围内强制执行**。所有面向欧盟消费者提供服务的商业 Web 应用（电商、银行、旅游、媒体、SaaS 等）必须严格符合 **EN 301 549 / WCAG 2.1 AA 级**标准，不合规者面临巨额民事罚款与市场准入禁令。无障碍已从传统的“道德关怀”上升为企业必须满足的**法定合规底线**。
-  - ISO 已将 WCAG 2.2 批准为国际标准 **[ISO/IEC 40500:2025](https://www.w3.org/press-releases/2025/wcag22-iso-pas/)**；美国（ADA Title II/III 相关司法裁判）与中国（《无障碍环境建设法》）也在加强对数字界面无障碍与适老化的合规审查。
+  - [欧洲无障碍法案（EAA - Directive 2019/882）](https://commission.europa.eu/news-and-media/news/eu-becomes-more-accessible-all-2025-07-31_en)：自 2025 年 6 月 28 日起已在全欧盟范围内强制执行。所有面向欧盟消费者提供服务的商业 Web 应用（电商、银行、旅游、媒体、SaaS 等）必须严格符合 EN 301 549 / WCAG 2.1 AA 级标准，不合规者面临巨额民事罚款与市场准入禁令。无障碍已从传统的“道德关怀”上升为企业必须满足的法定合规底线。
+  - ISO 已将 WCAG 2.2 批准为国际标准 [ISO/IEC 40500:2025](https://www.w3.org/press-releases/2025/wcag22-iso-pas/)；美国（ADA Title II/III 相关司法裁判）与中国（《无障碍环境建设法》）也在加强对数字界面无障碍与适老化的合规审查。
 - **下一代标准**：[WCAG 3.0](https://www.w3.org/TR/wcag-3.0/) 仍处于 Working Draft 阶段，当前项目以 WCAG 2.2 为主要合规参照，WCAG 3.0 适合作为观察材料。
 
 在日常研发中，无障碍保障主要落脚于四个具体维度（这些改进同样能提升普通用户的键盘效率与强光环境可读性）：
@@ -33,7 +33,7 @@ Web 应用的用户并不总是使用鼠标和高分辨率显示器：视障用�
 | **重复输入**             | A    | 已输入的信息尽量自动填充或可选取 | 降低认知和操作负担                             |
 | **可访问身份验证（最小）** | AA | 不把记忆、识别或解题作为唯一通道 | 避免把辅助技术用户排除在登录流程之外           |
 
-## **V.3.1 ARIA 属性的使用**
+## V.3.1 ARIA 属性的使用
 
 [WAI-ARIA](https://www.w3.org/WAI/ARIA/apg/)（Web Accessibility Initiative - Accessible Rich Internet Applications）是一套技术规范，通过添加额外的 HTML 属性增强 HTML 语义，从而改善残障人士借助辅助技术（如屏幕阅读器）访问 Web 应用的体验。ARIA 属性不会改变元素的视觉表现，但会改变辅助技术对元素的解释方式。
 
@@ -78,7 +78,7 @@ ARIA 的核心作用有三类：
 
 :::
 
-## **V.3.2 辅助技术测试方法**
+## V.3.2 辅助技术测试方法
 
 仅添加 ARIA 属性并不能保证真实可用，必须结合辅助技术与自动化工具做分层验证。常见的屏幕阅读器包括 Windows 上免费开源的 [NVDA](https://www.nvaccess.org/)（NonVisual Desktop Access）与商业软件 [JAWS](https://www.freedomscientific.com/products/software/jaws/)（Job Access With Speech）、macOS / iOS 内置的 [VoiceOver](https://www.apple.com/voiceover/info/guide/_1121.html)，以及 Android 内置的 TalkBack。
 
@@ -90,7 +90,7 @@ ARIA 的核心作用有三类：
 
 由于自动化工具大约只能拦截 30%~50% 的已知规则违规（如缺失 `alt`、对比度不足、无效 ARIA 属性），键盘走查与屏幕阅读器实测不可省略。产品具体需满足哪一级法规标准，应由目标市场、行业类别、客户合同与法务共同确认；工程团队的职责是先把 WCAG 2.2 的成功标准固化到组件库 API、设计走查清单与 CI 自动化测试中。
 
-## **V.3.3 把自动化审计接入浏览器测试**
+## V.3.3 把自动化审计接入浏览器测试
 
 自动化审计适合拦截明显的语义、名称、颜色和结构问题；键盘顺序、焦点体验和屏幕阅读器朗读仍需人工验证。
 

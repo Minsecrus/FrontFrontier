@@ -4,18 +4,18 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
 
 # V.6 安全基础：用户认证与授权（*）
 
-凡是涉及个人数据或受限操作的 Web 应用，都必须在架构上严格区分两个安全边界：**认证（Authentication）** 与 **授权（Authorization）**。
+凡是涉及个人数据或受限操作的 Web 应用，都必须在架构上严格区分两个安全边界：认证（Authentication）与授权（Authorization）。
 
 - **认证（Authentication — “你是谁？”）**：校验请求发起者的真实身份（如核对密码、Passkey 签名或会话凭据）。认证失败意味着身份未确认或凭据已失效，对应 HTTP `401 Unauthorized`。
 - **授权（Authorization — “你能做什么？”）**：在认证通过之后，判定当前身份是否有权访问特定资源或执行特定写操作（如普通用户只能编辑自己的文章，管理员可删除任意文章）。授权失败意味着身份已知但权限不足，对应 HTTP `403 Forbidden`。
 
 打个比方，认证是刷身份证进入办公楼，授权则是门禁卡决定你能刷开哪几间会议室。在工程边界上，**真正的身份核验与权限裁决必须在服务端完成**；前端的路由守卫和按钮显隐仅用于提供流畅的界面引导，绝不能替代后端的接口鉴权。
 
-## **V.6.1 主流认证模式的演进**
+## V.6.1 主流认证模式的演进
 
 不同架构形态（传统多页应用、前后端分离 SPA、跨端 API 与第三方接入）对状态存储和跨域传递有不同诉求，由此衍生出几类主流认证模式：
 
-### **1. 基于会话的认证（Session-Based Authentication）**
+### 1. 基于会话的认证（Session-Based Authentication）
 
 这是传统的有状态（Stateful）认证模式，常见于服务端直接渲染或同站部署的 Web 应用。
 
@@ -26,9 +26,9 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
   - **CSRF 风险**：由于认证依赖于浏览器自动发送的 Cookie，这种模式天然面临跨站请求伪造（CSRF）的攻击风险，需要额外的安全措施来防范。
   - **跨域不友好**：在前后端分离和跨域请求成为常态的今天，基于 Cookie 的会话管理会遇到诸多跨域策略的限制。
 
-### **2. 基于 token 的认证与 BFF 模式**
+### 2. 基于 token 的认证与 BFF 模式
 
-为了解决会话认证的扩展性问题，无状态的（Stateless）token 认证模式应运而生。**JSON Web Token（[JWT](https://jwt.io/)）** 是其中最常见的实现标准之一。在现代 Web 应用中，认证方案通常会在短期 access token（访问令牌）、refresh token（刷新令牌）轮换（rotation，每次刷新都签发新的 refresh token 并作废旧的）、HttpOnly Cookie、SameSite、CSRF 防护和 BFF（Backend for Frontend，专为前端服务的后端层）之间组合取舍。
+为了解决会话认证的扩展性问题，无状态的（Stateless）token 认证模式应运而生。JSON Web Token（[JWT](https://jwt.io/)） 是其中最常见的实现标准之一。在现代 Web 应用中，认证方案通常会在短期 access token（访问令牌）、refresh token（刷新令牌）轮换（rotation，每次刷新都签发新的 refresh token 并作废旧的）、HttpOnly Cookie、SameSite、CSRF 防护和 BFF（Backend for Frontend，专为前端服务的后端层）之间组合取舍。
 
 - **工作流程**：用户登录后，认证服务器签发短期 access token，并配套安全的刷新和撤销机制。纯 API 客户端常用 `Authorization: Bearer` 发送 token；浏览器应用则越来越多地通过 BFF 让服务端持有敏感 token，浏览器只保存合理配置了 HttpOnly、Secure、SameSite 的会话 Cookie。
 - **优势**：
@@ -39,14 +39,14 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
   - **token 难以主动撤销**：自包含的 token 一旦签发，在过期前一直有效。如果 token 泄露，服务器无法像撤销 Session 一样使其立即失效，通常需要引入黑名单机制或缩短 token 有效期来缓解。
   - **安全性**：长期或高权限 token 更适合放在服务端可控、且有浏览器安全属性保护的方案中，例如 HttpOnly Cookie 或 BFF 会话。
 
-### **3. OAuth 与 OpenID Connect（OIDC）**
+### 3. OAuth 与 OpenID Connect（OIDC）
 
-如果你的应用需要让用户通过第三方服务（如 Google、GitHub、Facebook）登录，就要用到 [OAuth](https://oauth.net/) 协议。浏览器应用应优先采用 **Authorization Code + PKCE** 流程。PKCE（Proof Key for Code Exchange，授权码交换证明密钥）让客户端在换取 token 时证明自己就是发起授权的一方，防止授权码被截获后冒用。
+如果你的应用需要让用户通过第三方服务（如 Google、GitHub、Facebook）登录，就要用到 [OAuth](https://oauth.net/) 协议。浏览器应用应优先采用 Authorization Code + PKCE 流程。PKCE（Proof Key for Code Exchange，授权码交换证明密钥）让客户端在换取 token 时证明自己就是发起授权的一方，防止授权码被截获后冒用。
 
-- **OAuth（开放授权）**：它是一个**授权**框架，而非认证协议。核心目的是允许用户授权一个应用（客户端）访问自己在另一个服务（资源服务器）上的受保护资源，而无需把用户名和密码直接暴露给该应用。例如，你授权一个图片打印网站访问自己 Google Photos 里的照片。
-- **OpenID Connect（[OIDC](https://openid.net/connect/)）**：它是构建在 OAuth 2.0 之上的简单**身份认证层**。OAuth 只关心“授权”，OIDC 则增加了“认证”功能。它允许客户端不仅能获得访问资源的授权，还能验证用户身份并获取基本的用户信息。“通过 Google 账号登录”“通过 Microsoft 账号登录”等功能通常基于 OIDC，客户端可以从 ID token 中验证用户身份。但并非所有第三方登录都是 OIDC：例如“通过 GitHub 登录”基于普通 OAuth 2.0，应用拿到 access token 后还要调用 GitHub 用户 API 才能确认身份。
+- **OAuth（开放授权）**：它是一个授权框架，而非认证协议。核心目的是允许用户授权一个应用（客户端）访问自己在另一个服务（资源服务器）上的受保护资源，而无需把用户名和密码直接暴露给该应用。例如，你授权一个图片打印网站访问自己 Google Photos 里的照片。
+- **OpenID Connect**（[OIDC](https://openid.net/connect/)）：它是构建在 OAuth 2.0 之上的简单身份认证层。OAuth 只关心“授权”，OIDC 则增加了“认证”功能。它允许客户端不仅能获得访问资源的授权，还能验证用户身份并获取基本的用户信息。“通过 Google 账号登录”“通过 Microsoft 账号登录”等功能通常基于 OIDC，客户端可以从 ID token 中验证用户身份。但并非所有第三方登录都是 OIDC：例如“通过 GitHub 登录”基于普通 OAuth 2.0，应用拿到 access token 后还要调用 GitHub 用户 API 才能确认身份。
 
-### **4. Passkeys、WebAuthn 与 FedCM**
+### 4. Passkeys、WebAuthn 与 FedCM
 
 现代认证正在从“记住密码并处理 token”转向更强的浏览器和平台原语（primitive，指平台内置、可直接调用的基础能力）：
 
@@ -54,10 +54,10 @@ title: "V. 高级主题和专业开发最佳实践 / V.6 安全基础：用户�
 - **FedCM（Federated Credential Management）**：由浏览器统一承载联合登录（使用第三方身份提供方的账号登录）的交互流程，减少对第三方 Cookie 和隐式跨站追踪的依赖。
 - **BFF 与会话边界**：对安全要求较高的业务来说，把敏感 token 留在服务端，由前端通过同源会话访问 BFF，通常比让浏览器 JavaScript 管理长期 token 更容易控制风险。
 
-### **5. 单点登录（Single Sign-On，SSO）**
+### 5. 单点登录（Single Sign-On，SSO）
 SSO 允许用户使用一套凭据（如用户名和密码），一次性登录多个相互独立的软件系统。这在企业环境中尤为常见：用户登录一次内部系统后，就可以直接访问其他关联的应用，而无需重复输入密码。SSO 通常基于 [SAML](https://www.oasis-open.org/committees/tc_home.php?wg_abbrev=security) 或 OIDC 等标准协议实现。
 
-## **V.6.2 前端开发者的职责与考量**
+## V.6.2 前端开发者的职责与考量
 
 - **审慎选择凭据存储介质**：将会话标识存入带 `HttpOnly`、`Secure`、`SameSite` 属性的 Cookie，可防止 XSS 脚本直接读取凭据，但写接口必须配套 CSRF 防护；若将长期 token 存入 `localStorage`，一旦页面存在任一 XSS 漏洞（含第三方脚本被攻破），攻击者即可直接盗取完整令牌。
 - **同步全局认证状态**：在应用状态层（如 React Context、Pinia/Zustand 或请求缓存层）统一维护当前用户资料与权限列表，并处理多标签页之间的登出状态同步（如通过 `BroadcastChannel` 或 `storage` 事件）。

@@ -4,33 +4,33 @@ title: "II. 基础 Web 技术：核心支柱 / II.4 现代 CSS 架构与策略"
 
 # II.4 现代 CSS 架构与策略
 
-在大型多人协作项目中，直接编写全局 CSS 容易遇到全局作用域污染、类名冲突、死代码难以清理以及组件样式复用困难等问题。现代 CSS 架构围绕**编译期扩展**、**作用域隔离**、**原子化复用**与**设计 Token 管理**展开，不同方案在构建链路、运行时开销与动态能力上各有取舍。
+在大型多人协作项目中，直接编写全局 CSS 容易遇到全局作用域污染、类名冲突、死代码难以清理以及组件样式复用困难等问题。现代 CSS 架构围绕编译期扩展、作用域隔离、原子化复用与设计 Token 管理展开，不同方案在构建链路、运行时开销与动态能力上各有取舍。
 
-## **II.4.1 CSS 预处理器（CSS Preprocessors）**
+## II.4.1 CSS 预处理器（CSS Preprocessors）
 
 CSS 预处理器（CSS Preprocessor）通过自定义语法为 CSS 提供变量、Mixin（混入）、函数和模块化拆分等能力，编写完成后需经编译器转换为浏览器可识别的标准 CSS 文件。
 
-### **1. Sass / SCSS**
+### 1. Sass / SCSS
 
 [Sass](https://sass-lang.com/) 是生态最成熟的 CSS 预处理器，支持两种语法格式：
 
 1. **Sass（缩进语法）**：使用缩进代替花括号、省略分号，文件扩展名为 `.sass`。
 2. **[SCSS](https://sass-lang.com/documentation/syntax#scss)（Sassy CSS）**：语法与标准 CSS 完全兼容（任何合法的 CSS 文件都是合法的 SCSS 文件），文件扩展名为 `.scss`，是工程中的主流选择。
 
-### **2. Less**
+### 2. Less
 
 [Less](https://lesscss.org/) 的语法和功能与 SCSS 接近，主要差异在于变量使用 `@` 前缀（如 `@primary-color`）以及混入与守卫（Guards）的写法。Less 早期支持在浏览器端通过 JavaScript 实时编译，但生产项目均在构建阶段预先编译为标准 CSS。
 
-## **II.4.2 PostCSS：用 JavaScript 插件转换 CSS 的工具平台**
+## II.4.2 PostCSS：用 JavaScript 插件转换 CSS 的工具平台
 
 [PostCSS](https://postcss.org/) 本身不是一门预处理器语言，而是把 CSS 解析为抽象语法树（AST）、交由 JavaScript 插件链转换后再输出 CSS 的工具平台。常见工程用途包括：
 
 - **语法转换与预处理器特性**：通过 [postcss-nested](https://github.com/postcss/postcss-nested)、[postcss-simple-vars](https://github.com/postcss/postcss-simple-vars) 等插件支持嵌套与变量转换。
-- **自动补齐浏览器前缀（[Autoprefixer](https://github.com/postcss/autoprefixer)）**：根据项目的 Browserslist 目标浏览器配置，自动为需要兼容的 CSS 属性补充 `-webkit-`、`-moz-` 等厂商前缀。
+- **自动补齐浏览器前缀**（[Autoprefixer](https://github.com/postcss/autoprefixer)）：根据项目的 Browserslist 目标浏览器配置，自动为需要兼容的 CSS 属性补充 `-webkit-`、`-moz-` 等厂商前缀。
 - **编译前沿 CSS 规范**：借助 [postcss-preset-env](https://preset-env.cssdb.org/)，将尚未在全部目标浏览器落地的现代 CSS 语法降级转换为等效的兼容代码。
 - **构建产物压缩**：配合 `cssnano` 等插件移除注释、空白并合并重复规则，减小产物体积。
 
-## **II.4.3 原子化（utility-first）CSS**
+## II.4.3 原子化（utility-first）CSS
 
 原子化 CSS（utility-first CSS，代表框架有 [Tailwind CSS](https://tailwindcss.com/) 和 [UnoCSS](https://unocss.dev/)）不再为每个组件内部节点单独发明语义化类名，而是直接在 HTML 模板中组合单用途的工具类（如 `text-center`、`bg-blue-500`、`px-4`）来构建界面：
 
@@ -39,7 +39,7 @@ CSS 预处理器（CSS Preprocessor）通过自定义语法为 CSS 提供变量�
 - **内联响应式与状态变体**：通过 `md:flex`、`hover:bg-blue-600`、`dark:text-white` 等前缀直接在模板中声明断点与状态，省去在独立样式文件中来回跳转和手写媒体查询的步骤。
 - **与原生 CSS 深度结合**：现代原子化框架普遍将构建期工具类与运行时 CSS 变量结合，用 CSS 自定义属性承载主题 Token。
 
-Tailwind CSS 已从早期的“JavaScript 配置文件驱动”演进为 **CSS 优先配置（CSS-first configuration）**：通过 `@theme` 指令将设计 Token 直接声明在 CSS 文件中，并提供官方 Vite 插件减少构建链配置成本（PostCSS 仍可作为可选集成路径）。
+Tailwind CSS 已从早期的“JavaScript 配置文件驱动”演进为 CSS 优先配置（CSS-first configuration）：通过 `@theme` 指令将设计 Token 直接声明在 CSS 文件中，并提供官方 Vite 插件减少构建链配置成本（PostCSS 仍可作为可选集成路径）。
 
 UnoCSS 则将原子化 CSS 设计为可插拔的按需生成引擎：
 
@@ -49,7 +49,7 @@ UnoCSS 则将原子化 CSS 设计为可插拔的按需生成引擎：
 
 **工程权衡**：原子化 CSS 需要开发者熟悉工具类命名体系；复杂样式组合会使 HTML 模板中的 `class` 字符串变长，通常需要配合组件抽取或 `clsx` / `tailwind-merge` 等工具函数管理条件类名。
 
-## **II.4.4 CSS-in-JS**
+## II.4.4 CSS-in-JS
 
 CSS-in-JS 将样式定义直接写入 JavaScript/TypeScript 组件文件中，使样式的加载、更新与卸载随组件生命周期同步管理。其核心机制是在构建期或运行时自动生成带哈希的唯一类名，将样式作用域严格限制在当前组件内部；同时可以直接读取组件的 `props` 或状态动态计算样式，并通过上下文（Context）或 CSS 变量实现主题切换。
 
@@ -57,7 +57,7 @@ CSS-in-JS 将样式定义直接写入 JavaScript/TypeScript 组件文件中，�
 
 **工程权衡**：传统运行时 CSS-in-JS 会把样式解析与注入逻辑打包进 JavaScript 产物，增加包体积与主线程运行时开销；在 React 并发渲染或高频状态更新下，运行时动态注入 `<style>` 标签可能触发整棵组件树的额外样式重算（Recalculate Style）。在 SSR / React Server Components（RSC）架构中，还需额外处理样式提取，否则容易引发无样式内容闪烁（FOUC）或服务端组件不兼容问题。评估时应结合渲染频率、动态样式占比与 SSR 架构综合取舍。
 
-## **II.4.5 CSS Modules**
+## II.4.5 CSS Modules
 
 [CSS Modules](https://github.com/css-modules/css-modules) 通过构建工具在编译期将 `.module.css` 文件中的类名重写为带文件与哈希前缀的全局唯一名称（如 `.Button_primary__x8k2a`），在不改变原生 CSS 编写习惯的前提下实现组件级作用域隔离：
 
@@ -69,13 +69,13 @@ CSS-in-JS 将样式定义直接写入 JavaScript/TypeScript 组件文件中，�
 
 **工程权衡**：CSS Modules 属于静态样式方案，无法像 CSS-in-JS 那样直接把任意 JavaScript 运行时变量写进样式规则（需通过行内赋值的 CSS 自定义属性传递动态值），主题系统也需自行依托 CSS 变量与顶层类名规划。
 
-## **II.4.6 设计系统与组件库中的 CSS**
+## II.4.6 设计系统与组件库中的 CSS
 
 设计系统与组件库通常采用分层或混合架构来平衡底层一致性与组件封装度：用 CSS 自定义属性定义全局 Design Token（颜色、字号、间距、圆角、阴影），用原子化 CSS 或基础工具层提供布局组合能力，再用 CSS Modules 或编译期 CSS-in-JS 封装复杂交互组件以确保样式隔离。
 
 与此同时，**原生 CSS 已接管了大量原本依赖预处理器或框架的特性**。容器查询（`@container`）、`:has()`、原生嵌套（CSS Nesting）、层叠层（`@layer`）、`@scope`、Popover API、View Transitions 与 `content-visibility` 等能力，使“原生 CSS + 少量构建处理”成为轻量化工程的务实选择。引入这些原生特性时，应先核对 [Baseline](/guide/web-basics/internet#ii-1-7-web-平台兼容性判断-baseline-与-interop) 状态，再结合目标用户的浏览器分布决定是否配置降级方案。
 
-## **II.4.7 现代 CSS 架构对比（原子化 CSS vs. CSS-in-JS vs. CSS Modules）**
+## II.4.7 现代 CSS 架构对比（原子化 CSS vs. CSS-in-JS vs. CSS Modules）
 
 下表从作用域机制、性能开销与开发体验等维度对比三种主流方案：
 
@@ -92,7 +92,7 @@ CSS-in-JS 将样式定义直接写入 JavaScript/TypeScript 组件文件中，�
 
 技术选型需结合项目规模、团队协作习惯、SSR/RSC 架构约束以及打包工具生态综合决定。
 
-## **II.4.8 原生 CSS 的小型实践：Token、层叠层与容器查询**
+## II.4.8 原生 CSS 的小型实践：Token、层叠层与容器查询
 
 下面的例子把设计 token、层叠顺序和组件局部响应式放在同一个文件中。组件宽度变化时，卡片自己决定布局；页面只负责提供容器。
 

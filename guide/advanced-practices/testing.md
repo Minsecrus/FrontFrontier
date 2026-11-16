@@ -4,22 +4,22 @@ title: "V. 高级主题和专业开发最佳实践 / V.8 测试策略：确保�
 
 # V.8 测试策略：确保代码质量和可靠性（*）
 
-前端重构组件内部状态、升级依赖或调整接口字段时，单靠手工点按很难兼顾回归速度与边界覆盖；而过度绑定组件内部实现细节（如浅渲染或死盯内部 state 变量）的测试，又会在每次代码重构时大面积脆弱报错。现代前端测试普遍采用**测试奖杯（Testing Trophy）**模型，在执行速度、维护成本与真实环境置信度之间分配投入：
+前端重构组件内部状态、升级依赖或调整接口字段时，单靠手工点按很难兼顾回归速度与边界覆盖；而过度绑定组件内部实现细节（如浅渲染或死盯内部 state 变量）的测试，又会在每次代码重构时大面积脆弱报错。现代前端测试普遍采用测试奖杯（Testing Trophy）模型，在执行速度、维护成本与真实环境置信度之间分配投入：
 
 - **静态分析（Static Analysis）**：TypeScript 类型系统与 ESLint 规则，在编码阶段以零运行时成本拦截语法错误、拼写错误与类型契约不匹配。
 - **单元测试（Unit Tests）**：独立验证纯函数、数据转换工具、复杂状态机或算法逻辑，执行极快且无需浏览器环境。
-- **集成与组件测试（Integration & Component Tests）**：**通常被视为现代前端投入产出比最高的层级**。它把多个父子组件、网络请求与本地状态当作一个整体，按真实用户的交互方式验证协作结果。
+- **集成与组件测试（Integration & Component Tests）**：通常被视为现代前端投入产出比最高的层级。它把多个父子组件、网络请求与本地状态当作一个整体，按真实用户的交互方式验证协作结果。
 - **端到端（E2E）测试**：在真实无头或有头浏览器中运行完整构建，模拟用户走通登录、搜索、结账等跨页面核心业务漏斗。
 - **视觉回归测试（Visual Regression Testing）**：对比 UI 在不同代码版本间的像素级渲染快照，拦截 CSS 布局坍塌、样式污染或意外的间距偏移，常用工具包括 Chromatic（集成 Storybook）和 Percy。
 
 围绕上述测试分层，主流工具链各司其职：
 
-- [**Jest**](https://jestjs.io/)：成熟的经典 JavaScript 测试框架，内置测试运行器、断言工具、Mock 机制和代码覆盖率统计。
-- [**Vitest**](https://vitest.dev/)：基于 Vite 构建的现代测试框架，原生支持 ESM 与 TypeScript，监听模式下按模块依赖图只重跑受影响的测试；同时提供 Browser Mode，可在真实浏览器而非模拟 DOM（jsdom）中运行组件测试。
-- [**Cypress**](https://www.cypress.io/)：专注于 Web 应用的 E2E 与组件测试工具，提供实时重载、交互式 GUI 和直观的 DOM 时间旅行调试。
-- [**Playwright**](https://playwright.dev/)：微软推出的跨浏览器 E2E 与组件测试框架，原生支持 Chromium、Firefox、WebKit 三大内核与多语言绑定，默认多进程并行执行，并提供可回放完整网络、控制台与 DOM 快照的 Trace Viewer。
-- **Testing Library**：轻量级 UI 节点查询方案，强制通过真实用户可感知的线索（可访问角色 Role、表单 Label、可见文本 Text）查找元素，避免测试与 CSS 类名或内部 state 耦合。
-- [**MSW（Mock Service Worker）**](https://mswjs.io/)：网络层 API 模拟库，在浏览器端通过 Service Worker、在 Node 端通过底层请求拦截器实现声明式 Mock。由于拦截发生在网络边界而非篡改业务代码中的 `fetch`/`axios` 引用，同一套 Mock 处理器（handlers）可以在单元测试、E2E 测试与 Storybook 之间无缝复用。
+- [Jest](https://jestjs.io/)：成熟的经典 JavaScript 测试框架，内置测试运行器、断言工具、Mock 机制和代码覆盖率统计。
+- [Vitest](https://vitest.dev/)：基于 Vite 构建的现代测试框架，原生支持 ESM 与 TypeScript，监听模式下按模块依赖图只重跑受影响的测试。Vitest 4 进一步成熟了 Browser Mode，支持在多款真实浏览器引擎（Chromium、Firefox、WebKit）中直接运行组件测试，并提供内置的截图对比视觉回归测试（VRT）及 `expect.schemaMatching` 等运行时契约断言能力。
+- [Cypress](https://www.cypress.io/)：专注于 Web 应用的 E2E 与组件测试工具，提供实时重载、交互式 GUI 和直观的 DOM 时间旅行调试。
+- [Playwright](https://playwright.dev/)：微软推出的跨浏览器 E2E 与组件测试框架，原生支持 Chromium、Firefox、WebKit 三大内核与多语言绑定，默认多进程并行执行，并提供可回放完整网络、控制台与 DOM 快照的 Trace Viewer。配套的 [Playwright Test Agents](https://playwright.dev/docs/test-agents) 基于可访问性树快照划分了 Planner（规划）、Generator（生成）与 Healer（自愈）三类角色，可用于辅助编写用例并在界面结构微调时自动修复定位器，核心业务链路仍应沉淀为确定性的回归测试并在 CI 中执行。
+- Testing Library：轻量级 UI 节点查询方案，强制通过真实用户可感知的线索（可访问角色 Role、表单 Label、可见文本 Text）查找元素，避免测试与 CSS 类名或内部 state 耦合。
+- [MSW（Mock Service Worker）](https://mswjs.io/)：网络层 API 模拟库，在浏览器端通过 Service Worker、在 Node 端通过底层请求拦截器实现声明式 Mock。由于拦截发生在网络边界而非篡改业务代码中的 `fetch`/`axios` 引用，同一套 Mock 处理器（handlers）可以在单元测试、E2E 测试与 Storybook 之间无缝复用。
 
 在 Cypress 和 Playwright 之间做 E2E 选型时，主要取决于团队技术栈与跨端诉求：Cypress 以 JavaScript 为中心，本地 GUI 交互式调试体验直观；Playwright 则在多浏览器引擎（含 WebKit/Safari）覆盖、多窗口/多标签页控制、并行执行速度以及 Trace 离线排障上更具优势。
 
@@ -117,7 +117,7 @@ describe("<UserProfile /> 集成测试", () => {
 
 | 框架名称 | 类型（示例） | 速度 | 浏览器支持（示例） | 语言支持（示例） | 模拟能力 | 调试工具 | 社区/生态系统 | 理想用例（示例） |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| [**Jest**](https://jestjs.io/) | 单元、集成 | 良好、可靠 | 不运行真实浏览器（Node 环境，可用 jsdom 模拟 DOM） | JavaScript、TypeScript | 强、内置 | 报告、快照、调试器 | 庞大、成熟 | 任何 JavaScript 项目、大型应用 |
-| [**Vitest**](https://vitest.dev/) | 单元、集成、组件 | 快 | Chrome、Firefox、Edge | JavaScript、TypeScript | 类似 Jest，API 更现代 | 浏览器 GUI、错误报告 | 正在增长 | Vite 项目、注重速度和现代 JS 特性 |
-| [**Cypress**](https://www.cypress.io/) | E2E | 良好 | Chrome、Firefox、Edge | JavaScript | 实时、内置 | GUI、时间旅行调试 | 较大、成熟 | JavaScript 密集型前端应用、实时反馈 |
-| [**Playwright**](https://playwright.dev/) | E2E、组件测试 | 快 | Chrome、Firefox、Safari（WebKit）、Edge | JS/TS、Python、C#、Java | 强、支持并行 | Trace Viewer | 正在增长 | 复杂集成场景、跨浏览器/设备测试、并行执行 |
+| [Jest](https://jestjs.io/) | 单元、集成 | 良好、可靠 | 不运行真实浏览器（Node 环境，可用 jsdom 模拟 DOM） | JavaScript、TypeScript | 强、内置 | 报告、快照、调试器 | 庞大、成熟 | 任何 JavaScript 项目、大型应用 |
+| [Vitest](https://vitest.dev/) | 单元、集成、组件 | 快 | Chrome、Firefox、Edge | JavaScript、TypeScript | 类似 Jest，API 更现代 | 浏览器 GUI、错误报告 | 正在增长 | Vite 项目、注重速度和现代 JS 特性 |
+| [Cypress](https://www.cypress.io/) | E2E | 良好 | Chrome、Firefox、Edge | JavaScript | 实时、内置 | GUI、时间旅行调试 | 较大、成熟 | JavaScript 密集型前端应用、实时反馈 |
+| [Playwright](https://playwright.dev/) | E2E、组件测试 | 快 | Chrome、Firefox、Safari（WebKit）、Edge | JS/TS、Python、C#、Java | 强、支持并行 | Trace Viewer | 正在增长 | 复杂集成场景、跨浏览器/设备测试、并行执行 |

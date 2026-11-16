@@ -4,11 +4,11 @@ title: "IV. 前端框架和库：构建现代 UI / IV.7 htmx：超媒体驱动�
 
 # IV.7 htmx：超媒体驱动开发
 
-在原生 HTML 中，只有 `<a>` 和 `<form>` 元素能够发起 HTTP 请求，且默认行为通常会触发整页刷新。[**htmx**](https://htmx.org/) 通过 `hx-get`、`hx-target`、`hx-trigger`、`hx-swap` 等声明式属性，将 HTTP 请求与局部 DOM 更新能力扩展到了任意 HTML 元素：浏览器直接向服务端发起请求，并拿服务端返回的 HTML 片段精准替换页面中的目标区域，从而无需在客户端维护庞大的 JavaScript 状态层与模板渲染逻辑。
+在原生 HTML 中，只有 `<a>` 和 `<form>` 元素能够发起 HTTP 请求，且默认行为通常会触发整页刷新。[htmx](https://htmx.org/) 通过 `hx-get`、`hx-target`、`hx-trigger`、`hx-swap` 等声明式属性，将 HTTP 请求与局部 DOM 更新能力扩展到了任意 HTML 元素：浏览器直接向服务端发起请求，并拿服务端返回的 HTML 片段精准替换页面中的目标区域，从而无需在客户端维护庞大的 JavaScript 状态层与模板渲染逻辑。
 
-这种架构被称为**超媒体驱动应用**（[Hypermedia-Driven Application, HDA](https://htmx.org/essays/hypermedia-driven-applications/)）。与“客户端拉取 JSON、在浏览器端重建状态树与视图”的富客户端路线不同，htmx 将业务状态与视图渲染留在服务端，客户端只负责表达交互意图并应用服务端返回的超媒体（HTML）响应。在工程演进上，htmx 坚持核心体积最小化与向后兼容，只收敛通用的超媒体控制原语，而将 SSE、WebSocket 等专项能力交由插件扩展处理。
+这种架构被称为超媒体驱动应用（[Hypermedia-Driven Application, HDA](https://htmx.org/essays/hypermedia-driven-applications/)）。与“客户端拉取 JSON、在浏览器端重建状态树与视图”的富客户端路线不同，htmx 将业务状态与视图渲染留在服务端，客户端只负责表达交互意图并应用服务端返回的超媒体（HTML）响应。在工程演进上，htmx 坚持核心体积最小化与向后兼容，只收敛通用的超媒体控制原语，而将 SSE、WebSocket 等专项能力交由插件扩展处理。
 
-## **IV.7.1 核心机制与常用属性体系**
+## IV.7.1 核心机制与常用属性体系
 
 htmx 通过一组正交的 HTML 属性声明“由什么事件触发、发往哪个接口、替换哪块 DOM 以及如何替换”：
 
@@ -21,7 +21,7 @@ htmx 通过一组正交的 HTML 属性声明“由什么事件触发、发往哪
 | **反馈与加载** | `hx-indicator`、`hx-confirm` | `hx-indicator` 在请求生命周期内自动为指定元素添加/移除加载中样式类；`hx-confirm` 在发送请求前弹出确认对话框。 |
 | **参数与上下文** | `hx-vals`、`hx-headers`、`hx-include` | `hx-vals` 以 JSON 形式携带额外参数；`hx-headers` 添加自定义请求头（如认证与 CSRF Token）；`hx-include` 把其他元素中的表单字段一并提交。 |
 
-## **IV.7.2 扩展能力与实时通信**
+## IV.7.2 扩展能力与实时通信
 
 针对超出常规请求-响应模型的场景，htmx 提供了官方扩展机制（`hx-ext`）按需挂载能力：
 
@@ -29,7 +29,7 @@ htmx 通过一组正交的 HTML 属性声明“由什么事件触发、发往哪
 - **WebSocket**：通过 `hx-ext="ws"` 实现全双工通信，直接在 HTML 层面接收和发送消息片段。
 - **客户端模板与 JSON 桥接**：在必须对接第三方纯 JSON API 时，可通过扩展在浏览器端将 JSON 渲染为 HTML。
 
-## **IV.7.3 安全防范与工程边界**
+## IV.7.3 安全防范与工程边界
 
 由于 htmx 会将服务端返回的 HTML 片段直接解析并插入文档，服务端与客户端必须共同守住两条安全边界：
 
@@ -41,7 +41,7 @@ htmx 通过一组正交的 HTML 属性声明“由什么事件触发、发往哪
    });
    ```
 
-## **IV.7.4 选型对比与边界考量**
+## IV.7.4 选型对比与边界考量
 
 评估是否采用 htmx，关键在于判断应用的状态重心位于服务端还是客户端。下表对比了 htmx、传统客户端 SPA 与现代全栈元框架在运行机制、脚本负载与选型边界上的差异：
 

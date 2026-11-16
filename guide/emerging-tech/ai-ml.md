@@ -9,7 +9,7 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 1. 模型运行在用户设备还是服务器？
 2. 模型由浏览器、应用还是服务端团队管理？
 
-## **VI.8.1 先分清四条实现路线**
+## VI.8.1 先分清四条实现路线
 
 | 实现路线 | 模型由谁管理 | 工具示例 | 适用场景 | 主要边界 |
 | :--- | :--- | :--- | :--- | :--- |
@@ -20,33 +20,33 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 表中的工具只是各条路线的例子，彼此不在同一层次，不宜直接横向比较：Chrome 内建 AI 是浏览器提供的任务 API，模型由浏览器管理；MediaPipe、Transformers.js 是应用引入的任务级库，ONNX Runtime Web、TensorFlow.js 是更底层的推理运行时（见 VI.8.4）；LangChain、LlamaIndex 在服务端负责流程编排和数据接入，Pinecone 则是存放向量的数据层。
 
-## **VI.8.2 用六个问题决定本地还是远端**
+## VI.8.2 用六个问题决定本地还是远端
 
-### **1. 原始数据能否离开设备**
+### 1. 原始数据能否离开设备
 
 摄像头画面、录音、医疗信息和未发布文档可能需要尽量留在设备端。本地运行仍需要配合日志、缓存、第三方脚本和网络请求审查，团队应画出真实数据流，明确哪些数据被读取、保存和传输。
 
-### **2. 用户能等多久**
+### 2. 用户能等多久
 
 手势控制、实时滤镜和输入建议通常对延迟敏感，本地推理可以减少网络往返。长文总结或复杂生成往往允许更长等待，也更可能需要服务器算力。评估指标应覆盖端到端体验，包括模型推理、数据准备、渲染与网络耗时。
 
-### **3. 模型有多大、多久更新一次**
+### 3. 模型有多大、多久更新一次
 
 应用自带模型意味着用户要下载它，浏览器还要解码并缓存它，占用内存。模型很大或更新频繁时，集中部署更容易控制版本；小而稳定的模型更适合端侧缓存和离线使用。
 
-### **4. 最差设备能否完成任务**
+### 4. 最差设备能否完成任务
 
 应同时在低内存手机、集成显卡电脑和节电模式下验证体验，并为设备分级。每一级都要明确路径：换用更小模型、切回 Wasm、调用服务器或隐藏增强功能。
 
-### **5. 成本落在哪里**
+### 5. 成本落在哪里
 
 本地推理减少服务器调用，却把下载、功耗和设备资源交给用户；服务端推理更容易统一性能，却会产生基础设施与调用成本。比较时要把模型分发、缓存失效、峰值并发和失败重试一起计算。
 
-### **6. 模型与凭据能否放到客户端**
+### 6. 模型与凭据能否放到客户端
 
 浏览器中的模型文件和 JavaScript 都可被用户取得，知识产权保护应以此为前提来规划。服务端 API 密钥应保存在受控服务端；需要保密的模型、系统提示、数据权限和供应商凭据也应遵循这一边界。
 
-## **VI.8.3 浏览器内建 AI 要按渐进增强使用**
+## VI.8.3 浏览器内建 AI 要按渐进增强使用
 
 浏览器内建 AI 允许应用调用较高层的任务 API，并由浏览器负责底层模型。是否可用取决于 API 阶段、设备条件和模型下载状态，需要在运行时确认。
 
@@ -54,30 +54,30 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 因此，接入顺序应该是：
 
-1. **检测 API 是否存在**，以运行时能力检测为准，并把浏览器版本作为调试信息。
-2. **查询可用状态**，区分不可用、可下载、下载中和可用。
-3. **提前说明下载与资源消耗**，提供进度、取消和重试。
-4. **让普通功能覆盖全部设备**，在能力满足时启用本地 AI，并按数据政策提供服务端回退。
-5. **持续监测真实失败率**，因为实验室里的支持列表无法代表所有设备状态。
+1. 检测 API 是否存在，以运行时能力检测为准，并把浏览器版本作为调试信息。
+2. 查询可用状态，区分不可用、可下载、下载中和可用。
+3. 提前说明下载与资源消耗，提供进度、取消和重试。
+4. 让普通功能覆盖全部设备，在能力满足时启用本地 AI，并按数据政策提供服务端回退。
+5. 持续监测真实失败率，因为实验室里的支持列表无法代表所有设备状态。
 
 例如，文章页始终显示原文；支持相关能力时提供本地摘要，并按产品的数据政策决定是否提供服务端摘要。AI 在这里处于渐进增强层。
 
-## **VI.8.4 用工具理解不同抽象层**
+## VI.8.4 用工具理解不同抽象层
 
 下面的表说明每个工具替开发者承担了哪一层工作。
 
 | 工具 | 它封装的重点 | 常见执行位置与后端 | 适用场景 | 需要自行验证的边界 |
 | :--- | :--- | :--- | :--- | :--- |
-| [**MediaPipe**](https://developers.google.com/mediapipe) | 把视觉、音频等常见感知任务封装成较高层接口 | 浏览器与其他端侧平台，具体后端由任务与环境决定 | 手势、姿态、目标检测等实时交互 | 支持的任务、模型定制范围、摄像头权限、帧率与功耗 |
-| [**ONNX Runtime Web**](https://onnxruntime.ai/docs/tutorials/web/) | 在 Web 中运行 ONNX 模型，并选择执行后端 | Wasm、WebGL、WebGPU、WebNN；各后端的算子覆盖不同 | 把其他训练生态导出的模型部署到浏览器 | 模型转换、算子兼容、包体、初始化时间和后端差异 |
-| [**Transformers.js**](https://huggingface.co/docs/transformers.js/en/index) | 用接近 Transformers 的高层 API 运行预训练模型 | 底层使用 ONNX Runtime；浏览器默认可走 Wasm，也可按环境尝试 WebGPU | 文本分类、特征提取、语音和视觉等 Transformer 任务 | 模型下载、量化精度、内存、WebGPU 兼容性与首次加载体验 |
-| [**TensorFlow.js**](https://www.tensorflow.org/js) | 在 JavaScript 中运行或训练 TensorFlow 模型 | 浏览器和 Node.js，可选择不同后端 | 已有 TensorFlow 模型、JS 内训练或定制交互实验 | 模型格式、后端支持、训练资源和目标设备性能 |
-| [**浏览器内建 AI API**](https://developer.chrome.com/docs/ai/built-in-apis) | 浏览器管理模型，应用调用翻译、摘要等任务接口 | 支持该 API 且满足设备条件的浏览器 | 不想自行分发模型的常见文本增强 | API 生命周期、跨浏览器覆盖、下载状态和输出质量 |
-| [**LangChain**](https://www.langchain.com/)、[**LlamaIndex**](https://www.llamaindex.ai/)、[**Pinecone**](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、提示词注入、成本与凭据保护 |
+| [MediaPipe](https://developers.google.com/mediapipe) | 把视觉、音频等常见感知任务封装成较高层接口 | 浏览器与其他端侧平台，具体后端由任务与环境决定 | 手势、姿态、目标检测等实时交互 | 支持的任务、模型定制范围、摄像头权限、帧率与功耗 |
+| [ONNX Runtime Web](https://onnxruntime.ai/docs/tutorials/web/) | 在 Web 中运行 ONNX 模型，并选择执行后端 | Wasm、WebGL、WebGPU、WebNN；各后端的算子覆盖不同 | 把其他训练生态导出的模型部署到浏览器 | 模型转换、算子兼容、包体、初始化时间和后端差异 |
+| [Transformers.js](https://huggingface.co/docs/transformers.js/en/index) | 用接近 Transformers 的高层 API 运行预训练模型 | 底层使用 ONNX Runtime；浏览器默认可走 Wasm，也可按环境尝试 WebGPU | 文本分类、特征提取、语音和视觉等 Transformer 任务 | 模型下载、量化精度、内存、WebGPU 兼容性与首次加载体验 |
+| [TensorFlow.js](https://www.tensorflow.org/js) | 在 JavaScript 中运行或训练 TensorFlow 模型 | 浏览器和 Node.js，可选择不同后端 | 已有 TensorFlow 模型、JS 内训练或定制交互实验 | 模型格式、后端支持、训练资源和目标设备性能 |
+| [浏览器内建 AI API](https://developer.chrome.com/docs/ai/built-in-apis) | 浏览器管理模型，应用调用翻译、摘要等任务接口 | 支持该 API 且满足设备条件的浏览器 | 不想自行分发模型的常见文本增强 | API 生命周期、跨浏览器覆盖、下载状态和输出质量 |
+| [LangChain](https://www.langchain.com/)、[LlamaIndex](https://www.llamaindex.ai/)、[Pinecone](https://www.pinecone.io/) | 服务端编排、数据连接和向量检索等 RAG 环节 | 通常位于受控服务端或云服务，承担编排与数据检索 | 需要权限控制、共享知识库和复杂检索的问答 | 数据新鲜度、召回质量、租户隔离、提示词注入、成本与凭据保护 |
 
 以 Transformers.js 为例，它给开发者的是高层任务 API，底层仍要依赖 ONNX Runtime 和具体计算后端。理解这层关系后，可以分别评估模型库、推理运行时和 GPU API。
 
-## **VI.8.5 Wasm、WebGPU 与 WebNN 分别解决什么**
+## VI.8.5 Wasm、WebGPU 与 WebNN 分别解决什么
 
 浏览器端推理可以分成三层：
 
@@ -85,14 +85,14 @@ title: "VI. 新兴技术和专业领域 / VI.8 前端 AI/ML 与 Agent 界面"
 
 MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.js runtime 负责加载模型与调度算子；Wasm、WebGPU、WebNN 则提供不同的底层执行路径。
 
-- **WebAssembly**（Wasm）兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
-- **WebGPU** 向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
-- **WebNN** 是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
-- **WebGL** 原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
+- WebAssembly（Wasm）兼容面通常更广，适合作为 CPU 路径和基础回退。它在所有模型上未必最快，但更容易覆盖没有现代 GPU 能力的设备。
+- WebGPU 向 Web 暴露通用 GPU 计算能力，是高并行推理的重要路径。模型是否更快仍取决于浏览器、驱动、算子、数据传输和预热成本。[Transformers.js 的 WebGPU 指南](https://huggingface.co/docs/transformers.js/guides/webgpu) 也要求显式选择并关注兼容性。
+- WebNN 是面向神经网络图的硬件无关 Web API，目标是让实现映射到 CPU、GPU 或 NPU。[W3C WebNN 规范](https://www.w3.org/TR/webnn/) 仍在标准化、实现也在演进中，适合作为经过能力检测的增强路径。
+- WebGL 原本为图形设计，但仍可能出现在既有框架的后端列表中。新项目应依据运行时官方支持和实际测量选择执行路径。
 
 一个稳妥的选择方式是：先建立可工作的 Wasm 或服务端基线，再对支持的设备启用 WebGPU；只有在目标浏览器确实实现且模型算子受支持时才尝试 WebNN。每条路径都要测首次加载、预热、持续推理、峰值内存、功耗和结果一致性。
 
-## **VI.8.6 混合架构示例**
+## VI.8.6 混合架构示例
 
 假设产品要在浏览器里为用户照片生成辅助说明：
 
@@ -104,7 +104,7 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 这个例子没有追求“全部本地”或“全部上云”。本地路径负责隐私敏感、低延迟的粗处理；远端路径负责更复杂的生成；普通表单负责兜底。三条路径共同保证产品可用。
 
-## **VI.8.7 上线前检查清单**
+## VI.8.7 上线前检查清单
 
 - **价值**：AI 是否解决了明确用户问题，还是只增加一个演示功能？
 - **数据**：输入、模型输出、日志和缓存分别存在哪里，保留多久？
@@ -118,18 +118,19 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 前端 AI/ML 的核心能力，是划清运行与数据边界，并为不同设备设计可检测、可降级、可评估的路径。
 
-## **VI.8.8 面向 Agent 的 Web 界面：新兴方向**
+## VI.8.8 面向 Agent 的 Web 界面：新兴方向
 
-传统前端把用户当作主要交互主体；新的 Agent 场景还要求网页向模型暴露可理解、可调用、可确认的能力。这里至少要区分四类工作：
+传统前端把用户当作主要交互主体；新的 Agent 场景还要求网页与前端界面同模型建立标准化的双向事件流，并暴露可理解、可调用、可确认的能力。这里至少要区分五类工作：
 
 | 方向 | 解决的问题 | 当前成熟度 |
 | :--- | :--- | :--- |
 | [MCP Tools](https://modelcontextprotocol.io/specification/2025-06-18/server/tools) | 让 Agent 发现并调用带有名称、描述和输入 Schema 的工具 | 已形成公开协议规范和生态，但权限与实现质量仍需自行治理 |
+| [AG-UI](https://ag-ui.com/) | 定义 Agent 后端与前端应用之间的标准事件流、状态双向同步与人工确认通道 | 开源轻量协议，已成为 CopilotKit 等前端 Agent 框架的常用传输规范 |
 | [MCP Apps](https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/) | 让工具结果在对话中呈现交互式组件，并保留文本和 JSON 数据能力 | MCP 的官方扩展，适合关注 Agent 内交互的团队 |
 | [A2UI](https://github.com/google/A2UI) | 用声明式组件树描述 Agent 要呈现的表单和界面，由客户端从受控目录渲染 | Public Preview，组件协议仍在演进 |
 | [WebMCP](https://webmachinelearning.github.io/webmcp/) | 让网页通过 JavaScript 或 HTML 表单声明 Agent 可调用的工具，复用页面的业务逻辑与状态 | 社区组草案，浏览器实现处于试验阶段，适合渐进增强与实验项目 |
 
-这些方向涉及工具调用与界面呈现等不同层次，前端需要根据接入方式继续负责：
+按分层视角梳理它们的关系更为直观：MCP 负责连接 Agent 与外部工具及数据，AG-UI 负责承载 Agent 运行时与前端应用之间的实时事件流和状态同步，MCP Apps 与 A2UI 负责描述对话中呈现的交互界面载荷，WebMCP 则让现有网页直接向浏览器内 Agent 暴露自身业务逻辑。前端在这些环节中需要继续负责：
 
 - 工具名称、描述、输入 Schema 和错误状态；
 - 用户身份、来源权限、确认步骤和可撤销操作；
@@ -139,14 +140,14 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 因此，Agent-facing UI 目前适合放在新兴技术和实验项目中学习。MCP Apps、A2UI 或 WebMCP 属于可选探索方向，权限、无障碍和审计要求继续保持在与普通 Web UI 相同或更高的标准。
 
-### **WebMCP：把网页操作声明为工具**
+### WebMCP：把网页操作声明为工具
 
 [WebMCP](https://developer.chrome.com/docs/ai/webmcp) 让网站为搜索、筛选、填写表单等操作提供明确的名称、用途和输入约束，供 Agent 发现并调用。工具在网页上下文中执行，可以复用已有业务逻辑，让用户与 Agent 共享页面状态。它关注的是网站如何被 Agent 使用，与前面讨论的模型运行位置是两个独立问题。
 
 当前设计提供两种接入方式：
 
-- **[命令式 API](https://developer.chrome.com/docs/ai/webmcp/imperative-api)**：用 JavaScript 注册工具，描述输入 Schema 和执行函数，适合需要读取应用状态、组合已有服务的操作。
-- **[声明式 API](https://developer.chrome.com/docs/ai/webmcp/declarative-api)**：在 HTML 表单上补充工具名称与用途等标注，由浏览器把表单字段转成工具参数，适合已有表单流程。字段标签、输入约束与提交反馈仍需要认真设计。
+- [命令式 API](https://developer.chrome.com/docs/ai/webmcp/imperative-api)：用 JavaScript 注册工具，描述输入 Schema 和执行函数，适合需要读取应用状态、组合已有服务的操作。
+- [声明式 API](https://developer.chrome.com/docs/ai/webmcp/declarative-api)：在 HTML 表单上补充工具名称与用途等标注，由浏览器把表单字段转成工具参数，适合已有表单流程。字段标签、输入约束与提交反馈仍需要认真设计。
 
 可以用商品搜索理解它的工作方式。以下是应用设计示例，具体 API 以当前实现为准：
 
@@ -165,7 +166,7 @@ MediaPipe、Transformers.js 等更接近上层；ONNX Runtime Web、TensorFlow.j
 
 [WebMCP 规范](https://webmachinelearning.github.io/webmcp/)仍是社区组草案，尚未成为 W3C 标准，浏览器实现也在试验中。接入应以能力检测为前提，保留完整的普通网页操作路径；工具接口应只暴露完成任务所需的数据和动作。
 
-## **VI.8.9 本地能力与服务端回退的适配层**
+## VI.8.9 本地能力与服务端回退的适配层
 
 前端可以把模型能力包在一个可替换的适配层里：浏览器具备本地能力时优先使用本地执行，能力缺失、下载失败或设备资源不足时转到服务端。下面的 `localSummarize` 由具体浏览器 API 或 WebGPU/Wasm 实现提供。
 
@@ -202,7 +203,7 @@ export async function summarize(
 
 适配层应同时返回加载、取消、超时、权限和内容安全状态。客户端只保存公开配置，模型密钥、敏感数据处理和最终权限判断留在服务端。
 
-## **VI.8.10 受约束的工具 Schema**
+## VI.8.10 受约束的工具 Schema
 
 面向 Agent 的工具先定义受约束的输入 Schema；客户端负责参数校验和用户确认，权限判断仍以服务端鉴权为准：
 

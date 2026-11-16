@@ -6,11 +6,11 @@ title: "VI. 新兴技术和专业领域 / VI.1 渐进式 Web 应用程序（PWA�
 
 渐进式 Web 应用（PWA）在不引入应用商店分发的前提下，用标准 Web 技术补齐弱网与离线可用、主屏安装、后台消息触达三项能力。其运行建立在三个核心机制之上：
 
-- [**Service Workers**](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)：独立于页面的后台脚本，负责拦截网络请求、管理离线缓存、执行后台同步与接收推送。
-- [**Web App Manifest**](https://developer.mozilla.org/en-US/docs/Web/Manifest)：描述应用名称、图标、启动路径与窗口显示模式的 JSON 清单，“添加到主屏幕”和安装提示均依赖它。
-- **推送通知**：结合 Service Worker 与推送服务，在用户未打开页面时下发消息并召回用户。
+- [Service Workers](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)：独立于页面的后台脚本，负责拦截网络请求、管理离线缓存、执行后台同步与接收推送。
+- [Web App Manifest](https://developer.mozilla.org/en-US/docs/Web/Manifest)：描述应用名称、图标、启动路径与窗口显示模式的 JSON 清单，“添加到主屏幕”和安装提示均依赖它。
+- 推送通知：结合 Service Worker 与推送服务，在用户未打开页面时下发消息并召回用户。
 
-## **VI.1.1 衡量与提升性能**
+## VI.1.1 衡量与提升性能
 
 PWA 的离线与安装体验建立在首屏加载和交互性能达标的基础上，通常从加载架构、量化目标、核心指标和调试工具四个层面把控：
 
@@ -27,7 +27,7 @@ PWA 的离线与安装体验建立在首屏加载和交互性能达标的基础�
 - **Performance Metrics（性能指标）**：当前稳定的 Core Web Vitals 包括衡量加载速度的 LCP（最大内容绘制）、衡量整体交互响应性的 INP（Interaction to Next Paint，交互到下一次绘制）以及衡量视觉稳定性的 CLS（累积布局偏移）。
 - **Lighthouse 与 DevTools**：Lighthouse 用于自动化审计性能、无障碍、最佳实践与 SEO。注意 Lighthouse 12（2024 年）已[移除独立的 PWA 评分类别](https://github.com/GoogleChrome/lighthouse/releases/tag/v12.0.0)，[PWA](https://web.dev/progressive-web-apps/) 的可安装性、Manifest 解析和 Service Worker 生命周期改在 [DevTools 的 Application 面板](https://developer.chrome.com/docs/devtools/progressive-web-apps/)中核查；运行时卡顿与长任务则在 Performance 面板中定位。
 
-## **VI.1.2 浏览器 API**
+## VI.1.2 浏览器 API
 
 PWA 依赖一组后台脚本、异步存储与系统集成 API 来处理断网容错和设备交互，接入时需要留意线程限制与权限边界：
 
@@ -108,7 +108,7 @@ async function cacheFirst(request) {
 - **Web Share API / Web Share Target API**：调用系统原生分享面板，或将 PWA 注册为系统分享目标以接收外部应用传入的内容。
 - **SEO**：安装型 Web 应用同样依赖搜索引擎入口，需为每个视图提供独立 URL（History API）、提交站点地图、完善元数据与结构化数据（Schema），并对需要收录的页面采用 SSR/SSG 等渲染方案。
 
-## **VI.1.3 Manifest、注册与更新验证**
+## VI.1.3 Manifest、注册与更新验证
 
 最小安装能力由 Manifest、页面链接和 Service Worker 注册共同组成：
 
